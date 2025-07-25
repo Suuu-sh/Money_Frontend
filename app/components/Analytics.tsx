@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { CategorySummary } from '../types'
 import { fetchCategorySummary } from '../lib/api'
+import { ChartBarIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
 
 export default function Analytics() {
   const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
@@ -49,12 +50,18 @@ export default function Analytics() {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-bold text-gray-900">📈 分析</h2>
+      <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+        <ChartBarIcon className="w-6 h-6 mr-2" />
+        分析
+      </h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* 支出分析 */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">💸 支出カテゴリ別</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <CurrencyDollarIcon className="w-5 h-5 mr-2 text-red-500" />
+            支出カテゴリ別
+          </h3>
           {expenseSummary.length === 0 ? (
             <p className="text-gray-500 text-center py-8">支出データがありません</p>
           ) : (
@@ -96,7 +103,10 @@ export default function Analytics() {
 
         {/* 収入分析 */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">💰 収入カテゴリ別</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <CurrencyDollarIcon className="w-5 h-5 mr-2 text-green-500" />
+            収入カテゴリ別
+          </h3>
           {incomeSummary.length === 0 ? (
             <p className="text-gray-500 text-center py-8">収入データがありません</p>
           ) : (

@@ -4,7 +4,11 @@ import {
   CurrencyDollarIcon, 
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  SparklesIcon,
+  RocketLaunchIcon,
+  StarIcon,
+  TargetIcon
 } from '@heroicons/react/24/outline';
 
 export default function LandingPage() {
@@ -48,7 +52,7 @@ export default function LandingPage() {
           <div className="text-center">
             <div className="mb-8">
               <div className="inline-flex items-center px-4 py-2 bg-white bg-opacity-10 rounded-full text-sm font-medium text-blue-100 backdrop-blur-sm">
-                <span className="mr-2">✨</span>
+                <SparklesIcon className="w-4 h-4 mr-2" />
                 日本で最も使いやすい家計簿アプリ
               </div>
             </div>
@@ -89,7 +93,9 @@ export default function LandingPage() {
                 <div className="text-blue-200 text-sm sm:text-base">利用者数</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl sm:text-4xl font-bold text-white mb-2">4.8★</div>
+                <div className="text-3xl sm:text-4xl font-bold text-white mb-2 flex items-center justify-center">
+                  4.8<StarIcon className="w-6 h-6 ml-1 text-yellow-400 fill-current" />
+                </div>
                 <div className="text-blue-200 text-sm sm:text-base">満足度</div>
               </div>
               <div className="text-center">
@@ -106,7 +112,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 sm:mb-20">
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-sm font-medium text-blue-800 mb-6">
-              <span className="mr-2">🚀</span>
+              <RocketLaunchIcon className="w-4 h-4 mr-2" />
               充実の機能
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 px-4">
@@ -158,7 +164,7 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-8">
             <div className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium text-white backdrop-blur-sm mb-6">
-              <span className="mr-2">🎯</span>
+              <TargetIcon className="w-4 h-4 mr-2" />
               今すぐ始めよう
             </div>
           </div>

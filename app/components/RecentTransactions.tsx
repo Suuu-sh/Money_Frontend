@@ -2,6 +2,7 @@
 
 import { Transaction } from '../types'
 import { format } from 'date-fns'
+import { DocumentTextIcon } from '@heroicons/react/24/outline'
 
 interface RecentTransactionsProps {
   transactions: Transaction[]
@@ -20,7 +21,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
   if (transactions.length === 0) {
     return (
       <div className="card text-center py-8">
-        <div className="text-4xl mb-2">📝</div>
+        <DocumentTextIcon className="w-12 h-12 mx-auto mb-2 text-gray-400" />
         <p className="text-gray-500">最近の取引がありません</p>
       </div>
     )
