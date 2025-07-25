@@ -899,6 +899,9 @@ video {
 .h-full {
   height: 100%;
 }
+.h-\[calc\(100vh-128px\)\] {
+  height: calc(100vh - 128px);
+}
 .max-h-\[90vh\] {
   max-height: 90vh;
 }
@@ -1951,6 +1954,10 @@ video {
 .hover\:bg-white:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+.hover\:bg-primary-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
 }
 .hover\:from-blue-600:hover {
   --tw-gradient-from: #2563eb var(--tw-gradient-from-position);

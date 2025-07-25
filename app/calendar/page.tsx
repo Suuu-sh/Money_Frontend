@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '../components/Header'
+import TabNavigation from '../components/TabNavigation'
 import Calendar from '../components/Calendar'
 import DayTransactions from '../components/DayTransactions'
 import AddTransactionModal from '../components/AddTransactionModal'
@@ -86,9 +87,10 @@ export default function CalendarPage() {
         onAddTransaction={() => setIsAddModalOpen(true)}
         onLogout={handleLogout}
       />
+      <TabNavigation />
       
       {/* Desktop Layout */}
-      <main className="hidden md:block h-[calc(100vh-80px)] px-4 sm:px-6 lg:px-8 py-4">
+      <main className="hidden md:block h-[calc(100vh-128px)] px-4 sm:px-6 lg:px-8 py-4">
         <div className="h-full flex gap-6">
           <div className="flex-1 min-w-0">
             <Calendar 
