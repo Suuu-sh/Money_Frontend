@@ -93,7 +93,7 @@ export default function BudgetPage() {
       />
       <TabNavigation />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="px-4 sm:px-6 lg:px-8 py-4">
         {/* ページヘッダー */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -162,7 +162,7 @@ export default function BudgetPage() {
         <div className="mt-12">
           <BudgetHistory />
         </div>
-      </div>
+      </main>
 
       {/* 固定費モーダル */}
       <FixedExpenseModal
