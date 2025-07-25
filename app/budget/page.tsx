@@ -99,23 +99,12 @@ export default function BudgetPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* ページヘッダー */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <CurrencyDollarIcon className="w-8 h-8 mr-3" />
-                予算管理
-              </h1>
-              <p className="mt-2 text-gray-600">
-                月次予算と固定費を設定して、計画的な家計管理を行いましょう
-              </p>
-            </div>
-            <button className="btn-secondary flex items-center">
-              <Cog6ToothIcon className="w-4 h-4 mr-2" />
-              設定
-            </button>
-          </div>
+        {/* 設定ボタン */}
+        <div className="mb-8 flex justify-end">
+          <button className="btn-secondary flex items-center">
+            <Cog6ToothIcon className="w-4 h-4 mr-2" />
+            設定
+          </button>
         </div>
 
         {/* アラート表示 */}
