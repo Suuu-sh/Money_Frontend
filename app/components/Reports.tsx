@@ -169,12 +169,13 @@ export default function Reports() {
                       innerRadius={40}
                       outerRadius={80}
                       paddingAngle={0}
-                      startAngle={90}
-                      endAngle={450}
+                      startAngle={0}
+                      endAngle={360}
                       dataKey="value"
+                      stroke="none"
                     >
                       {expensePieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                       ))}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />
@@ -228,12 +229,13 @@ export default function Reports() {
                       innerRadius={40}
                       outerRadius={80}
                       paddingAngle={0}
-                      startAngle={90}
-                      endAngle={450}
+                      startAngle={0}
+                      endAngle={360}
                       dataKey="value"
+                      stroke="none"
                     >
                       {incomePieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                       ))}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />

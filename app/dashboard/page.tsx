@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [modalDate, setModalDate] = useState<Date | null>(null)
+  const [currentMonth, setCurrentMonth] = useState(new Date())
 
   useEffect(() => {
     // Check if user is authenticated
@@ -31,11 +32,20 @@ export default function DashboardPage() {
     loadData()
   }, [router])
 
-  const loadData = async () => {
+  const loadData = async (month?: Date) => {
     try {
       setLoading(true)
+      
+      // 月が指定されている場合は、その月のデータを取得
+      let params = { limit: 100 }
+      if (month) {
+        const startDate = new Date(month.getFullYear(), month.getMonth(), 1).toISOString().split('T')[0]
+        const endDate = new Date(month.getFullYear(), month.getMonth() + 1, 0).toISOString().split('T')[0]
+        params = { ...params, startDate, endDate }
+      }
+      
       const [transactionsData, categoriesData, statsData] = await Promise.all([
-        fetchTransactions({ limit: 100 }),
+        fetchTransactions(params),
         fetchCategories(),
         fetchStats()
       ])
@@ -51,6 +61,11 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleMonthChange = (month: Date) => {
+    setCurrentMonth(month)
+    loadData(month)
   }
 
   const handleTransactionAdded = () => {
@@ -105,6 +120,7 @@ export default function DashboardPage() {
                 onDateClick={handleDateClick}
                 selectedDate={selectedDate}
                 onAddTransaction={handleAddTransactionForDate}
+                onMonthChange={handleMonthChange}
               />
             </div>
             
@@ -148,6 +164,7 @@ export default function DashboardPage() {
               onDateClick={handleDateClick}
               selectedDate={selectedDate}
               onAddTransaction={handleAddTransactionForDate}
+              onMonthChange={handleMonthChange}
             />
           </div>
           

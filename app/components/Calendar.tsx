@@ -9,9 +9,10 @@ interface CalendarProps {
   onDateClick: (date: Date) => void
   selectedDate: Date | null
   onAddTransaction?: (date: Date) => void
+  onMonthChange?: (date: Date) => void
 }
 
-export default function Calendar({ transactions, onDateClick, selectedDate, onAddTransaction }: CalendarProps) {
+export default function Calendar({ transactions, onDateClick, selectedDate, onAddTransaction, onMonthChange }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
   const monthStart = startOfMonth(currentMonth)
@@ -46,15 +47,21 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
   }
 
   const goToPreviousMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))
+    const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    setCurrentMonth(newMonth)
+    onMonthChange?.(newMonth)
   }
 
   const goToNextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))
+    const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    setCurrentMonth(newMonth)
+    onMonthChange?.(newMonth)
   }
 
   const goToToday = () => {
-    setCurrentMonth(new Date())
+    const today = new Date()
+    setCurrentMonth(today)
+    onMonthChange?.(today)
   }
 
   // 週の開始を月曜日にするため、日曜日を最後に移動

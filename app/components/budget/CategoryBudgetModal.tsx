@@ -79,9 +79,15 @@ export default function CategoryBudgetModal({
 
       onSaved()
       onClose()
-    } catch (error) {
+    } catch (error: any) {
       console.error('予算の保存に失敗しました:', error)
-      setError('予算の保存に失敗しました')
+      if (error.response?.data?.error) {
+        setError(error.response.data.error)
+      } else if (error.message) {
+        setError(error.message)
+      } else {
+        setError('予算の保存に失敗しました')
+      }
     } finally {
       setLoading(false)
     }
