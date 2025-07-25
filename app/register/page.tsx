@@ -52,7 +52,7 @@ export default function RegisterPage() {
 
       if (response.ok) {
         localStorage.setItem('token', data.token)
-        router.push('/home')
+        router.push('/dashboard')
       } else {
         setError(data.error || 'Registration failed')
       }

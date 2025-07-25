@@ -16,7 +16,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
 
   const cards = [
     {
-      title: '今月の収入',
+      title: '収入',
       value: formatAmount(stats.thisMonthIncome),
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
       textColor: 'text-income-600',
     },
     {
-      title: '今月の支出',
+      title: '支出',
       value: formatAmount(stats.thisMonthExpense),
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +38,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
       textColor: 'text-expense-600',
     },
     {
-      title: '今月の収支',
+      title: '収支',
       value: formatAmount(stats.thisMonthIncome - stats.thisMonthExpense),
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,7 +49,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
       textColor: stats.thisMonthIncome - stats.thisMonthExpense >= 0 ? 'text-income-600' : 'text-expense-600',
     },
     {
-      title: '総残高',
+      title: '残高',
       value: formatAmount(stats.currentBalance),
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

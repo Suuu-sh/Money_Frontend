@@ -9,6 +9,7 @@ export default function MonthlyChart() {
   const [loading, setLoading] = useState(true)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
+  const [showAll, setShowAll] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -142,30 +143,47 @@ export default function MonthlyChart() {
       ) : (
         // 年間表示（コンパクト）
         <div className="space-y-2">
-          {filteredData.length === 0 ? (
+          {data.length === 0 ? (
             <p className="text-center text-gray-500 text-sm py-4">データがありません</p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {filteredData.slice(0, 6).map((item) => (
-                <div key={item.month} className="bg-gray-50 p-2 rounded text-center">
-                  <p className="text-xs font-medium text-gray-700">{getMonthName(item.month)}</p>
-                  <p className={`text-xs font-bold ${item.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {formatCompactAmount(item.balance)}
-                  </p>
+            <>
+              <div className={`grid gap-2 ${showAll ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3'}`}>
+                {(showAll ? data : data.slice(0, 6)).map((item) => (
+                  <div 
+                    key={item.month} 
+                    className="bg-gray-50 p-2 rounded text-center cursor-pointer hover:bg-gray-100 transition-colors"
+                    onClick={() => setSelectedMonth(item.month)}
+                  >
+                    <p className="text-xs font-medium text-gray-700">{getMonthName(item.month)}</p>
+                    <p className={`text-xs font-bold ${item.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {formatCompactAmount(item.balance)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              
+              {data.length > 6 && !showAll && (
+                <div className="text-center">
+                  <button
+                    onClick={() => setShowAll(true)}
+                    className="text-xs text-primary-600 hover:text-primary-700 underline"
+                  >
+                    すべて表示
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
-          
-          {filteredData.length > 6 && (
-            <div className="text-center">
-              <button
-                onClick={() => setSelectedMonth(null)}
-                className="text-xs text-primary-600 hover:text-primary-700"
-              >
-                すべて表示
-              </button>
-            </div>
+              )}
+              
+              {showAll && (
+                <div className="text-center">
+                  <button
+                    onClick={() => setShowAll(false)}
+                    className="text-xs text-primary-600 hover:text-primary-700 underline"
+                  >
+                    折りたたむ
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
