@@ -99,7 +99,7 @@ export default function DashboardPage() {
           {/* Left: Calendar and Day Transactions */}
           <div className="flex flex-col gap-4">
             {/* Calendar - Full visibility */}
-            <div className="h-[calc(60vh-80px)] min-h-[500px]">
+            <div className="h-[calc(65vh-60px)] min-h-[520px]">
               <Calendar 
                 transactions={transactions}
                 onDateClick={handleDateClick}

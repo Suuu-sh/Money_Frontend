@@ -112,55 +112,15 @@ export default function BudgetPage() {
           <BudgetAlerts analysis={analysis} />
         </div>
 
-        {/* 全体予算セクション */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* 左カラム: 予算概要 */}
-          <div className="lg:col-span-1">
-            <BudgetOverview />
-          </div>
-
-          {/* 中央カラム: 予算進捗 */}
-          <div className="lg:col-span-1">
-            <div className="card">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">予算進捗</h2>
-              {analysis ? (
-                <BudgetProgress analysis={analysis} />
-              ) : (
-                <div className="text-center text-gray-500 py-8">
-                  予算データを読み込み中...
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 右カラム: 設定エリア */}
-          <div className="lg:col-span-1">
-            <div className="space-y-6">
-              {/* 予算設定 */}
-              <BudgetSettings onBudgetUpdated={loadBudgetAnalysis} />
-
-              {/* 固定費管理 */}
-              <FixedExpensesList 
-                onAddExpense={() => setShowExpenseModal(true)}
-                onEditExpense={(expense) => {
-                  setEditingExpense(expense)
-                  setShowExpenseModal(true)
-                }}
-                onExpensesUpdated={loadBudgetAnalysis}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* カテゴリ別予算セクション */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        {/* メインセクション: カテゴリ別予算 */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
           {/* カテゴリ別予算概要 */}
-          <div>
+          <div className="xl:col-span-1">
             <CategoryBudgetOverview />
           </div>
 
           {/* カテゴリ別予算リスト */}
-          <div>
+          <div className="xl:col-span-2">
             <CategoryBudgetList
               categories={categories}
               onAddBudget={() => setShowCategoryBudgetModal(true)}
@@ -173,9 +133,24 @@ export default function BudgetPage() {
           </div>
         </div>
 
-        {/* 予算履歴セクション */}
-        <div className="mt-12">
-          <BudgetHistory />
+        {/* サブセクション */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* 固定費管理 */}
+          <div>
+            <FixedExpensesList 
+              onAddExpense={() => setShowExpenseModal(true)}
+              onEditExpense={(expense) => {
+                setEditingExpense(expense)
+                setShowExpenseModal(true)
+              }}
+              onExpensesUpdated={loadBudgetAnalysis}
+            />
+          </div>
+
+          {/* 予算履歴 */}
+          <div>
+            <BudgetHistory />
+          </div>
         </div>
       </main>
 
