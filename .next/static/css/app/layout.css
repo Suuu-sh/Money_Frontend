@@ -912,6 +912,12 @@ video {
 .h-\[calc\(100vh-128px\)\] {
   height: calc(100vh - 128px);
 }
+.h-96 {
+  height: 24rem;
+}
+.h-\[calc\(100vh-200px\)\] {
+  height: calc(100vh - 200px);
+}
 .max-h-\[90vh\] {
   max-height: 90vh;
 }
@@ -1587,6 +1593,9 @@ video {
 }
 .pl-8 {
   padding-left: 2rem;
+}
+.pb-20 {
+  padding-bottom: 5rem;
 }
 .text-left {
   text-align: left;

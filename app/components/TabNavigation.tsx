@@ -13,20 +13,6 @@ export default function TabNavigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             <Link
-              href="/calendar"
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
-                pathname === '/calendar'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>カレンダー</span>
-            </Link>
-            
-            <Link
               href="/dashboard"
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                 pathname === '/dashboard'
@@ -101,21 +87,7 @@ export default function TabNavigation() {
 
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-        <div className="grid grid-cols-6 h-16">
-          <Link
-            href="/calendar"
-            className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
-              pathname === '/calendar'
-                ? 'text-primary-600 bg-primary-50'
-                : 'text-gray-500'
-            }`}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span className="text-xs">カレンダー</span>
-          </Link>
-          
+        <div className="grid grid-cols-5 h-16">
           <Link
             href="/dashboard"
             className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
