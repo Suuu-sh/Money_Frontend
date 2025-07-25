@@ -53,3 +53,60 @@ export interface DailySummary {
   totalExpense: number
   balance: number
 }
+
+export interface Budget {
+  id: number
+  year: number
+  month: number
+  amount: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface FixedExpense {
+  id: number
+  name: string
+  amount: number
+  categoryId?: number
+  category?: Category
+  description: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface BudgetAnalysis {
+  year: number
+  month: number
+  monthlyBudget: number
+  totalFixedExpenses: number
+  currentSpending: number
+  remainingBudget: number
+  budgetUtilization: number
+  daysRemaining: number
+  dailyAverage: number
+}
+
+export interface BudgetHistory {
+  year: number
+  month: number
+  budget: number
+  actualSpending: number
+  fixedExpenses: number
+  savingsRate: number
+  budgetExceeded: boolean
+}
+
+export interface BudgetRequest {
+  year: number
+  month: number
+  amount: number
+}
+
+export interface FixedExpenseRequest {
+  name: string
+  amount: number
+  categoryId?: number
+  description: string
+  isActive?: boolean
+}

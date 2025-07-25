@@ -1,5 +1,18 @@
 import axios from 'axios'
-import { Transaction, Category, Stats, MonthlySummary, CategorySummary, DailySummary } from '../types'
+import { 
+  Transaction, 
+  Category, 
+  Stats, 
+  MonthlySummary, 
+  CategorySummary, 
+  DailySummary,
+  Budget,
+  FixedExpense,
+  BudgetAnalysis,
+  BudgetHistory,
+  BudgetRequest,
+  FixedExpenseRequest
+} from '../types'
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://your-api-domain.com/api' 
@@ -110,5 +123,65 @@ export const fetchDailySummary = async (params?: {
   endDate?: string
 }): Promise<DailySummary[]> => {
   const response = await api.get('/summary/daily', { params })
+  return response.data
+}// Bu
+dget API
+export const fetchBudget = async (year: number, month: number): Promise<Budget> => {
+  const response = await api.get(`/budget/${year}/${month}`)
+  return response.data
+}
+
+export const createBudget = async (budget: BudgetRequest): Promise<Budget> => {
+  const response = await api.post('/budget', budget)
+  return response.data
+}
+
+export const updateBudget = async (id: number, budget: BudgetRequest): Promise<Budget> => {
+  const response = await api.put(`/budget/${id}`, budget)
+  return response.data
+}
+
+export const deleteBudget = async (id: number): Promise<void> => {
+  await api.delete(`/budget/${id}`)
+}
+
+// Fixed Expenses API
+export const fetchFixedExpenses = async (): Promise<FixedExpense[]> => {
+  const response = await api.get('/fixed-expenses')
+  return response.data
+}
+
+export const createFixedExpense = async (fixedExpense: FixedExpenseRequest): Promise<FixedExpense> => {
+  const response = await api.post('/fixed-expenses', fixedExpense)
+  return response.data
+}
+
+export const updateFixedExpense = async (id: number, fixedExpense: FixedExpenseRequest): Promise<FixedExpense> => {
+  const response = await api.put(`/fixed-expenses/${id}`, fixedExpense)
+  return response.data
+}
+
+export const deleteFixedExpense = async (id: number): Promise<void> => {
+  await api.delete(`/fixed-expenses/${id}`)
+}
+
+// Budget Analysis API
+export const fetchBudgetAnalysis = async (year: number, month: number): Promise<BudgetAnalysis> => {
+  const response = await api.get(`/budget/analysis/${year}/${month}`)
+  return response.data
+}
+
+export const fetchRemainingBudget = async (year: number, month: number): Promise<{
+  remainingBudget: number
+  monthlyBudget: number
+  fixedExpenses: number
+  currentSpending: number
+}> => {
+  const response = await api.get(`/budget/remaining/${year}/${month}`)
+  return response.data
+}
+
+export const fetchBudgetHistory = async (): Promise<BudgetHistory[]> => {
+  const response = await api.get('/budget/history')
   return response.data
 }

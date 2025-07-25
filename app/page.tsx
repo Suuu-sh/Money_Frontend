@@ -7,8 +7,7 @@ import {
   ArrowRightIcon,
   SparklesIcon,
   RocketLaunchIcon,
-  StarIcon,
-  TargetIcon
+  StarIcon
 } from '@heroicons/react/24/outline';
 
 export default function LandingPage() {
@@ -164,7 +163,7 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-8">
             <div className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium text-white backdrop-blur-sm mb-6">
-              <TargetIcon className="w-4 h-4 mr-2" />
+              <RocketLaunchIcon className="w-4 h-4 mr-2" />
               今すぐ始めよう
             </div>
           </div>
