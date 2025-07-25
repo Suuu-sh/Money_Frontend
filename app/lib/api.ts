@@ -124,8 +124,9 @@ export const fetchDailySummary = async (params?: {
 }): Promise<DailySummary[]> => {
   const response = await api.get('/summary/daily', { params })
   return response.data
-}// Bu
-dget API
+}
+
+// Budget API
 export const fetchBudget = async (year: number, month: number): Promise<Budget> => {
   const response = await api.get(`/budget/${year}/${month}`)
   return response.data
