@@ -95,11 +95,11 @@ export default function DashboardPage() {
       
       {/* Desktop Layout */}
       <main className="hidden md:block px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 h-[calc(100vh-200px)]">
-          {/* Left: Compact Calendar */}
-          <div className="lg:col-span-1 flex flex-col gap-4">
-            {/* Small Calendar */}
-            <div className="h-80">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left: Calendar and Day Transactions */}
+          <div className="flex flex-col gap-4">
+            {/* Calendar */}
+            <div className="h-[calc(50vh-100px)]">
               <Calendar 
                 transactions={transactions}
                 onDateClick={handleDateClick}
@@ -121,7 +121,7 @@ export default function DashboardPage() {
           </div>
           
           {/* Right: Dashboard Stats and Overview */}
-          <div className="lg:col-span-4 overflow-y-auto">
+          <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
             <Dashboard 
               transactions={transactions}
               categories={categories}
