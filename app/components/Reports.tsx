@@ -168,7 +168,9 @@ export default function Reports() {
                       cy="50%"
                       innerRadius={40}
                       outerRadius={80}
-                      paddingAngle={2}
+                      paddingAngle={0}
+                      startAngle={90}
+                      endAngle={450}
                       dataKey="value"
                     >
                       {expensePieData.map((entry, index) => (
@@ -225,7 +227,9 @@ export default function Reports() {
                       cy="50%"
                       innerRadius={40}
                       outerRadius={80}
-                      paddingAngle={2}
+                      paddingAngle={0}
+                      startAngle={90}
+                      endAngle={450}
                       dataKey="value"
                     >
                       {incomePieData.map((entry, index) => (

@@ -31,25 +31,25 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
     <div className="card">
       <div className="space-y-4">
         {transactions.map((transaction) => (
-          <div key={transaction.id} className="flex items-center justify-between border-b border-gray-100 last:border-b-0 pb-4 last:pb-0">
-            <div className="flex items-center space-x-3">
+          <div key={transaction.id} className="flex items-center justify-between border-b border-gray-100 last:border-b-0 pb-3 last:pb-0 min-w-0">
+            <div className="flex items-center space-x-3 min-w-0 flex-1">
               <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0"
                 style={{ backgroundColor: transaction.category.color }}
               >
                 <span>{transaction.category.icon}</span>
               </div>
-              <div>
-                <h4 className="font-medium text-gray-900">
+              <div className="min-w-0 flex-1">
+                <h4 className="font-medium text-gray-900 text-sm truncate">
                   {transaction.description || transaction.category.name}
                 </h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs text-gray-600 truncate">
                   {transaction.category.name} • {format(new Date(transaction.date), 'MM/dd')}
                 </p>
               </div>
             </div>
-            <div className="text-right">
-              <div className={`font-semibold ${
+            <div className="text-right flex-shrink-0 ml-2">
+              <div className={`font-semibold text-sm whitespace-nowrap ${
                 transaction.type === 'income' ? 'text-income-600' : 'text-expense-600'
               }`}>
                 {formatAmount(transaction.amount, transaction.type)}

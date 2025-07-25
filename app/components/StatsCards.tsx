@@ -62,16 +62,16 @@ export default function StatsCards({ stats }: StatsCardsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {cards.map((card, index) => (
         <div key={index} className="card">
-          <div className="flex items-center">
-            <div className={`${card.color} rounded-lg p-3 mr-4 text-white`}>
+          <div className="flex items-center min-w-0">
+            <div className={`${card.color} rounded-lg p-2 mr-3 text-white flex-shrink-0`}>
               {card.icon}
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">{card.title}</p>
-              <p className={`text-xl font-bold ${card.textColor}`}>{card.value}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium text-gray-600 whitespace-nowrap truncate">{card.title}</p>
+              <p className={`text-lg font-bold ${card.textColor} whitespace-nowrap truncate`}>{card.value}</p>
             </div>
           </div>
         </div>
