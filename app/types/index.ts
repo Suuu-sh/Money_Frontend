@@ -110,3 +110,37 @@ export interface FixedExpenseRequest {
   description: string
   isActive?: boolean
 }
+
+export interface CategoryBudget {
+  id: number
+  categoryId: number
+  category: Category
+  year: number
+  month: number
+  amount: number
+  spent: number
+  remaining: number
+  utilizationRate: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CategoryBudgetRequest {
+  categoryId: number
+  year: number
+  month: number
+  amount: number
+}
+
+export interface CategoryBudgetAnalysis {
+  categoryId: number
+  categoryName: string
+  categoryColor: string
+  categoryIcon: string
+  budgetAmount: number
+  spentAmount: number
+  remainingAmount: number
+  utilizationRate: number
+  isOverBudget: boolean
+  transactionCount: number
+}

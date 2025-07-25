@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { BudgetAnalysis, FixedExpense, Category } from '../types'
+import { BudgetAnalysis, FixedExpense, Category, CategoryBudget } from '../types'
 import { fetchBudgetAnalysis, fetchCategories } from '../lib/api'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
@@ -14,6 +14,9 @@ import BudgetSettings from '../components/budget/BudgetSettings'
 import FixedExpensesList from '../components/budget/FixedExpensesList'
 import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 import BudgetHistory from '../components/budget/BudgetHistory'
+import CategoryBudgetOverview from '../components/budget/CategoryBudgetOverview'
+import CategoryBudgetList from '../components/budget/CategoryBudgetList'
+import CategoryBudgetModal from '../components/budget/CategoryBudgetModal'
 import { CurrencyDollarIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
 
 export default function BudgetPage() {
@@ -24,6 +27,8 @@ export default function BudgetPage() {
   const [showExpenseModal, setShowExpenseModal] = useState(false)
   const [editingExpense, setEditingExpense] = useState<FixedExpense | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
+  const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
 
   useEffect(() => {
     // Check if user is authenticated
@@ -118,8 +123,8 @@ export default function BudgetPage() {
           <BudgetAlerts analysis={analysis} />
         </div>
 
-        {/* メインコンテンツ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* 全体予算セクション */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* 左カラム: 予算概要 */}
           <div className="lg:col-span-1">
             <BudgetOverview />
@@ -158,6 +163,27 @@ export default function BudgetPage() {
           </div>
         </div>
 
+        {/* カテゴリ別予算セクション */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* カテゴリ別予算概要 */}
+          <div>
+            <CategoryBudgetOverview />
+          </div>
+
+          {/* カテゴリ別予算リスト */}
+          <div>
+            <CategoryBudgetList
+              categories={categories}
+              onAddBudget={() => setShowCategoryBudgetModal(true)}
+              onEditBudget={(budget) => {
+                setEditingCategoryBudget(budget)
+                setShowCategoryBudgetModal(true)
+              }}
+              onBudgetUpdated={loadBudgetAnalysis}
+            />
+          </div>
+        </div>
+
         {/* 予算履歴セクション */}
         <div className="mt-12">
           <BudgetHistory />
@@ -175,6 +201,21 @@ export default function BudgetPage() {
         onSaved={() => {
           loadBudgetAnalysis()
           setEditingExpense(null)
+        }}
+      />
+
+      {/* カテゴリ別予算モーダル */}
+      <CategoryBudgetModal
+        isOpen={showCategoryBudgetModal}
+        onClose={() => {
+          setShowCategoryBudgetModal(false)
+          setEditingCategoryBudget(null)
+        }}
+        categories={categories}
+        budget={editingCategoryBudget}
+        onSaved={() => {
+          loadBudgetAnalysis()
+          setEditingCategoryBudget(null)
         }}
       />
 

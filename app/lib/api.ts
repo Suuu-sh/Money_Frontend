@@ -11,7 +11,10 @@ import {
   BudgetAnalysis,
   BudgetHistory,
   BudgetRequest,
-  FixedExpenseRequest
+  FixedExpenseRequest,
+  CategoryBudget,
+  CategoryBudgetRequest,
+  CategoryBudgetAnalysis
 } from '../types'
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
@@ -184,5 +187,30 @@ export const fetchRemainingBudget = async (year: number, month: number): Promise
 
 export const fetchBudgetHistory = async (): Promise<BudgetHistory[]> => {
   const response = await api.get('/budget/history')
+  return response.data
+}
+
+// Category Budget API
+export const fetchCategoryBudgets = async (year: number, month: number): Promise<CategoryBudget[]> => {
+  const response = await api.get(`/category-budgets/${year}/${month}`)
+  return response.data
+}
+
+export const createCategoryBudget = async (categoryBudget: CategoryBudgetRequest): Promise<CategoryBudget> => {
+  const response = await api.post('/category-budgets', categoryBudget)
+  return response.data
+}
+
+export const updateCategoryBudget = async (id: number, categoryBudget: CategoryBudgetRequest): Promise<CategoryBudget> => {
+  const response = await api.put(`/category-budgets/${id}`, categoryBudget)
+  return response.data
+}
+
+export const deleteCategoryBudget = async (id: number): Promise<void> => {
+  await api.delete(`/category-budgets/${id}`)
+}
+
+export const fetchCategoryBudgetAnalysis = async (year: number, month: number): Promise<CategoryBudgetAnalysis[]> => {
+  const response = await api.get(`/category-budgets/analysis/${year}/${month}`)
   return response.data
 }
