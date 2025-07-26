@@ -32,9 +32,11 @@ export default function Dashboard({ transactions, categories, stats }: Dashboard
       
       const data = await fetchBudgetAnalysis(year, month)
       setBudgetAnalysis(data)
-    } catch (error) {
-      // 予算が設定されていない場合は無視
-      console.log('予算データが見つかりません')
+    } catch (error: any) {
+      console.error('予算データの取得に失敗しました:', error)
+      console.error('エラー詳細:', error.response?.data || error.message)
+      // 予算が設定されていない場合やエラーの場合はnullのまま
+      setBudgetAnalysis(null)
     }
   }
 
