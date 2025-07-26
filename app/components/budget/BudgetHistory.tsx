@@ -219,5 +219,5 @@ function BudgetHistory() {
     </div>
   )
 }
-e
-xport default BudgetHistory
+
+export default BudgetHistory
