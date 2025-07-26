@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { BudgetHistory as BudgetHistoryType } from '../../types'
 import { fetchBudgetHistory } from '../../lib/api'
-import { ChartBarIcon, TrendingUpIcon, TrendingDownIcon } from '@heroicons/react/24/outline'
+import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
 
 function BudgetHistory() {
   const [history, setHistory] = useState<BudgetHistoryType[]>([])
@@ -139,9 +139,9 @@ function BudgetHistory() {
                     </div>
                     <div className="flex items-center space-x-2">
                       {item.savingsRate >= 0 ? (
-                        <TrendingUpIcon className="w-4 h-4 text-green-500" />
+                        <ArrowUpIcon className="w-4 h-4 text-green-500" />
                       ) : (
-                        <TrendingDownIcon className="w-4 h-4 text-red-500" />
+                        <ArrowDownIcon className="w-4 h-4 text-red-500" />
                       )}
                       <span className={`text-sm font-medium ${
                         item.savingsRate >= 0 ? 'text-green-600' : 'text-red-600'
