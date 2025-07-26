@@ -21,9 +21,10 @@ export default function CategoryBudgetOverview() {
       const month = now.getMonth() + 1
 
       const data = await fetchCategoryBudgetAnalysis(year, month)
-      setAnalysis(data)
+      setAnalysis(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('カテゴリ別予算分析の取得に失敗しました:', error)
+      setAnalysis([])
     } finally {
       setLoading(false)
     }
