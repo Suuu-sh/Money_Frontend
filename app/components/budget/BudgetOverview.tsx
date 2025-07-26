@@ -25,9 +25,9 @@ export default function BudgetOverview() {
       const data = await fetchBudgetAnalysis(year, month)
       setAnalysis(data)
       
-      // 予算が0の場合はエラーメッセージを表示
+      // 月次予算もカテゴリ別予算も設定されていない場合のみエラーメッセージを表示
       if (data.monthlyBudget === 0) {
-        setError('今月の予算が設定されていません')
+        setError('予算が設定されていません')
       }
     } catch (error: any) {
       setError('予算データの取得に失敗しました')
