@@ -77,6 +77,7 @@ export default function CategoryBudgetModal({
         await createCategoryBudget(budgetData)
       }
 
+      // 成功時に即座にコールバックを実行
       onSaved()
       onClose()
     } catch (error: any) {

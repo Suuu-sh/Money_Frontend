@@ -23,6 +23,8 @@ export default function BudgetPage() {
   const router = useRouter()
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
+  const [categoryBudgets, setCategoryBudgets] = useState<CategoryBudget[]>([])
+  const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0)
   const [loading, setLoading] = useState(true)
   const [showExpenseModal, setShowExpenseModal] = useState(false)
   const [editingExpense, setEditingExpense] = useState<FixedExpense | null>(null)
@@ -77,6 +79,12 @@ export default function BudgetPage() {
     loadData()
   }
 
+  const handleBudgetUpdated = () => {
+    // カテゴリ予算が更新されたときに両方のコンポーネントを更新
+    setBudgetUpdateTrigger(prev => prev + 1)
+    loadBudgetAnalysis()
+  }
+
   const handleLogout = () => {
     localStorage.removeItem('token')
     router.push('/')
@@ -116,19 +124,20 @@ export default function BudgetPage() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
           {/* カテゴリ別予算概要 */}
           <div className="xl:col-span-1">
-            <CategoryBudgetOverview />
+            <CategoryBudgetOverview key={budgetUpdateTrigger} />
           </div>
 
           {/* カテゴリ別予算リスト */}
           <div className="xl:col-span-2">
             <CategoryBudgetList
+              key={budgetUpdateTrigger}
               categories={categories}
               onAddBudget={() => setShowCategoryBudgetModal(true)}
               onEditBudget={(budget) => {
                 setEditingCategoryBudget(budget)
                 setShowCategoryBudgetModal(true)
               }}
-              onBudgetUpdated={loadBudgetAnalysis}
+              onBudgetUpdated={handleBudgetUpdated}
             />
           </div>
         </div>
@@ -178,7 +187,7 @@ export default function BudgetPage() {
         categories={categories}
         budget={editingCategoryBudget}
         onSaved={() => {
-          loadBudgetAnalysis()
+          handleBudgetUpdated()
           setEditingCategoryBudget(null)
         }}
       />
