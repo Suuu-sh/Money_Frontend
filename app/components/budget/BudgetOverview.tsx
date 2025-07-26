@@ -24,12 +24,13 @@ export default function BudgetOverview() {
       
       const data = await fetchBudgetAnalysis(year, month)
       setAnalysis(data)
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+      
+      // 予算が0の場合はエラーメッセージを表示
+      if (data.monthlyBudget === 0) {
         setError('今月の予算が設定されていません')
-      } else {
-        setError('予算データの取得に失敗しました')
       }
+    } catch (error: any) {
+      setError('予算データの取得に失敗しました')
     } finally {
       setLoading(false)
     }
