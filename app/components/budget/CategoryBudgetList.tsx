@@ -117,24 +117,24 @@ export default function CategoryBudgetList({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {analysis.map((item) => {
             const budget = budgets.find(b => b.categoryId === item.categoryId)
             
             return (
-              <div key={item.categoryId} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
+              <div key={item.categoryId} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
                     <div 
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium"
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium"
                       style={{ backgroundColor: item.categoryColor }}
                     >
                       {item.categoryIcon}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{item.categoryName}</h3>
-                      <p className="text-sm text-gray-500">
-                        {item.transactionCount}件の取引
+                      <h3 className="font-medium text-gray-900 text-sm">{item.categoryName}</h3>
+                      <p className="text-xs text-gray-500">
+                        {item.transactionCount}件
                       </p>
                     </div>
                   </div>
@@ -161,20 +161,20 @@ export default function CategoryBudgetList({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-3 gap-2 mb-3">
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">予算</p>
-                    <p className="font-semibold text-gray-900">{formatCurrency(item.budgetAmount)}</p>
+                    <p className="font-medium text-gray-900 text-sm">{formatCurrency(item.budgetAmount)}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">使用済み</p>
-                    <p className={`font-semibold ${item.isOverBudget ? 'text-red-600' : 'text-orange-600'}`}>
+                    <p className={`font-medium text-sm ${item.isOverBudget ? 'text-red-600' : 'text-orange-600'}`}>
                       {formatCurrency(item.spentAmount)}
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">残り</p>
-                    <p className={`font-semibold ${item.remainingAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    <p className={`font-medium text-sm ${item.remainingAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
                       {formatCurrency(item.remainingAmount)}
                     </p>
                   </div>
