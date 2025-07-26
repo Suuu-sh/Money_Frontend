@@ -38,10 +38,12 @@ export default function CategoryBudgetList({
         fetchCategoryBudgetAnalysis(year, month)
       ])
 
-      setBudgets(budgetsData)
-      setAnalysis(analysisData)
+      setBudgets(Array.isArray(budgetsData) ? budgetsData : [])
+      setAnalysis(Array.isArray(analysisData) ? analysisData : [])
     } catch (error) {
       console.error('カテゴリ別予算データの取得に失敗しました:', error)
+      setBudgets([])
+      setAnalysis([])
     } finally {
       setLoading(false)
     }
