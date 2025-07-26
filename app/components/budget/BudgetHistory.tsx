@@ -5,7 +5,7 @@ import { BudgetHistory as BudgetHistoryType } from '../../types'
 import { fetchBudgetHistory } from '../../lib/api'
 import { ChartBarIcon, TrendingUpIcon, TrendingDownIcon } from '@heroicons/react/24/outline'
 
-export default function BudgetHistory() {
+function BudgetHistory() {
   const [history, setHistory] = useState<BudgetHistoryType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -219,3 +219,5 @@ export default function BudgetHistory() {
     </div>
   )
 }
+e
+xport default BudgetHistory
