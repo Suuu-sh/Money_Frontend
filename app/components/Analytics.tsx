@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CategorySummary } from '../types'
-import { fetchCategorySummary } from '../lib/api'
+import { CategorySummary, FixedExpense } from '../types'
+import { fetchCategorySummary, fetchFixedExpenses } from '../lib/api'
 import { ChartBarIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
 
 export default function Analytics() {
   const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
   const [incomeSummary, setIncomeSummary] = useState<CategorySummary[]>([])
+  const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,12 +18,14 @@ export default function Analytics() {
   const loadData = async () => {
     try {
       setLoading(true)
-      const [expenseData, incomeData] = await Promise.all([
+      const [expenseData, incomeData, fixedExpensesData] = await Promise.all([
         fetchCategorySummary({ type: 'expense' }),
-        fetchCategorySummary({ type: 'income' })
+        fetchCategorySummary({ type: 'income' }),
+        fetchFixedExpenses()
       ])
       setExpenseSummary(expenseData)
       setIncomeSummary(incomeData)
+      setFixedExpenses(Array.isArray(fixedExpensesData) ? fixedExpensesData : [])
     } catch (error) {
       console.error('分析データ取得エラー:', error)
     } finally {
@@ -45,7 +48,23 @@ export default function Analytics() {
     )
   }
 
-  const totalExpense = expenseSummary.reduce((sum, item) => sum + item.totalAmount, 0)
+  // 固定費をカテゴリ別に集計
+  const fixedExpensesByCategory = fixedExpenses
+    .filter(expense => expense.isActive)
+    .reduce((acc, expense) => {
+      if (expense.categoryId) {
+        acc[expense.categoryId] = (acc[expense.categoryId] || 0) + expense.amount
+      }
+      return acc
+    }, {} as Record<number, number>)
+
+  // 支出サマリーに固定費を追加
+  const expenseSummaryWithFixed = expenseSummary.map(item => ({
+    ...item,
+    totalAmount: item.totalAmount + (fixedExpensesByCategory[item.categoryId] || 0)
+  }))
+
+  const totalExpense = expenseSummaryWithFixed.reduce((sum, item) => sum + item.totalAmount, 0)
   const totalIncome = incomeSummary.reduce((sum, item) => sum + item.totalAmount, 0)
 
   return (
@@ -62,11 +81,11 @@ export default function Analytics() {
             <CurrencyDollarIcon className="w-5 h-5 mr-2 text-red-500" />
             支出カテゴリ別
           </h3>
-          {expenseSummary.length === 0 ? (
+          {expenseSummaryWithFixed.length === 0 ? (
             <p className="text-gray-500 text-center py-8">支出データがありません</p>
           ) : (
             <div className="space-y-4">
-              {expenseSummary.map((item) => (
+              {expenseSummaryWithFixed.map((item) => (
                 <div key={item.categoryId} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
