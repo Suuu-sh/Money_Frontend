@@ -247,10 +247,9 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div 
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white"
+                    className="w-8 h-8 rounded-full"
                     style={{ backgroundColor: category.color }}
                   >
-                    <span>{category.icon}</span>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">{category.name}</h4>
@@ -283,10 +282,9 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div 
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white"
+                    className="w-8 h-8 rounded-full"
                     style={{ backgroundColor: category.color }}
                   >
-                    <span>{category.icon}</span>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">{category.name}</h4>
