@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CategoryBudgetAnalysis } from '../../types'
-import { fetchCategoryBudgetAnalysis } from '../../lib/api'
+import { CategoryBudgetAnalysis, FixedExpense } from '../../types'
+import { fetchCategoryBudgetAnalysis, fetchFixedExpenses } from '../../lib/api'
 import { ChartBarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function CategoryBudgetOverview() {
   const [analysis, setAnalysis] = useState<CategoryBudgetAnalysis[]>([])
+  const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -20,11 +21,17 @@ export default function CategoryBudgetOverview() {
       const year = now.getFullYear()
       const month = now.getMonth() + 1
 
-      const data = await fetchCategoryBudgetAnalysis(year, month)
-      setAnalysis(Array.isArray(data) ? data : [])
+      const [analysisData, fixedExpensesData] = await Promise.all([
+        fetchCategoryBudgetAnalysis(year, month),
+        fetchFixedExpenses()
+      ])
+      
+      setAnalysis(Array.isArray(analysisData) ? analysisData : [])
+      setFixedExpenses(Array.isArray(fixedExpensesData) ? fixedExpensesData : [])
     } catch (error) {
       console.error('カテゴリ別予算分析の取得に失敗しました:', error)
       setAnalysis([])
+      setFixedExpenses([])
     } finally {
       setLoading(false)
     }
@@ -38,8 +45,12 @@ export default function CategoryBudgetOverview() {
   }
 
   const totalBudget = analysis.reduce((sum, item) => sum + item.budgetAmount, 0)
-  const totalSpent = analysis.reduce((sum, item) => sum + item.spentAmount, 0)
-  const totalRemaining = analysis.reduce((sum, item) => sum + item.remainingAmount, 0)
+  const categorySpent = analysis.reduce((sum, item) => sum + item.spentAmount, 0)
+  const fixedExpensesTotal = fixedExpenses
+    .filter(expense => expense.isActive)
+    .reduce((sum, expense) => sum + expense.amount, 0)
+  const totalSpent = categorySpent + fixedExpensesTotal
+  const totalRemaining = totalBudget - totalSpent
   const overBudgetCategories = analysis.filter(item => item.isOverBudget)
   const warningCategories = analysis.filter(item => !item.isOverBudget && item.utilizationRate >= 80)
 
