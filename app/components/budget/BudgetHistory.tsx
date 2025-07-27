@@ -128,7 +128,7 @@ function BudgetHistory() {
           <div className="space-y-3">
             {history.map((item, index) => {
               const budgetUtilization = item.budget > 0 ? (item.actualSpending / item.budget) * 100 : 0
-              const isCurrentMonth = index === history.length - 1
+              const isCurrentMonth = index === 0
               
               return (
                 <div
