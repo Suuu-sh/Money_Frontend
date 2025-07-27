@@ -107,11 +107,10 @@ export default function TransactionList({ transactions, categories, onTransactio
                     <td className="py-3 px-4">
                       <div className="flex justify-center">
                         <div 
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
+                          className="w-6 h-6 rounded-full"
                           style={{ backgroundColor: transaction.category.color }}
                           title={transaction.category.name}
                         >
-                          <span>{transaction.category.icon}</span>
                         </div>
                       </div>
                     </td>

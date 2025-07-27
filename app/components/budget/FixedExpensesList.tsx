@@ -133,11 +133,10 @@ export default function FixedExpensesList({
                   <div className="flex items-center space-x-3">
                     {expense.category && (
                       <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
+                        className="w-6 h-6 rounded-full"
                         style={{ backgroundColor: expense.category.color }}
                         title={expense.category.name}
                       >
-                        <span>{expense.category.icon}</span>
                       </div>
                     )}
                     <div>

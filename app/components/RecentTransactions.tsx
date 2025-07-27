@@ -34,18 +34,17 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
           <div key={transaction.id} className="flex items-center justify-between border-b border-gray-100 last:border-b-0 pb-3 last:pb-0 min-w-0">
             <div className="flex items-center space-x-3 min-w-0 flex-1">
               <div 
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0"
+                className="w-8 h-8 rounded-full flex-shrink-0"
                 style={{ backgroundColor: transaction.category.color }}
                 title={transaction.category.name}
               >
-                <span>{transaction.category.icon}</span>
               </div>
               <div className="min-w-0 flex-1">
                 <h4 className="font-medium text-gray-900 text-sm truncate">
                   {transaction.description || transaction.category.name}
                 </h4>
                 <p className="text-xs text-gray-600 truncate">
-                  {format(new Date(transaction.date), 'MM/dd')}
+                  {transaction.category.name} • {format(new Date(transaction.date), 'MM/dd')}
                 </p>
               </div>
             </div>

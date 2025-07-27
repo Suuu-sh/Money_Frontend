@@ -136,16 +136,18 @@ export default function DayTransactions({
               >
                 <div className="flex items-center space-x-3">
                   <div 
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white"
+                    className="w-10 h-10 rounded-full"
                     style={{ backgroundColor: transaction.category.color }}
                     title={transaction.category.name}
                   >
-                    <span>{transaction.category.icon}</span>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">
                       {transaction.description || transaction.category.name}
                     </h4>
+                    <p className="text-sm text-gray-600">
+                      {transaction.category.name}
+                    </p>
                   </div>
                 </div>
                 

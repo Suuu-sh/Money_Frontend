@@ -147,6 +147,7 @@ export default function CategoryBudgetList({
                     >
                     </div>
                     <div>
+                      <p className="text-sm font-medium text-gray-900">{item.categoryName}</p>
                       <p className="text-xs text-gray-500">
                         {item.transactionCount}件
                       </p>
