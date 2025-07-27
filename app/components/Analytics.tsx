@@ -69,14 +69,14 @@ export default function Analytics() {
               {expenseSummary.map((item) => (
                 <div key={item.categoryId} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
                       <div 
                         className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
                         style={{ backgroundColor: item.categoryColor }}
+                        title={item.categoryName}
                       >
                         <span>{item.categoryIcon}</span>
                       </div>
-                      <span className="font-medium">{item.categoryName}</span>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-expense-600">
@@ -114,14 +114,14 @@ export default function Analytics() {
               {incomeSummary.map((item) => (
                 <div key={item.categoryId} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
                       <div 
                         className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
                         style={{ backgroundColor: item.categoryColor }}
+                        title={item.categoryName}
                       >
                         <span>{item.categoryIcon}</span>
                       </div>
-                      <span className="font-medium">{item.categoryName}</span>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-income-600">

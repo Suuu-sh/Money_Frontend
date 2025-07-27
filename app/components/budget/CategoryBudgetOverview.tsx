@@ -180,10 +180,10 @@ export default function CategoryBudgetOverview() {
                     <div 
                       className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
                       style={{ backgroundColor: item.categoryColor }}
+                      title={item.categoryName}
                     >
                       {item.categoryIcon}
                     </div>
-                    <span className="text-sm text-gray-700 font-medium">{item.categoryName}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-16 bg-gray-200 rounded-full h-2">

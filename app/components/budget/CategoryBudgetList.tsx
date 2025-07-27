@@ -128,11 +128,11 @@ export default function CategoryBudgetList({
                     <div 
                       className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium"
                       style={{ backgroundColor: item.categoryColor }}
+                      title={item.categoryName}
                     >
                       {item.categoryIcon}
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-900 text-sm">{item.categoryName}</h3>
                       <p className="text-xs text-gray-500">
                         {item.transactionCount}件
                       </p>

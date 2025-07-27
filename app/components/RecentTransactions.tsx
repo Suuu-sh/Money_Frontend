@@ -36,6 +36,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
               <div 
                 className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0"
                 style={{ backgroundColor: transaction.category.color }}
+                title={transaction.category.name}
               >
                 <span>{transaction.category.icon}</span>
               </div>
@@ -44,7 +45,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
                   {transaction.description || transaction.category.name}
                 </h4>
                 <p className="text-xs text-gray-600 truncate">
-                  {transaction.category.name} • {format(new Date(transaction.date), 'MM/dd')}
+                  {format(new Date(transaction.date), 'MM/dd')}
                 </p>
               </div>
             </div>

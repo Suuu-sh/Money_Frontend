@@ -105,14 +105,14 @@ export default function TransactionList({ transactions, categories, onTransactio
                       {format(new Date(transaction.date), 'yyyy/MM/dd')}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex justify-center">
                         <div 
                           className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
                           style={{ backgroundColor: transaction.category.color }}
+                          title={transaction.category.name}
                         >
                           <span>{transaction.category.icon}</span>
                         </div>
-                        <span className="text-sm text-gray-900">{transaction.category.name}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-900">
