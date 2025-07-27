@@ -111,27 +111,16 @@ export default function DashboardPage() {
       {/* Desktop Layout */}
       <main className="hidden md:block px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left: Calendar and Day Transactions */}
-          <div className="flex flex-col gap-4">
+          {/* Left: Calendar */}
+          <div className="flex flex-col">
             {/* Calendar - Full visibility */}
-            <div className="h-[calc(65vh-60px)] min-h-[520px]">
+            <div className="h-[calc(100vh-200px)] min-h-[600px]">
               <Calendar 
                 transactions={transactions}
                 onDateClick={handleDateClick}
                 selectedDate={selectedDate}
                 onAddTransaction={handleAddTransactionForDate}
                 onMonthChange={handleMonthChange}
-              />
-            </div>
-            
-            {/* Day Transactions */}
-            <div className="flex-1">
-              <DayTransactions 
-                selectedDate={selectedDate}
-                transactions={transactions}
-                categories={categories}
-                onTransactionUpdated={handleTransactionUpdated}
-                onAddTransaction={handleAddTransactionForDate}
               />
             </div>
           </div>
@@ -142,6 +131,9 @@ export default function DashboardPage() {
               transactions={transactions}
               categories={categories}
               stats={stats}
+              selectedDate={selectedDate}
+              onTransactionUpdated={handleTransactionUpdated}
+              onAddTransaction={handleAddTransactionForDate}
             />
           </div>
         </div>
@@ -155,6 +147,9 @@ export default function DashboardPage() {
             transactions={transactions}
             categories={categories}
             stats={stats}
+            selectedDate={selectedDate}
+            onTransactionUpdated={handleTransactionUpdated}
+            onAddTransaction={handleAddTransactionForDate}
           />
           
           {/* Compact Calendar */}
@@ -167,15 +162,6 @@ export default function DashboardPage() {
               onMonthChange={handleMonthChange}
             />
           </div>
-          
-          {/* Day Transactions */}
-          <DayTransactions 
-            selectedDate={selectedDate}
-            transactions={transactions}
-            categories={categories}
-            onTransactionUpdated={handleTransactionUpdated}
-            onAddTransaction={handleAddTransactionForDate}
-          />
         </div>
       </main>
 

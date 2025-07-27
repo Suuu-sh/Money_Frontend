@@ -3,6 +3,7 @@
 import { Transaction, Category, Stats } from '../types'
 import StatsCards from './StatsCards'
 import MonthlyChart from './MonthlyChart'
+import DayTransactions from './DayTransactions'
 import BudgetOverview from './budget/BudgetOverview'
 import BudgetAlerts from './budget/BudgetAlerts'
 import { useState, useEffect } from 'react'
@@ -13,9 +14,12 @@ interface DashboardProps {
   transactions: Transaction[]
   categories: Category[]
   stats: Stats | null
+  selectedDate?: Date | null
+  onTransactionUpdated?: () => void
+  onAddTransaction?: (date: Date) => void
 }
 
-export default function Dashboard({ transactions, categories, stats }: DashboardProps) {
+export default function Dashboard({ transactions, categories, stats, selectedDate, onTransactionUpdated, onAddTransaction }: DashboardProps) {
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
 
   useEffect(() => {
@@ -60,7 +64,16 @@ export default function Dashboard({ transactions, categories, stats }: Dashboard
         </div>
       </div>
 
-
+      {/* 取引履歴 */}
+      <div>
+        <DayTransactions 
+          selectedDate={selectedDate}
+          transactions={transactions}
+          categories={categories}
+          onTransactionUpdated={onTransactionUpdated}
+          onAddTransaction={onAddTransaction}
+        />
+      </div>
 
       {transactions.length === 0 && (
         <div className="text-center py-12">
