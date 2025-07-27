@@ -6,7 +6,8 @@ import { fetchBudgetHistory } from '../../lib/api'
 import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
 
 function BudgetHistory() {
-  const [history, setHistory] = useState<BudgetHistoryType[]>([])
+  const [allHistory, setAllHistory] = useState<BudgetHistoryType[]>([])
+  const [selectedMonths, setSelectedMonths] = useState(3)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -18,13 +19,16 @@ function BudgetHistory() {
     try {
       setLoading(true)
       const data = await fetchBudgetHistory()
-      setHistory(data)
+      setAllHistory(data)
     } catch (error) {
       setError('予算履歴の取得に失敗しました')
     } finally {
       setLoading(false)
     }
   }
+
+  // 選択された月数分の履歴を取得
+  const history = allHistory.slice(-selectedMonths)
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
@@ -72,9 +76,21 @@ function BudgetHistory() {
 
   return (
     <div className="card">
-      <div className="flex items-center mb-6">
-        <ChartBarIcon className="w-6 h-6 mr-2 text-blue-500" />
-        <h2 className="text-xl font-semibold text-gray-900">予算履歴（過去6ヶ月）</h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <ChartBarIcon className="w-6 h-6 mr-2 text-blue-500" />
+          <h2 className="text-xl font-semibold text-gray-900">予算履歴</h2>
+        </div>
+        <select
+          value={selectedMonths}
+          onChange={(e) => setSelectedMonths(Number(e.target.value))}
+          className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value={1}>過去1ヶ月</option>
+          <option value={2}>過去2ヶ月</option>
+          <option value={3}>過去3ヶ月</option>
+          <option value={6}>過去6ヶ月</option>
+        </select>
       </div>
 
       {history.length === 0 ? (
