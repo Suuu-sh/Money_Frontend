@@ -152,7 +152,7 @@ export default function BudgetPage() {
                 setEditingExpense(expense)
                 setShowExpenseModal(true)
               }}
-              onExpensesUpdated={loadBudgetAnalysis}
+              onExpensesUpdated={handleBudgetUpdated}
             />
           </div>
 
@@ -172,7 +172,7 @@ export default function BudgetPage() {
         }}
         expense={editingExpense}
         onSaved={() => {
-          loadBudgetAnalysis()
+          handleBudgetUpdated()
           setEditingExpense(null)
         }}
       />
