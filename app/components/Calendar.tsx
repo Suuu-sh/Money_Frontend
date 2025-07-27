@@ -102,32 +102,32 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col md:h-full">
       {/* カレンダーヘッダー */}
-      <div className="bg-white border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 flex-shrink-0">
+      <div className="bg-white border-b border-gray-200 px-4 py-2 flex-shrink-0">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-3 sm:space-x-6">
+          <div className="flex items-center space-x-2">
             <button
               onClick={goToPreviousMonth}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900 touch-manipulation"
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900 touch-manipulation"
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-lg sm:text-2xl font-normal text-gray-900">
-              {format(currentMonth, 'yyyy年MM月')}
+            <h1 className="text-base font-medium text-gray-900 min-w-[100px] text-center">
+              {format(currentMonth, 'yyyy/MM')}
             </h1>
             <button
               onClick={goToNextMonth}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900 touch-manipulation"
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900 touch-manipulation"
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
           </div>
           <button
             onClick={goToToday}
-            className="border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-1.5 sm:py-2 px-2 sm:px-4 rounded-md transition-colors text-xs sm:text-sm touch-manipulation"
+            className="bg-primary-500 hover:bg-primary-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-xs touch-manipulation"
           >
             今日
           </button>
