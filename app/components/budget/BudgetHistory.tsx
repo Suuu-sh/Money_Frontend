@@ -27,8 +27,8 @@ function BudgetHistory() {
     }
   }
 
-  // 選択された月数分の履歴を取得
-  const history = allHistory.slice(-selectedMonths)
+  // 選択された月数分の履歴を取得（新しい順に並び替え）
+  const history = allHistory.slice(-selectedMonths).reverse()
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
