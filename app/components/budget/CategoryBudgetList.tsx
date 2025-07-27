@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Category, CategoryBudget, CategoryBudgetAnalysis } from '../../types'
-import { fetchCategoryBudgets, fetchCategoryBudgetAnalysis, deleteCategoryBudget } from '../../lib/api'
+import { Category, CategoryBudget, CategoryBudgetAnalysis, FixedExpense } from '../../types'
+import { fetchCategoryBudgets, fetchCategoryBudgetAnalysis, deleteCategoryBudget, fetchFixedExpenses } from '../../lib/api'
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 interface CategoryBudgetListProps {
@@ -20,6 +20,7 @@ export default function CategoryBudgetList({
 }: CategoryBudgetListProps) {
   const [budgets, setBudgets] = useState<CategoryBudget[]>([])
   const [analysis, setAnalysis] = useState<CategoryBudgetAnalysis[]>([])
+  const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -33,17 +34,20 @@ export default function CategoryBudgetList({
       const year = now.getFullYear()
       const month = now.getMonth() + 1
 
-      const [budgetsData, analysisData] = await Promise.all([
+      const [budgetsData, analysisData, fixedExpensesData] = await Promise.all([
         fetchCategoryBudgets(year, month),
-        fetchCategoryBudgetAnalysis(year, month)
+        fetchCategoryBudgetAnalysis(year, month),
+        fetchFixedExpenses()
       ])
 
       setBudgets(Array.isArray(budgetsData) ? budgetsData : [])
       setAnalysis(Array.isArray(analysisData) ? analysisData : [])
+      setFixedExpenses(Array.isArray(fixedExpensesData) ? fixedExpensesData : [])
     } catch (error) {
       console.error('カテゴリ別予算データの取得に失敗しました:', error)
       setBudgets([])
       setAnalysis([])
+      setFixedExpenses([])
     } finally {
       setLoading(false)
     }
@@ -121,6 +125,17 @@ export default function CategoryBudgetList({
           {analysis.map((item) => {
             const budget = budgets.find(b => b.categoryId === item.categoryId)
             
+            // このカテゴリの固定費合計を計算
+            const categoryFixedExpenses = fixedExpenses
+              .filter(expense => expense.isActive && expense.categoryId === item.categoryId)
+              .reduce((sum, expense) => sum + expense.amount, 0)
+            
+            // 固定費を含めた使用済み金額を計算
+            const totalSpentWithFixed = item.spentAmount + categoryFixedExpenses
+            const remainingWithFixed = item.budgetAmount - totalSpentWithFixed
+            const utilizationWithFixed = item.budgetAmount > 0 ? (totalSpentWithFixed / item.budgetAmount) * 100 : 0
+            const isOverBudgetWithFixed = totalSpentWithFixed > item.budgetAmount
+            
             return (
               <div key={item.categoryId} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors">
                 <div className="flex items-center justify-between mb-3">
@@ -168,14 +183,14 @@ export default function CategoryBudgetList({
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">使用済み</p>
-                    <p className={`font-medium text-sm ${item.isOverBudget ? 'text-red-600' : 'text-orange-600'}`}>
-                      {formatCurrency(item.spentAmount)}
+                    <p className={`font-medium text-sm ${isOverBudgetWithFixed ? 'text-red-600' : 'text-orange-600'}`}>
+                      {formatCurrency(totalSpentWithFixed)}
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">残り</p>
-                    <p className={`font-medium text-sm ${item.remainingAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {formatCurrency(item.remainingAmount)}
+                    <p className={`font-medium text-sm ${remainingWithFixed < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {formatCurrency(remainingWithFixed)}
                     </p>
                   </div>
                 </div>
@@ -184,19 +199,19 @@ export default function CategoryBudgetList({
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs text-gray-600">
                     <span>使用率</span>
-                    <span className={`font-medium ${item.isOverBudget ? 'text-red-600' : 'text-gray-700'}`}>
-                      {Math.round(item.utilizationRate)}%
+                    <span className={`font-medium ${isOverBudgetWithFixed ? 'text-red-600' : 'text-gray-700'}`}>
+                      {Math.round(utilizationWithFixed)}%
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div
-                      className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(item.utilizationRate, item.isOverBudget)}`}
-                      style={{ width: `${Math.min(item.utilizationRate, 100)}%` }}
+                      className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(utilizationWithFixed, isOverBudgetWithFixed)}`}
+                      style={{ width: `${Math.min(utilizationWithFixed, 100)}%` }}
                     />
                   </div>
-                  {item.isOverBudget && (
+                  {isOverBudgetWithFixed && (
                     <p className="text-xs text-red-600 font-medium">
-                      ⚠️ 予算を{formatCurrency(Math.abs(item.remainingAmount))}超過
+                      ⚠️ 予算を{formatCurrency(Math.abs(remainingWithFixed))}超過
                     </p>
                   )}
                 </div>
