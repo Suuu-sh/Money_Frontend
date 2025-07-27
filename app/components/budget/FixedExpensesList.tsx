@@ -7,7 +7,9 @@ import {
   PlusIcon, 
   PencilIcon, 
   TrashIcon, 
-  ExclamationTriangleIcon 
+  ExclamationTriangleIcon,
+  ArrowUpIcon,
+  ArrowDownIcon
 } from '@heroicons/react/24/outline'
 
 interface FixedExpensesListProps {
@@ -25,6 +27,7 @@ export default function FixedExpensesList({
   const [loading, setLoading] = useState(true)
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null)
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc') // デフォルトで金額の大きい順
 
   useEffect(() => {
     loadExpenses()
@@ -65,6 +68,20 @@ export default function FixedExpensesList({
       currency: 'JPY',
     }).format(amount)
   }
+
+  // ソート機能
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
+  }
+
+  // 金額でソートされた固定費リスト
+  const sortedExpenses = [...expenses].sort((a, b) => {
+    if (sortOrder === 'desc') {
+      return b.amount - a.amount // 金額の大きい順
+    } else {
+      return a.amount - b.amount // 金額の小さい順
+    }
+  })
 
   const totalAmount = expenses
     .filter(expense => expense.isActive)
@@ -107,6 +124,31 @@ export default function FixedExpensesList({
         </div>
       </div>
 
+      {/* ソートボタン */}
+      {expenses.length > 0 && (
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-sm text-gray-600">
+            金額順で表示中
+          </div>
+          <button
+            onClick={toggleSortOrder}
+            className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            {sortOrder === 'desc' ? (
+              <>
+                <ArrowDownIcon className="w-4 h-4 mr-1" />
+                高い順
+              </>
+            ) : (
+              <>
+                <ArrowUpIcon className="w-4 h-4 mr-1" />
+                安い順
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
       {/* 固定費リスト */}
       <div className="space-y-3">
         {expenses.length === 0 ? (
@@ -121,7 +163,7 @@ export default function FixedExpensesList({
             </button>
           </div>
         ) : (
-          expenses.map((expense) => (
+          sortedExpenses.map((expense) => (
             <div
               key={expense.id}
               className={`border rounded-lg p-4 ${
