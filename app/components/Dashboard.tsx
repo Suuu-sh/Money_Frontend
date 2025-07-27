@@ -2,7 +2,6 @@
 
 import { Transaction, Category, Stats } from '../types'
 import StatsCards from './StatsCards'
-import RecentTransactions from './RecentTransactions'
 import MonthlyChart from './MonthlyChart'
 import BudgetOverview from './budget/BudgetOverview'
 import BudgetAlerts from './budget/BudgetAlerts'
@@ -18,7 +17,6 @@ interface DashboardProps {
 
 export default function Dashboard({ transactions, categories, stats }: DashboardProps) {
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
-  const recentTransactions = transactions.slice(0, 10)
 
   useEffect(() => {
     loadBudgetAnalysis()
@@ -62,10 +60,7 @@ export default function Dashboard({ transactions, categories, stats }: Dashboard
         </div>
       </div>
 
-      {/* 最近の取引 */}
-      <div>
-        <RecentTransactions transactions={recentTransactions} />
-      </div>
+
 
       {transactions.length === 0 && (
         <div className="text-center py-12">
