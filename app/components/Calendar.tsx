@@ -209,8 +209,10 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                     
                     {/* 取引がない場合のプレースホルダー */}
                     {dayData.count === 0 && (
-                      <div className="text-xs text-gray-300 text-center mt-2">
-                        +
+                      <div className="flex-1 flex items-center justify-center">
+                        <div className="text-lg text-gray-300 font-light">
+                          +
+                        </div>
                       </div>
                     )}
                   </div>
