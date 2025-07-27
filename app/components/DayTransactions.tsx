@@ -132,34 +132,34 @@ export default function DayTransactions({
             {dayTransactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-2 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   <div 
-                    className="w-10 h-10 rounded-full"
+                    className="w-6 h-6 rounded-full"
                     style={{ backgroundColor: transaction.category.color }}
                     title={transaction.category.name}
                   >
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">
+                    <h4 className="font-medium text-gray-900 text-sm">
                       {transaction.description || transaction.category.name}
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600">
                       {transaction.category.name}
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4">
-                  <div className={`font-semibold ${
+                <div className="flex items-center space-x-2">
+                  <div className={`font-medium text-sm ${
                     transaction.type === 'income' ? 'text-income-600' : 'text-expense-600'
                   }`}>
                     {formatAmount(transaction.amount, transaction.type)}
                   </div>
                   <button
                     onClick={() => handleDelete(transaction.id)}
-                    className="text-red-600 hover:text-red-800 text-sm"
+                    className="text-red-600 hover:text-red-800 text-xs"
                   >
                     削除
                   </button>
