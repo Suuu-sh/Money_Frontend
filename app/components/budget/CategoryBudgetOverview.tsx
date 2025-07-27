@@ -186,7 +186,7 @@ export default function CategoryBudgetOverview() {
               .slice(0, 5)
               .map((item, index) => (
                 <div key={item.categoryId} className="flex items-center justify-between py-2">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 flex-1">
                     <span className="text-xs font-bold text-gray-400 w-4">#{index + 1}</span>
                     <div 
                       className="w-6 h-6 rounded-full"
@@ -194,6 +194,7 @@ export default function CategoryBudgetOverview() {
                       title={item.categoryName}
                     >
                     </div>
+                    <span className="text-sm text-gray-700 font-medium truncate">{item.categoryName}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-16 bg-gray-200 rounded-full h-2">
