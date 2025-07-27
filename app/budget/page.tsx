@@ -147,6 +147,7 @@ export default function BudgetPage() {
           {/* 固定費管理 */}
           <div>
             <FixedExpensesList 
+              key={`fixed-expenses-${budgetUpdateTrigger}`}
               onAddExpense={() => setShowExpenseModal(true)}
               onEditExpense={(expense) => {
                 setEditingExpense(expense)
