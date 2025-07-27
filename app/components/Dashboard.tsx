@@ -58,21 +58,24 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
           <BudgetOverview />
         </div>
         
-        {/* 月別収支（コンパクト） */}
-        <div>
-          <MonthlyChart />
+        {/* 右側：月別収支と取引履歴 */}
+        <div className="space-y-4">
+          {/* 月別収支（コンパクト） */}
+          <div>
+            <MonthlyChart />
+          </div>
+          
+          {/* 取引履歴 */}
+          <div className="max-h-64 overflow-y-auto">
+            <DayTransactions 
+              selectedDate={selectedDate}
+              transactions={transactions}
+              categories={categories}
+              onTransactionUpdated={onTransactionUpdated}
+              onAddTransaction={onAddTransaction}
+            />
+          </div>
         </div>
-      </div>
-
-      {/* 取引履歴 */}
-      <div>
-        <DayTransactions 
-          selectedDate={selectedDate}
-          transactions={transactions}
-          categories={categories}
-          onTransactionUpdated={onTransactionUpdated}
-          onAddTransaction={onAddTransaction}
-        />
       </div>
 
       {transactions.length === 0 && (
