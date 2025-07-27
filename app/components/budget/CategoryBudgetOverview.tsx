@@ -80,7 +80,7 @@ export default function CategoryBudgetOverview() {
   const totalSpent = categorySpent
   const totalRemaining = totalBudget - totalSpent
   const overBudgetCategories = analysisWithFixedExpenses.filter(item => item.isOverBudget)
-  const warningCategories = analysisWithFixedExpenses.filter(item => !item.isOverBudget && item.utilizationRate >= 80)
+  const warningCategories: typeof analysisWithFixedExpenses = [] // 100%以下は正常なので警告なし
 
   if (loading) {
     return (
@@ -237,9 +237,7 @@ export default function CategoryBudgetOverview() {
                         className={`h-2 rounded-full transition-all duration-300 ${
                           item.isOverBudget 
                             ? 'bg-red-500' 
-                            : item.utilizationRate >= 80 
-                              ? 'bg-yellow-500' 
-                              : 'bg-green-500'
+                            : 'bg-green-500'
                         }`}
                         style={{ width: `${Math.min(item.utilizationRate, 100)}%` }}
                       />
