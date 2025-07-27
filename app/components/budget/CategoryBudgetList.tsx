@@ -74,7 +74,6 @@ export default function CategoryBudgetList({
 
   const getProgressColor = (utilizationRate: number, isOverBudget: boolean) => {
     if (isOverBudget) return 'bg-red-500'
-    if (utilizationRate >= 80) return 'bg-yellow-500'
     return 'bg-green-500'
   }
 
