@@ -12,12 +12,19 @@ interface AddTransactionModalProps {
 }
 
 export default function AddTransactionModal({ categories, onClose, onTransactionAdded, defaultDate }: AddTransactionModalProps) {
+  const getLocalDateString = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   const [formData, setFormData] = useState({
     type: 'expense' as 'income' | 'expense',
     amount: '',
     categoryId: '',
     description: '',
-    date: defaultDate ? defaultDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    date: defaultDate ? getLocalDateString(defaultDate) : getLocalDateString(new Date()),
   })
   const [loading, setLoading] = useState(false)
 
