@@ -146,7 +146,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
       </div>
 
       {/* カレンダーグリッド */}
-      <div className="grid grid-cols-7 md:flex-1">
+      <div className="grid grid-cols-7 grid-rows-6 md:flex-1 min-h-0">
         {calendarDays.map(({ date, isCurrentMonth }, index) => {
           const dayData = getDayBalance(date)
           const isSelected = selectedDate && isSameDay(date, selectedDate)
@@ -159,16 +159,13 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
               key={index}
               onClick={() => onDateClick(date)}
               className={`
-                border-r border-b border-gray-100 cursor-pointer transition-all hover:bg-gray-50 relative p-1 sm:p-2 touch-manipulation
+                border-r border-b border-gray-100 cursor-pointer transition-all hover:bg-gray-50 relative p-1 sm:p-2 touch-manipulation min-h-[60px] md:min-h-[80px]
                 ${isSelected ? 'bg-blue-50 ring-1 ring-blue-200' : ''}
                 ${isTodayDate ? 'bg-blue-50' : ''}
                 ${!isCurrentMonth ? 'bg-gray-50/50' : ''}
                 ${index % 7 === 6 ? 'border-r-0' : ''}
                 ${index >= 35 ? 'border-b-0' : ''}
               `}
-              style={{ 
-                minHeight: window.innerWidth < 768 ? '60px' : 'calc((100vh - 280px) / 6)'
-              }}
             >
               <div className="h-full flex flex-col">
                 {/* 日付 */}

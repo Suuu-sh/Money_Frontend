@@ -918,6 +918,12 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
+.min-h-0 {
+  min-height: 0px;
+}
+.min-h-\[60px\] {
+  min-height: 60px;
+}
 .w-1\.5 {
   width: 0.375rem;
 }
@@ -1051,6 +1057,9 @@ video {
 }
 .grid-cols-7 {
   grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.grid-rows-6 {
+  grid-template-rows: repeat(6, minmax(0, 1fr));
 }
 .flex-col {
   flex-direction: column;
@@ -2510,6 +2519,10 @@ video {
 
   .md\:h-full {
     height: 100%;
+  }
+
+  .md\:min-h-\[80px\] {
+    min-height: 80px;
   }
 
   .md\:flex-1 {
