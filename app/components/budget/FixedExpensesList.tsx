@@ -150,7 +150,7 @@ export default function FixedExpensesList({
       )}
 
       {/* 固定費リスト */}
-      <div className="space-y-3">
+      <div className="space-y-1.5">
         {expenses.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <div className="text-4xl mb-2">📋</div>
@@ -166,44 +166,46 @@ export default function FixedExpensesList({
           sortedExpenses.map((expense) => (
             <div
               key={expense.id}
-              className={`border rounded-lg p-4 ${
+              className={`border rounded-md p-2 ${
                 expense.isActive ? 'border-gray-200' : 'border-gray-100 bg-gray-50'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
                     {expense.category && (
                       <div
-                        className="w-6 h-6 rounded-full"
+                        className="w-4 h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: expense.category.color }}
                         title={expense.category.name}
                       >
                       </div>
                     )}
-                    <div>
-                      <h3 className={`font-medium ${
-                        expense.isActive ? 'text-gray-900' : 'text-gray-500'
-                      }`}>
-                        {expense.name}
-                      </h3>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center space-x-2">
+                        <h3 className={`text-sm font-medium truncate ${
+                          expense.isActive ? 'text-gray-900' : 'text-gray-500'
+                        }`}>
+                          {expense.name}
+                        </h3>
+                        {expense.category && (
+                          <span className="text-xs text-gray-400 flex-shrink-0">
+                            {expense.category.name}
+                          </span>
+                        )}
+                      </div>
                       {expense.description && (
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 truncate mt-0.5">
                           {expense.description}
-                        </p>
-                      )}
-                      {expense.category && (
-                        <p className="text-xs text-gray-400 mt-1">
-                          {expense.category.name}
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3 flex-shrink-0">
                   <div className="text-right">
-                    <div className={`font-semibold ${
+                    <div className={`text-sm font-semibold ${
                       expense.isActive ? 'text-gray-900' : 'text-gray-500'
                     }`}>
                       {formatAmount(expense.amount)}
@@ -213,27 +215,27 @@ export default function FixedExpensesList({
                     )}
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <button
                       onClick={() => onEditExpense?.(expense)}
                       className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
                       title="編集"
                     >
-                      <PencilIcon className="w-4 h-4" />
+                      <PencilIcon className="w-3.5 h-3.5" />
                     </button>
                     
                     {deleteConfirm === expense.id ? (
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1">
                         <button
                           onClick={() => handleDelete(expense.id)}
                           disabled={deleting === expense.id}
-                          className="text-xs bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
+                          className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded hover:bg-red-700 disabled:opacity-50"
                         >
-                          {deleting === expense.id ? '削除中...' : '削除'}
+                          {deleting === expense.id ? '削除中' : '削除'}
                         </button>
                         <button
                           onClick={() => setDeleteConfirm(null)}
-                          className="text-xs bg-gray-300 text-gray-700 px-2 py-1 rounded hover:bg-gray-400"
+                          className="text-xs bg-gray-300 text-gray-700 px-1.5 py-0.5 rounded hover:bg-gray-400"
                         >
                           キャンセル
                         </button>
@@ -244,7 +246,7 @@ export default function FixedExpensesList({
                         className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                         title="削除"
                       >
-                        <TrashIcon className="w-4 h-4" />
+                        <TrashIcon className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>

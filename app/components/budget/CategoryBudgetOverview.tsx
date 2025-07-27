@@ -177,46 +177,82 @@ export default function CategoryBudgetOverview() {
       )}
 
       {/* 使用率ランキング */}
-      {analysis.length > 0 && (
+      {(analysis.length > 0 || fixedExpensesTotal > 0) && (
         <div>
           <h3 className="font-medium text-gray-900 mb-3 text-sm">使用率ランキング</h3>
           <div className="space-y-2">
-            {analysis
-              .sort((a, b) => b.utilizationRate - a.utilizationRate)
-              .slice(0, 5)
-              .map((item, index) => (
+            {(() => {
+              // カテゴリ別予算分析データを準備
+              const categoryItems = analysis.map(item => ({
+                ...item,
+                type: 'category' as const
+              }))
+
+              // 固定費を仮想カテゴリとして追加（固定費がある場合のみ）
+              const fixedExpenseItems = fixedExpensesTotal > 0 ? [{
+                categoryId: 'fixed-expenses',
+                categoryName: '固定費',
+                categoryIcon: '🏠',
+                categoryColor: '#6B7280',
+                budgetAmount: fixedExpensesTotal, // 固定費は予算=実際の金額
+                spentAmount: fixedExpensesTotal,
+                remainingAmount: 0,
+                utilizationRate: 100, // 固定費は常に100%
+                isOverBudget: false,
+                type: 'fixed' as const
+              }] : []
+
+              // 全てのアイテムを結合してソート
+              const allItems = [...categoryItems, ...fixedExpenseItems]
+                .sort((a, b) => b.utilizationRate - a.utilizationRate)
+                .slice(0, 5)
+
+              return allItems.map((item, index) => (
                 <div key={item.categoryId} className="flex items-center justify-between py-2">
                   <div className="flex items-center space-x-2 flex-1">
                     <span className="text-xs font-bold text-gray-400 w-4">#{index + 1}</span>
                     <div 
-                      className="w-6 h-6 rounded-full"
+                      className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
                       style={{ backgroundColor: item.categoryColor }}
                       title={item.categoryName}
                     >
+                      {item.type === 'fixed' ? '🏠' : ''}
                     </div>
-                    <span className="text-sm text-gray-700 font-medium truncate">{item.categoryName}</span>
+                    <span className="text-sm text-gray-700 font-medium truncate">
+                      {item.categoryName}
+                      {item.type === 'fixed' && (
+                        <span className="text-xs text-gray-500 ml-1">(固定費)</span>
+                      )}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all duration-300 ${
-                          item.isOverBudget 
-                            ? 'bg-red-500' 
-                            : item.utilizationRate >= 80 
-                              ? 'bg-yellow-500' 
-                              : 'bg-green-500'
+                          item.type === 'fixed'
+                            ? 'bg-gray-500'
+                            : item.isOverBudget 
+                              ? 'bg-red-500' 
+                              : item.utilizationRate >= 80 
+                                ? 'bg-yellow-500' 
+                                : 'bg-green-500'
                         }`}
                         style={{ width: `${Math.min(item.utilizationRate, 100)}%` }}
                       />
                     </div>
                     <span className={`text-xs font-medium w-10 text-right ${
-                      item.isOverBudget ? 'text-red-600' : 'text-gray-600'
+                      item.type === 'fixed' 
+                        ? 'text-gray-600'
+                        : item.isOverBudget 
+                          ? 'text-red-600' 
+                          : 'text-gray-600'
                     }`}>
-                      {Math.round(item.utilizationRate)}%
+                      {item.type === 'fixed' ? '固定' : `${Math.round(item.utilizationRate)}%`}
                     </span>
                   </div>
                 </div>
-              ))}
+              ))
+            })()}
           </div>
         </div>
       )}
