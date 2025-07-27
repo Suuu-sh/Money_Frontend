@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { BudgetAnalysis, FixedExpense, Category, CategoryBudget } from '../types'
+import { BudgetAnalysis, FixedExpense, FixedTransaction, Category, CategoryBudget } from '../types'
 import { fetchBudgetAnalysis, fetchCategories } from '../lib/api'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
@@ -13,6 +13,8 @@ import BudgetAlerts from '../components/budget/BudgetAlerts'
 import BudgetSettings from '../components/budget/BudgetSettings'
 import FixedExpensesList from '../components/budget/FixedExpensesList'
 import FixedExpenseModal from '../components/budget/FixedExpenseModal'
+import FixedTransactionsList from '../components/budget/FixedTransactionsList'
+import FixedTransactionModal from '../components/budget/FixedTransactionModal'
 import BudgetHistory from '../components/budget/BudgetHistory'
 import CategoryBudgetOverview from '../components/budget/CategoryBudgetOverview'
 import CategoryBudgetList from '../components/budget/CategoryBudgetList'
@@ -28,6 +30,8 @@ export default function BudgetPage() {
   const [loading, setLoading] = useState(true)
   const [showExpenseModal, setShowExpenseModal] = useState(false)
   const [editingExpense, setEditingExpense] = useState<FixedExpense | null>(null)
+  const [showTransactionModal, setShowTransactionModal] = useState(false)
+  const [editingTransaction, setEditingTransaction] = useState<FixedTransaction | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
   const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
@@ -144,16 +148,16 @@ export default function BudgetPage() {
 
         {/* サブセクション */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* 固定費管理 */}
+          {/* 固定収支管理 */}
           <div>
-            <FixedExpensesList 
-              key={`fixed-expenses-${budgetUpdateTrigger}`}
-              onAddExpense={() => setShowExpenseModal(true)}
-              onEditExpense={(expense) => {
-                setEditingExpense(expense)
-                setShowExpenseModal(true)
+            <FixedTransactionsList 
+              key={`fixed-transactions-${budgetUpdateTrigger}`}
+              onAddTransaction={() => setShowTransactionModal(true)}
+              onEditTransaction={(transaction) => {
+                setEditingTransaction(transaction)
+                setShowTransactionModal(true)
               }}
-              onExpensesUpdated={handleBudgetUpdated}
+              onTransactionsUpdated={handleBudgetUpdated}
             />
           </div>
 
@@ -175,6 +179,20 @@ export default function BudgetPage() {
         onSaved={() => {
           handleBudgetUpdated()
           setEditingExpense(null)
+        }}
+      />
+
+      {/* 固定収支モーダル */}
+      <FixedTransactionModal
+        isOpen={showTransactionModal}
+        onClose={() => {
+          setShowTransactionModal(false)
+          setEditingTransaction(null)
+        }}
+        transaction={editingTransaction}
+        onSave={() => {
+          handleBudgetUpdated()
+          setEditingTransaction(null)
         }}
       />
 

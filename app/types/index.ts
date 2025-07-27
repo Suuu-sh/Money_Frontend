@@ -75,6 +75,19 @@ export interface FixedExpense {
   updatedAt: string
 }
 
+export interface FixedTransaction {
+  id: number
+  name: string
+  amount: number
+  type: 'income' | 'expense'
+  categoryId?: number
+  category?: Category
+  description: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
 export interface BudgetAnalysis {
   year: number
   month: number
@@ -106,6 +119,15 @@ export interface BudgetRequest {
 export interface FixedExpenseRequest {
   name: string
   amount: number
+  categoryId?: number
+  description: string
+  isActive?: boolean
+}
+
+export interface FixedTransactionRequest {
+  name: string
+  amount: number
+  type: 'income' | 'expense'
   categoryId?: number
   description: string
   isActive?: boolean
