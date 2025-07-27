@@ -86,8 +86,8 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
       calendarDays.push({ date, isCurrentMonth: true })
     })
     
-    // 次月の日付を追加（42日になるまで）
-    const remainingDays = 42 - calendarDays.length
+    // 次月の日付を追加（35日になるまで）
+    const remainingDays = 35 - calendarDays.length
     for (let i = 1; i <= remainingDays; i++) {
       const date = new Date(monthEnd)
       date.setDate(date.getDate() + i)
@@ -146,7 +146,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
       </div>
 
       {/* カレンダーグリッド */}
-      <div className="grid grid-cols-7 grid-rows-6 md:flex-1 min-h-0">
+      <div className="grid grid-cols-7 grid-rows-5 md:flex-1 min-h-0">
         {calendarDays.map(({ date, isCurrentMonth }, index) => {
           const dayData = getDayBalance(date)
           const isSelected = selectedDate && isSameDay(date, selectedDate)
