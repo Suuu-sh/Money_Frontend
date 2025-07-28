@@ -48,12 +48,14 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
 
   const goToPreviousMonth = () => {
     const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    console.log('Going to previous month:', newMonth)
     setCurrentMonth(newMonth)
     onMonthChange?.(newMonth)
   }
 
   const goToNextMonth = () => {
     const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    console.log('Going to next month:', newMonth)
     setCurrentMonth(newMonth)
     onMonthChange?.(newMonth)
   }
@@ -106,8 +108,13 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <button
-              onClick={goToPreviousMonth}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900 touch-manipulation"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                goToPreviousMonth()
+              }}
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900"
+              type="button"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -117,8 +124,13 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
               {format(currentMonth, 'yyyy/MM')}
             </h1>
             <button
-              onClick={goToNextMonth}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900 touch-manipulation"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                goToNextMonth()
+              }}
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900"
+              type="button"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
