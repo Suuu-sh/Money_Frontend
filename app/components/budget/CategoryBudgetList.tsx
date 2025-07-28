@@ -124,16 +124,11 @@ export default function CategoryBudgetList({
           {analysis.map((item) => {
             const budget = budgets.find(b => b.categoryId === item.categoryId)
             
-            // このカテゴリの固定費合計を計算
-            const categoryFixedExpenses = fixedExpenses
-              .filter(expense => expense.isActive && expense.categoryId === item.categoryId)
-              .reduce((sum, expense) => sum + expense.amount, 0)
-            
-            // 固定費を含めた使用済み金額を計算
-            const totalSpentWithFixed = item.spentAmount + categoryFixedExpenses
-            const remainingWithFixed = item.budgetAmount - totalSpentWithFixed
-            const utilizationWithFixed = item.budgetAmount > 0 ? (totalSpentWithFixed / item.budgetAmount) * 100 : 0
-            const isOverBudgetWithFixed = totalSpentWithFixed > item.budgetAmount
+            // 取引履歴からのみ使用済み金額を計算（固定費から生成された取引も含む）
+            const totalSpent = item.spentAmount
+            const remaining = item.budgetAmount - totalSpent
+            const utilization = item.budgetAmount > 0 ? (totalSpent / item.budgetAmount) * 100 : 0
+            const isOverBudget = totalSpent > item.budgetAmount
             
             return (
               <div key={item.categoryId} className="bg-gray-50 rounded-md p-2 hover:bg-gray-100 transition-colors">
@@ -182,14 +177,14 @@ export default function CategoryBudgetList({
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-0.5">使用済み</p>
-                    <p className={`font-medium text-xs ${isOverBudgetWithFixed ? 'text-red-600' : 'text-orange-600'}`}>
-                      {formatCurrency(totalSpentWithFixed)}
+                    <p className={`font-medium text-xs ${isOverBudget ? 'text-red-600' : 'text-orange-600'}`}>
+                      {formatCurrency(totalSpent)}
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-0.5">残り</p>
-                    <p className={`font-medium text-xs ${remainingWithFixed < 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {formatCurrency(remainingWithFixed)}
+                    <p className={`font-medium text-xs ${remaining < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {formatCurrency(remaining)}
                     </p>
                   </div>
                 </div>
@@ -198,19 +193,19 @@ export default function CategoryBudgetList({
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs text-gray-600">
                     <span>使用率</span>
-                    <span className={`font-medium ${isOverBudgetWithFixed ? 'text-red-600' : 'text-gray-700'}`}>
-                      {Math.round(utilizationWithFixed)}%
+                    <span className={`font-medium ${isOverBudget ? 'text-red-600' : 'text-gray-700'}`}>
+                      {Math.round(utilization)}%
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(utilizationWithFixed, isOverBudgetWithFixed)}`}
-                      style={{ width: `${Math.min(utilizationWithFixed, 100)}%` }}
+                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(utilization, isOverBudget)}`}
+                      style={{ width: `${Math.min(utilization, 100)}%` }}
                     />
                   </div>
-                  {isOverBudgetWithFixed && (
+                  {isOverBudget && (
                     <p className="text-xs text-red-600 font-medium">
-                      ⚠️ 予算を{formatCurrency(Math.abs(remainingWithFixed))}超過
+                      ⚠️ 予算を{formatCurrency(Math.abs(remaining))}超過
                     </p>
                   )}
                 </div>
