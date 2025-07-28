@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Transaction } from '../types'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns'
 
@@ -10,10 +10,24 @@ interface CalendarProps {
   selectedDate: Date | null
   onAddTransaction?: (date: Date) => void
   onMonthChange?: (date: Date) => void
+  currentMonth?: Date
 }
 
-export default function Calendar({ transactions, onDateClick, selectedDate, onAddTransaction, onMonthChange }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date())
+export default function Calendar({ transactions, onDateClick, selectedDate, onAddTransaction, onMonthChange, currentMonth: propCurrentMonth }: CalendarProps) {
+  const [currentMonth, setCurrentMonth] = useState(propCurrentMonth || new Date())
+
+  // 親から渡されるcurrentMonthプロパティが変更された時に内部状態を更新
+  useEffect(() => {
+    if (propCurrentMonth) {
+      console.log('Parent currentMonth changed to:', propCurrentMonth)
+      setCurrentMonth(propCurrentMonth)
+    }
+  }, [propCurrentMonth])
+
+  // currentMonthの変更を監視
+  useEffect(() => {
+    console.log('currentMonth state changed to:', currentMonth)
+  }, [currentMonth])
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
@@ -47,6 +61,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
   }
 
   const goToPreviousMonth = () => {
+    console.log('Current month before change:', currentMonth)
     const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
     console.log('Going to previous month:', newMonth)
     setCurrentMonth(newMonth)
@@ -54,6 +69,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
   }
 
   const goToNextMonth = () => {
+    console.log('Current month before change:', currentMonth)
     const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
     console.log('Going to next month:', newMonth)
     setCurrentMonth(newMonth)

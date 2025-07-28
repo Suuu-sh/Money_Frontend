@@ -121,6 +121,7 @@ export default function DashboardPage() {
                 selectedDate={selectedDate}
                 onAddTransaction={handleAddTransactionForDate}
                 onMonthChange={handleMonthChange}
+                currentMonth={currentMonth}
               />
             </div>
           </div>
@@ -160,6 +161,7 @@ export default function DashboardPage() {
               selectedDate={selectedDate}
               onAddTransaction={handleAddTransactionForDate}
               onMonthChange={handleMonthChange}
+              currentMonth={currentMonth}
             />
           </div>
         </div>
