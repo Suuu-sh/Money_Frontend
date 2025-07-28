@@ -136,75 +136,75 @@ export default function CategoryBudgetList({
             const isOverBudgetWithFixed = totalSpentWithFixed > item.budgetAmount
             
             return (
-              <div key={item.categoryId} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-2">
+              <div key={item.categoryId} className="bg-gray-50 rounded-md p-2 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1.5">
                     <div 
-                      className="w-8 h-8 rounded-full"
+                      className="w-5 h-5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: item.categoryColor }}
                       title={item.categoryName}
                     >
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{item.categoryName}</p>
+                    <div className="min-w-0">
+                      <p className="text-xs font-medium text-gray-900 truncate">{item.categoryName}</p>
                       <p className="text-xs text-gray-500">
                         {item.transactionCount}件
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1 flex-shrink-0">
                     {budget && (
                       <>
                         <button
                           onClick={() => onEditBudget(budget)}
-                          className="text-gray-400 hover:text-primary-600 p-2 rounded-lg hover:bg-white transition-colors"
+                          className="text-gray-400 hover:text-primary-600 p-1 rounded hover:bg-white transition-colors"
                           title="編集"
                         >
-                          <PencilIcon className="w-4 h-4" />
+                          <PencilIcon className="w-3 h-3" />
                         </button>
                         <button
                           onClick={() => handleDelete(budget.id)}
-                          className="text-gray-400 hover:text-red-600 p-2 rounded-lg hover:bg-white transition-colors"
+                          className="text-gray-400 hover:text-red-600 p-1 rounded hover:bg-white transition-colors"
                           title="削除"
                         >
-                          <TrashIcon className="w-4 h-4" />
+                          <TrashIcon className="w-3 h-3" />
                         </button>
                       </>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="grid grid-cols-3 gap-1 mb-2">
                   <div className="text-center">
-                    <p className="text-xs text-gray-500 mb-1">予算</p>
-                    <p className="font-medium text-gray-900 text-sm">{formatCurrency(item.budgetAmount)}</p>
+                    <p className="text-xs text-gray-500 mb-0.5">予算</p>
+                    <p className="font-medium text-gray-900 text-xs">{formatCurrency(item.budgetAmount)}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-500 mb-1">使用済み</p>
-                    <p className={`font-medium text-sm ${isOverBudgetWithFixed ? 'text-red-600' : 'text-orange-600'}`}>
+                    <p className="text-xs text-gray-500 mb-0.5">使用済み</p>
+                    <p className={`font-medium text-xs ${isOverBudgetWithFixed ? 'text-red-600' : 'text-orange-600'}`}>
                       {formatCurrency(totalSpentWithFixed)}
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-500 mb-1">残り</p>
-                    <p className={`font-medium text-sm ${remainingWithFixed < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    <p className="text-xs text-gray-500 mb-0.5">残り</p>
+                    <p className={`font-medium text-xs ${remainingWithFixed < 0 ? 'text-red-600' : 'text-green-600'}`}>
                       {formatCurrency(remainingWithFixed)}
                     </p>
                   </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <div className="flex justify-between text-xs text-gray-600">
                     <span>使用率</span>
                     <span className={`font-medium ${isOverBudgetWithFixed ? 'text-red-600' : 'text-gray-700'}`}>
                       {Math.round(utilizationWithFixed)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(utilizationWithFixed, isOverBudgetWithFixed)}`}
+                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(utilizationWithFixed, isOverBudgetWithFixed)}`}
                       style={{ width: `${Math.min(utilizationWithFixed, 100)}%` }}
                     />
                   </div>
