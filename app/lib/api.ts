@@ -12,6 +12,7 @@ import {
   BudgetHistory,
   BudgetRequest,
   FixedExpenseRequest,
+  FixedTransactionRequest,
   CategoryBudget,
   CategoryBudgetRequest,
   CategoryBudgetAnalysis
@@ -167,6 +168,17 @@ export const updateFixedExpense = async (id: number, fixedExpense: FixedExpenseR
 
 export const deleteFixedExpense = async (id: number): Promise<void> => {
   await api.delete(`/fixed-expenses/${id}`)
+}
+
+// Fixed Transactions API (新しい固定収支API)
+export const createFixedTransaction = async (fixedTransaction: FixedTransactionRequest): Promise<FixedExpense> => {
+  const response = await api.post('/fixed-expenses', fixedTransaction)
+  return response.data
+}
+
+export const updateFixedTransaction = async (id: number, fixedTransaction: FixedTransactionRequest): Promise<FixedExpense> => {
+  const response = await api.put(`/fixed-expenses/${id}`, fixedTransaction)
+  return response.data
 }
 
 // Budget Analysis API

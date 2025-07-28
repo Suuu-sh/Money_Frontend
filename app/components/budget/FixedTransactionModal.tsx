@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { FixedTransaction, Category, FixedTransactionRequest } from '../../types'
-import { fetchCategories, createFixedExpense, updateFixedExpense } from '../../lib/api'
+import { fetchCategories, createFixedTransaction, updateFixedTransaction } from '../../lib/api'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 interface FixedTransactionModalProps {
@@ -90,19 +90,20 @@ export default function FixedTransactionModal({
     try {
       setLoading(true)
       
-      // 既存のAPIを使用（後でバックエンドを拡張）
-      const requestData = {
+      // 新しい固定収支APIを使用
+      const requestData: FixedTransactionRequest = {
         name: formData.name,
         amount: formData.amount,
+        type: formData.type,
         categoryId: formData.categoryId,
         description: formData.description,
         isActive: formData.isActive
       }
 
       if (transaction) {
-        await updateFixedExpense(transaction.id, requestData)
+        await updateFixedTransaction(transaction.id, requestData)
       } else {
-        await createFixedExpense(requestData)
+        await createFixedTransaction(requestData)
       }
 
       onSave()
