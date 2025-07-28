@@ -6,13 +6,16 @@ import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import TransactionList from '../components/TransactionList'
 import AddTransactionModal from '../components/AddTransactionModal'
-import { Transaction, Category } from '../types'
-import { fetchTransactions, fetchCategories } from '../lib/api'
+import { Transaction, Category, CategorySummary } from '../types'
+import { fetchTransactions, fetchCategories, fetchCategorySummary } from '../lib/api'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
 export default function TransactionsPage() {
   const router = useRouter()
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
+  const [incomeSummary, setIncomeSummary] = useState<CategorySummary[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
@@ -29,12 +32,23 @@ export default function TransactionsPage() {
   const loadData = async () => {
     try {
       setLoading(true)
-      const [transactionsData, categoriesData] = await Promise.all([
+      
+      // 今月のデータを取得
+      const now = new Date()
+      const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
+      const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
+      
+      const [transactionsData, categoriesData, expenseData, incomeData] = await Promise.all([
         fetchTransactions({ limit: 100 }),
-        fetchCategories()
+        fetchCategories(),
+        fetchCategorySummary({ type: "expense", startDate, endDate }),
+        fetchCategorySummary({ type: "income", startDate, endDate })
       ])
+      
       setTransactions(transactionsData)
       setCategories(categoriesData)
+      setExpenseSummary(expenseData.filter((item) => item.totalAmount > 0))
+      setIncomeSummary(incomeData.filter((item) => item.totalAmount > 0))
     } catch (error) {
       console.error('データ取得エラー:', error)
       if (error instanceof Error && error.message.includes('401')) {
@@ -60,6 +74,63 @@ export default function TransactionsPage() {
     router.push('/')
   }
 
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat('ja-JP', {
+      style: 'currency',
+      currency: 'JPY',
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  // 円グラフ用のカラーパレット
+  const EXPENSE_COLORS = [
+    "#EF4444", "#F97316", "#EAB308", "#22C55E", "#3B82F6",
+    "#8B5CF6", "#EC4899", "#06B6D4", "#84CC16", "#6B7280",
+  ]
+
+  const INCOME_COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#6B7280"]
+
+  // 円グラフ用データ変換（価格の大きい順にソート）
+  const expensePieData = expenseSummary
+    .sort((a, b) => b.totalAmount - a.totalAmount)
+    .map((item, index) => ({
+      name: item.categoryName,
+      value: item.totalAmount,
+      color: EXPENSE_COLORS[index % EXPENSE_COLORS.length],
+      icon: item.categoryIcon,
+    }))
+
+  const incomePieData = incomeSummary
+    .sort((a, b) => b.totalAmount - a.totalAmount)
+    .map((item, index) => ({
+      name: item.categoryName,
+      value: item.totalAmount,
+      color: INCOME_COLORS[index % INCOME_COLORS.length],
+      icon: item.categoryIcon,
+    }))
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload
+      return (
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+          <p className="font-medium">{data.name}</p>
+          <p className="text-sm text-gray-600">
+            {formatAmount(data.value)} (
+            {(
+              (data.value /
+                (expensePieData.reduce((sum, item) => sum + item.value, 0) ||
+                  incomePieData.reduce((sum, item) => sum + item.value, 0))) *
+              100
+            ).toFixed(1)}
+            %)
+          </p>
+        </div>
+      )
+    }
+    return null
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -77,11 +148,175 @@ export default function TransactionsPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        <TransactionList 
-          transactions={transactions}
-          categories={categories}
-          onTransactionUpdated={handleTransactionUpdated}
-        />
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* レポート部分 - 支出内訳・収入内訳 */}
+          <div className="xl:col-span-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* 支出内訳 */}
+              <div className="card">
+                <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span>支出内訳</span>
+                </h3>
+
+                {expensePieData.length === 0 ? (
+                  <div className="text-center py-8">
+                    <svg
+                      className="w-8 h-8 text-gray-400 mx-auto mb-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
+                    </svg>
+                    <p className="text-gray-500 text-sm">支出データがありません</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="h-48">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={expensePieData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={30}
+                            outerRadius={60}
+                            paddingAngle={0}
+                            startAngle={90}
+                            endAngle={-270}
+                            dataKey="value"
+                            stroke="none"
+                          >
+                            {expensePieData.map((entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={entry.color}
+                                stroke="none"
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip content={<CustomTooltip />} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="space-y-1">
+                      {expensePieData.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between py-1"
+                        >
+                          <div className="flex items-center space-x-1.5">
+                            <div
+                              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: item.color }}
+                            ></div>
+                            <span className="text-xs font-medium text-gray-900 truncate">{item.name}</span>
+                          </div>
+                          <div className="text-xs text-gray-600 font-medium">
+                            {formatAmount(item.value)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 収入内訳 */}
+              <div className="card">
+                <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span>収入内訳</span>
+                </h3>
+
+                {incomePieData.length === 0 ? (
+                  <div className="text-center py-8">
+                    <svg
+                      className="w-8 h-8 text-gray-400 mx-auto mb-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
+                    </svg>
+                    <p className="text-gray-500 text-sm">収入データがありません</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="h-48">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={incomePieData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={30}
+                            outerRadius={60}
+                            paddingAngle={0}
+                            startAngle={90}
+                            endAngle={-270}
+                            dataKey="value"
+                            stroke="none"
+                          >
+                            {incomePieData.map((entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={entry.color}
+                                stroke="none"
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip content={<CustomTooltip />} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="space-y-1">
+                      {incomePieData.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between py-1"
+                        >
+                          <div className="flex items-center space-x-1.5">
+                            <div
+                              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: item.color }}
+                            ></div>
+                            <span className="text-xs font-medium text-gray-900 truncate">{item.name}</span>
+                          </div>
+                          <div className="text-xs text-gray-600 font-medium">
+                            {formatAmount(item.value)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 取引履歴部分 - 右側縦長 */}
+          <div className="xl:col-span-1">
+            <TransactionList 
+              transactions={transactions}
+              categories={categories}
+              onTransactionUpdated={handleTransactionUpdated}
+            />
+          </div>
+        </div>
       </main>
 
       {isAddModalOpen && (
