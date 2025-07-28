@@ -39,14 +39,9 @@ export default function FixedTransactionsList({
   const loadTransactions = async () => {
     try {
       setLoading(true)
-      // 既存のAPIを使用（後でバックエンドを拡張）
       const data = await fetchFixedExpenses()
-      // 仮のtypeフィールドを追加（実際のデータ構造に合わせて調整）
-      const transactionsWithType = data.map(item => ({
-        ...item,
-        type: 'expense' as const // 既存データは全て支出として扱う
-      }))
-      setTransactions(transactionsWithType)
+      // バックエンドから取得したtypeフィールドをそのまま使用
+      setTransactions(data)
     } catch (error) {
       console.error('固定収支データの取得に失敗しました:', error)
     } finally {
