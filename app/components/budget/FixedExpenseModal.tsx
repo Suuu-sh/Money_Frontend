@@ -23,7 +23,7 @@ export default function FixedExpenseModal({
   const [formData, setFormData] = useState<FixedExpenseRequest>({
     name: '',
     amount: 0,
-    categoryId: undefined,
+    categoryId: 0,
     description: '',
     isActive: true
   })
@@ -47,7 +47,7 @@ export default function FixedExpenseModal({
         setFormData({
           name: '',
           amount: 0,
-          categoryId: undefined,
+          categoryId: 0,
           description: '',
           isActive: true
         })
@@ -75,6 +75,7 @@ export default function FixedExpenseModal({
     const validationErrors = validateFixedExpenseForm({
       name: formData.name,
       amount: formData.amount,
+      categoryId: formData.categoryId,
       description: formData.description
     })
     
@@ -171,7 +172,7 @@ export default function FixedExpenseModal({
           {/* カテゴリ */}
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-              カテゴリ
+              カテゴリ <span className="text-red-500">*</span>
             </label>
             {loading ? (
               <div className="animate-pulse h-10 bg-gray-200 rounded"></div>
@@ -179,10 +180,11 @@ export default function FixedExpenseModal({
               <select
                 id="category"
                 value={formData.categoryId || ''}
-                onChange={(e) => handleInputChange('categoryId', e.target.value ? parseInt(e.target.value) : undefined)}
+                onChange={(e) => handleInputChange('categoryId', e.target.value ? parseInt(e.target.value) : 0)}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                required
               >
-                <option value="">カテゴリを選択（任意）</option>
+                <option value="">カテゴリを選択してください</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.icon} {category.name}

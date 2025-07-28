@@ -22,7 +22,7 @@ export default function FixedTransactionModal({
     name: '',
     amount: 0,
     type: 'expense',
-    categoryId: undefined,
+    categoryId: 0,
     description: '',
     isActive: true
   })
@@ -47,7 +47,7 @@ export default function FixedTransactionModal({
           name: '',
           amount: 0,
           type: 'expense',
-          categoryId: undefined,
+          categoryId: 0,
           description: '',
           isActive: true
         })
@@ -74,6 +74,10 @@ export default function FixedTransactionModal({
 
     if (formData.amount <= 0) {
       newErrors.amount = '金額は0より大きい値を入力してください'
+    }
+
+    if (!formData.categoryId) {
+      newErrors.categoryId = 'カテゴリの選択は必須です'
     }
 
     setErrors(newErrors)
@@ -147,7 +151,7 @@ export default function FixedTransactionModal({
                   name="type"
                   value="income"
                   checked={formData.type === 'income'}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as 'income' | 'expense', categoryId: undefined })}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value as 'income' | 'expense', categoryId: 0 })}
                   className="mr-2"
                 />
                 <span className="text-green-600">収入</span>
@@ -158,7 +162,7 @@ export default function FixedTransactionModal({
                   name="type"
                   value="expense"
                   checked={formData.type === 'expense'}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as 'income' | 'expense', categoryId: undefined })}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value as 'income' | 'expense', categoryId: 0 })}
                   className="mr-2"
                 />
                 <span className="text-red-600">支出</span>
@@ -208,20 +212,25 @@ export default function FixedTransactionModal({
           {/* カテゴリ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              カテゴリ
+              カテゴリ <span className="text-red-500">*</span>
             </label>
             <select
               value={formData.categoryId || ''}
-              onChange={(e) => setFormData({ ...formData, categoryId: e.target.value ? Number(e.target.value) : undefined })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setFormData({ ...formData, categoryId: e.target.value ? Number(e.target.value) : 0 })}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                errors.categoryId ? 'border-red-500' : 'border-gray-300'
+              }`}
             >
-              <option value="">カテゴリを選択</option>
+              <option value="">カテゴリを選択してください</option>
               {filteredCategories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.icon} {category.name}
                 </option>
               ))}
             </select>
+            {errors.categoryId && (
+              <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>
+            )}
           </div>
 
           {/* 説明 */}

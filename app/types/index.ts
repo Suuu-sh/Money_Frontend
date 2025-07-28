@@ -67,8 +67,8 @@ export interface FixedExpense {
   id: number
   name: string
   amount: number
-  categoryId?: number
-  category?: Category
+  categoryId: number
+  category: Category
   description: string
   isActive: boolean
   createdAt: string
@@ -80,8 +80,8 @@ export interface FixedTransaction {
   name: string
   amount: number
   type: 'income' | 'expense'
-  categoryId?: number
-  category?: Category
+  categoryId: number
+  category: Category
   description: string
   isActive: boolean
   createdAt: string
@@ -119,7 +119,7 @@ export interface BudgetRequest {
 export interface FixedExpenseRequest {
   name: string
   amount: number
-  categoryId?: number
+  categoryId: number
   description: string
   isActive?: boolean
 }
@@ -128,7 +128,7 @@ export interface FixedTransactionRequest {
   name: string
   amount: number
   type: 'income' | 'expense'
-  categoryId?: number
+  categoryId: number
   description: string
   isActive?: boolean
 }

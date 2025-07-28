@@ -78,9 +78,17 @@ export const validateBudgetForm = (data: {
   return errors
 }
 
+export const validateCategoryId = (categoryId: number): string | null => {
+  if (!categoryId || categoryId <= 0) {
+    return 'カテゴリを選択してください'
+  }
+  return null
+}
+
 export const validateFixedExpenseForm = (data: {
   name: string
   amount: number
+  categoryId: number
   description: string
 }): { [key: string]: string } => {
   const errors: { [key: string]: string } = {}
@@ -93,6 +101,11 @@ export const validateFixedExpenseForm = (data: {
   const amountError = validateFixedExpenseAmount(data.amount)
   if (amountError) {
     errors.amount = amountError
+  }
+  
+  const categoryError = validateCategoryId(data.categoryId)
+  if (categoryError) {
+    errors.categoryId = categoryError
   }
   
   const descriptionError = validateDescription(data.description)
