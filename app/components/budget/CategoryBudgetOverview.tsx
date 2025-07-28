@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CategoryBudgetAnalysis } from '../../types'
-import { fetchCategoryBudgetAnalysis } from '../../lib/api'
+import { CategoryBudgetAnalysis, FixedExpense } from '../../types'
+import { fetchCategoryBudgetAnalysis, fetchFixedExpenses } from '../../lib/api'
 import { ChartBarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function CategoryBudgetOverview() {
@@ -76,10 +76,38 @@ export default function CategoryBudgetOverview() {
 
   if (analysis.length === 0) {
     return (
-      <div className="card">
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">月間予算サマリー</h2>
         <div className="text-center py-8">
-          <ChartBarIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">カテゴリ別予算が設定されていません</p>
+          <div className="w-16 h-16 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
+            <ChartBarIcon className="w-8 h-8 text-blue-500" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">カテゴリ別予算を設定しましょう</h3>
+          <p className="text-gray-500 mb-4">
+            カテゴリごとに予算を設定することで、<br />
+            より詳細な支出管理ができます
+          </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0">
+                <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-medium text-blue-800 mb-1">予算設定のメリット</p>
+                <ul className="text-xs text-blue-700 space-y-1">
+                  <li>• カテゴリごとの支出状況を把握</li>
+                  <li>• 予算超過の早期発見</li>
+                  <li>• 計画的な家計管理</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">
+            右側の「予算を追加」ボタンから<br />
+            カテゴリ別予算を設定してください
+          </p>
         </div>
       </div>
     )
