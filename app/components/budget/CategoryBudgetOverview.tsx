@@ -204,55 +204,7 @@ export default function CategoryBudgetOverview() {
         </div>
       )}
 
-      {/* 使用率ランキング */}
-      {analysisWithFixedExpenses.length > 0 && (
-        <div>
-          <h3 className="font-medium text-gray-900 mb-3 text-sm">使用率ランキング</h3>
-          <div className="space-y-2">
-            {analysisWithFixedExpenses
-              .sort((a, b) => b.utilizationRate - a.utilizationRate)
-              .slice(0, 5)
-              .map((item, index) => (
-                <div key={item.categoryId} className="flex items-center justify-between py-2">
-                  <div className="flex items-center space-x-2 flex-1">
-                    <span className="text-xs font-bold text-gray-400 w-4">#{index + 1}</span>
-                    <div 
-                      className="w-6 h-6 rounded-full"
-                      style={{ backgroundColor: item.categoryColor }}
-                      title={item.categoryName}
-                    >
-                    </div>
-                    <span className="text-sm text-gray-700 font-medium truncate">
-                      {item.categoryName}
-                      {item.fixedExpenseAmount > 0 && (
-                        <span className="text-xs text-gray-500 ml-1">
-                          (固定費: {formatCurrency(item.fixedExpenseAmount)})
-                        </span>
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-16 bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          item.isOverBudget 
-                            ? 'bg-red-500' 
-                            : 'bg-green-500'
-                        }`}
-                        style={{ width: `${Math.min(item.utilizationRate, 100)}%` }}
-                      />
-                    </div>
-                    <span className={`text-xs font-medium w-10 text-right ${
-                      item.isOverBudget ? 'text-red-600' : 'text-gray-600'
-                    }`}>
-                      {Math.round(item.utilizationRate)}%
-                    </span>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
+
     </div>
   )
 }
