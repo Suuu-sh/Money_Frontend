@@ -6,9 +6,9 @@ import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import TransactionList from '../components/TransactionList'
 import AddTransactionModal from '../components/AddTransactionModal'
-import { Transaction, Category, CategorySummary } from '../types'
-import { fetchTransactions, fetchCategories, fetchCategorySummary } from '../lib/api'
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
+import { Transaction, Category, CategorySummary, MonthlySummary } from '../types'
+import { fetchTransactions, fetchCategories, fetchCategorySummary, fetchMonthlySummary } from '../lib/api'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts'
 
 export default function TransactionsPage() {
   const router = useRouter()
@@ -16,6 +16,7 @@ export default function TransactionsPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
   const [incomeSummary, setIncomeSummary] = useState<CategorySummary[]>([])
+  const [monthlySummary, setMonthlySummary] = useState<MonthlySummary[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
@@ -38,17 +39,19 @@ export default function TransactionsPage() {
       const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
       const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
       
-      const [transactionsData, categoriesData, expenseData, incomeData] = await Promise.all([
+      const [transactionsData, categoriesData, expenseData, incomeData, monthlyData] = await Promise.all([
         fetchTransactions({ limit: 100 }),
         fetchCategories(),
         fetchCategorySummary({ type: "expense", startDate, endDate }),
-        fetchCategorySummary({ type: "income", startDate, endDate })
+        fetchCategorySummary({ type: "income", startDate, endDate }),
+        fetchMonthlySummary(now.getFullYear())
       ])
       
       setTransactions(transactionsData)
       setCategories(categoriesData)
       setExpenseSummary(expenseData.filter((item) => item.totalAmount > 0))
       setIncomeSummary(incomeData.filter((item) => item.totalAmount > 0))
+      setMonthlySummary(monthlyData)
     } catch (error) {
       console.error('データ取得エラー:', error)
       if (error instanceof Error && error.message.includes('401')) {
@@ -149,8 +152,8 @@ export default function TransactionsPage() {
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* レポート部分 - 支出内訳・収入内訳 */}
-          <div className="xl:col-span-2">
+          {/* レポート部分 - 支出内訳・収入内訳・月別収支推移 */}
+          <div className="xl:col-span-2 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* 支出内訳 */}
               <div className="card">
@@ -304,6 +307,72 @@ export default function TransactionsPage() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* 月別収支推移 */}
+            <div className="card">
+              <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span>月別収支推移 ({new Date().getFullYear()}年)</span>
+              </h3>
+
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={monthlySummary.map((item) => ({
+                      month: `${item.month}月`,
+                      収入: item.totalIncome,
+                      支出: item.totalExpense,
+                      収支: item.balance,
+                    }))}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis
+                      tickFormatter={(value) => `¥${(value / 1000).toFixed(0)}K`}
+                    />
+                    <Tooltip
+                      formatter={(value: number) => [formatAmount(value), ""]}
+                      labelStyle={{ color: "#374151" }}
+                    />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="収入" 
+                      stroke="#10B981" 
+                      strokeWidth={2}
+                      dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="支出" 
+                      stroke="#EF4444" 
+                      strokeWidth={2}
+                      dot={{ fill: "#EF4444", strokeWidth: 2, r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="収支" 
+                      stroke="#3B82F6" 
+                      strokeWidth={2}
+                      dot={{ fill: "#3B82F6", strokeWidth: 2, r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
