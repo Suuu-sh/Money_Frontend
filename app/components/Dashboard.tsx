@@ -42,10 +42,33 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
     }
   }
 
+  // 現在表示されている取引から月別統計を計算
+  const calculateMonthlyStats = (): Stats => {
+    const income = transactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0)
+    
+    const expense = transactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0)
+    
+    return {
+      totalIncome: income,
+      totalExpense: expense,
+      currentBalance: income - expense,
+      thisMonthIncome: income,
+      thisMonthExpense: expense,
+      transactionCount: transactions.length
+    }
+  }
+
+  // 表示用の統計データ（月別データがある場合はそれを使用、なければ全体統計）
+  const displayStats = transactions.length > 0 ? calculateMonthlyStats() : stats
+
   return (
     <div className="space-y-8">
       <div>
-        {stats && <StatsCards stats={stats} />}
+        {displayStats && <StatsCards stats={displayStats} />}
       </div>
 
       {/* 予算アラート */}

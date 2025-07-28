@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CategoryBudgetAnalysis, FixedExpense } from '../../types'
-import { fetchCategoryBudgetAnalysis, fetchFixedExpenses } from '../../lib/api'
+import { CategoryBudgetAnalysis } from '../../types'
+import { fetchCategoryBudgetAnalysis } from '../../lib/api'
 import { ChartBarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function CategoryBudgetOverview() {
@@ -44,40 +44,21 @@ export default function CategoryBudgetOverview() {
     }).format(amount)
   }
 
-  // 各カテゴリに固定費を反映した分析データを作成
+  // 取引履歴からのみ分析データを作成（固定費から生成された取引も含む）
   const analysisWithFixedExpenses = analysis.map(item => {
-    // このカテゴリに属する固定費の合計を計算
-    const categoryFixedExpenses = fixedExpenses
-      .filter(expense => expense.isActive && expense.categoryId === item.categoryId)
-      .reduce((sum, expense) => sum + expense.amount, 0)
-    
-    // 固定費を含めた使用済み金額
-    const totalSpentWithFixed = item.spentAmount + categoryFixedExpenses
-    
-    // 固定費を含めた使用率を再計算
-    const utilizationRateWithFixed = item.budgetAmount > 0 
-      ? (totalSpentWithFixed / item.budgetAmount) * 100 
-      : 0
-    
-    // 固定費を含めた残り予算
-    const remainingAmountWithFixed = item.budgetAmount - totalSpentWithFixed
-    
     return {
       ...item,
-      spentAmount: totalSpentWithFixed,
-      remainingAmount: remainingAmountWithFixed,
-      utilizationRate: utilizationRateWithFixed,
-      isOverBudget: totalSpentWithFixed > item.budgetAmount,
-      fixedExpenseAmount: categoryFixedExpenses // 固定費の金額を追加
+      // 既にitem.spentAmountには固定費から生成された取引も含まれている
+      spentAmount: item.spentAmount,
+      remainingAmount: item.remainingAmount,
+      utilizationRate: item.utilizationRate,
+      isOverBudget: item.isOverBudget,
+      fixedExpenseAmount: 0 // 固定費は取引履歴に含まれているため0
     }
   })
 
   const totalBudget = analysisWithFixedExpenses.reduce((sum, item) => sum + item.budgetAmount, 0)
-  const categorySpent = analysisWithFixedExpenses.reduce((sum, item) => sum + item.spentAmount, 0)
-  const fixedExpensesTotal = fixedExpenses
-    .filter(expense => expense.isActive)
-    .reduce((sum, expense) => sum + expense.amount, 0)
-  const totalSpent = categorySpent
+  const totalSpent = analysisWithFixedExpenses.reduce((sum, item) => sum + item.spentAmount, 0)
   const totalRemaining = totalBudget - totalSpent
   const overBudgetCategories = analysisWithFixedExpenses.filter(item => item.isOverBudget)
   const warningCategories: typeof analysisWithFixedExpenses = [] // 100%以下は正常なので警告なし
