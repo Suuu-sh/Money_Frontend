@@ -44,8 +44,10 @@ export default function TransactionList({ transactions, categories, onTransactio
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">取引履歴</h2>
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 whitespace-nowrap">取引履歴</h2>
+        </div>
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
           <select
             value={filter}
