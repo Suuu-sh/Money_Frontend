@@ -74,14 +74,14 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <CurrencyDollarIcon className="h-12 w-12 text-blue-600" />
+          <CurrencyDollarIcon className="h-12 w-12 text-green-600" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your MoneyTracker account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{' '}
-          <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+          <Link href="/login" className="font-medium text-green-600 hover:text-green-500">
             sign in to your existing account
           </Link>
         </p>
