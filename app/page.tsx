@@ -40,7 +40,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="absolute inset-0" style={{

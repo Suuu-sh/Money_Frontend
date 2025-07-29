@@ -67,27 +67,18 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
 
   return (
     <div className="space-y-8">
-      <div>
-        {displayStats && <StatsCards stats={displayStats} />}
-      </div>
-
       {/* 予算アラート */}
       <BudgetAlerts analysis={budgetAnalysis} />
 
-      {/* 予算概要と月別収支 */}
+      {/* 予算概要と取引履歴 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 予算概要 */}
         <div>
           <BudgetOverview />
         </div>
         
-        {/* 右側：月別収支と取引履歴 */}
+        {/* 右側：取引履歴 */}
         <div className="space-y-4">
-          {/* 月別収支（コンパクト） */}
-          <div>
-            <MonthlyChart />
-          </div>
-          
           {/* 取引履歴 */}
           <div className="max-h-64 overflow-y-auto">
             <DayTransactions 
