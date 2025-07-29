@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Category } from '../types'
-import { createCategory, deleteCategory } from '../lib/api'
+import { createCategory, updateCategory, deleteCategory } from '../lib/api'
 
 interface CategoriesProps {
   categories: Category[]
@@ -11,7 +11,16 @@ interface CategoriesProps {
 
 export default function Categories({ categories, onCategoryUpdated }: CategoriesProps) {
   const [isCreating, setIsCreating] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const [newCategory, setNewCategory] = useState({
+    name: '',
+    type: 'expense' as 'income' | 'expense',
+    color: '#3B82F6',
+    icon: 'document',
+    description: '',
+  })
+  const [editCategory, setEditCategory] = useState({
     name: '',
     type: 'expense' as 'income' | 'expense',
     color: '#3B82F6',
@@ -38,6 +47,40 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
     } catch (error) {
       console.error('カテゴリ作成エラー:', error)
       alert('カテゴリの作成に失敗しました')
+    }
+  }
+
+  const handleEdit = (category: Category) => {
+    setEditingCategory(category)
+    setEditCategory({
+      name: category.name,
+      type: category.type,
+      color: category.color,
+      icon: category.icon,
+      description: category.description,
+    })
+    setIsEditing(true)
+  }
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingCategory) return
+
+    try {
+      await updateCategory(editingCategory.id, editCategory)
+      setIsEditing(false)
+      setEditingCategory(null)
+      setEditCategory({
+        name: '',
+        type: 'expense',
+        color: '#3B82F6',
+        icon: 'document',
+        description: '',
+      })
+      onCategoryUpdated()
+    } catch (error) {
+      console.error('カテゴリ更新エラー:', error)
+      alert('カテゴリの更新に失敗しました')
     }
   }
 
@@ -232,6 +275,120 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
         </div>
       )}
 
+      {/* カテゴリ編集フォーム */}
+      {isEditing && (
+        <div className="card">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">カテゴリを編集</h3>
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  カテゴリ名 *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editCategory.name}
+                  onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })}
+                  className="input-field"
+                  placeholder="例: 交際費"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  タイプ
+                </label>
+                <select
+                  value={editCategory.type}
+                  onChange={(e) => setEditCategory({ ...editCategory, type: e.target.value as any })}
+                  className="input-field"
+                >
+                  <option value="expense">支出</option>
+                  <option value="income">収入</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                アイコン
+              </label>
+              <div className="grid grid-cols-5 gap-3">
+                {iconOptions.map((option) => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setEditCategory({ ...editCategory, icon: option.key })}
+                    className={`p-3 rounded-lg border-2 transition-colors flex flex-col items-center space-y-1 ${
+                      editCategory.icon === option.key
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                    }`}
+                  >
+                    {renderIcon(option.key)}
+                    <span className="text-xs font-medium">{option.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                カラー
+              </label>
+              <div className="grid grid-cols-10 gap-2">
+                {commonColors.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => setEditCategory({ ...editCategory, color })}
+                    className={`w-8 h-8 rounded border-2 transition-all ${
+                      editCategory.color === color
+                        ? 'border-gray-800 scale-110'
+                        : 'border-gray-300'
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                説明
+              </label>
+              <input
+                type="text"
+                value={editCategory.description}
+                onChange={(e) => setEditCategory({ ...editCategory, description: e.target.value })}
+                className="input-field"
+                placeholder="カテゴリの説明"
+              />
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditing(false)
+                  setEditingCategory(null)
+                }}
+                className="btn-secondary"
+              >
+                キャンセル
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                更新
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       {/* カテゴリ一覧 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* 支出カテゴリ */}
@@ -247,9 +404,10 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div 
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full flex items-center justify-center"
                     style={{ backgroundColor: category.color }}
                   >
+                    {renderIcon(category.icon, "w-4 h-4 text-white")}
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">{category.name}</h4>
@@ -258,12 +416,20 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     )}
                   </div>
                 </div>
-                <button
-                  onClick={() => handleDelete(category.id)}
-                  className="text-red-600 hover:text-red-800 text-sm"
-                >
-                  削除
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => handleEdit(category)}
+                    className="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                  >
+                    編集
+                  </button>
+                  <button
+                    onClick={() => handleDelete(category.id)}
+                    className="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                  >
+                    削除
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -282,9 +448,10 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div 
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full flex items-center justify-center"
                     style={{ backgroundColor: category.color }}
                   >
+                    {renderIcon(category.icon, "w-4 h-4 text-white")}
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">{category.name}</h4>
@@ -293,12 +460,20 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     )}
                   </div>
                 </div>
-                <button
-                  onClick={() => handleDelete(category.id)}
-                  className="text-red-600 hover:text-red-800 text-sm"
-                >
-                  削除
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => handleEdit(category)}
+                    className="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                  >
+                    編集
+                  </button>
+                  <button
+                    onClick={() => handleDelete(category.id)}
+                    className="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                  >
+                    削除
+                  </button>
+                </div>
               </div>
             ))}
           </div>
