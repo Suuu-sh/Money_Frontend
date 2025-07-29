@@ -111,14 +111,6 @@ export default function BudgetPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* 設定ボタン */}
-        <div className="mb-8 flex justify-end">
-          <button className="btn-secondary flex items-center">
-            <Cog6ToothIcon className="w-4 h-4 mr-2" />
-            設定
-          </button>
-        </div>
-
         {/* アラート表示 */}
         <div className="mb-6">
           <BudgetAlerts analysis={analysis} />

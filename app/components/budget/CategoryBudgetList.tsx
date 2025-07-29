@@ -121,7 +121,7 @@ export default function CategoryBudgetList({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          {analysis.map((item) => {
+          {analysis.sort((a, b) => b.budgetAmount - a.budgetAmount).map((item) => {
             const budget = budgets.find(b => b.categoryId === item.categoryId)
             
             // 取引履歴からのみ使用済み金額を計算（固定費から生成された取引も含む）
