@@ -16,14 +16,14 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
   const [newCategory, setNewCategory] = useState({
     name: '',
     type: 'expense' as 'income' | 'expense',
-    color: '#3B82F6',
+    color: '#22c55e',
     icon: 'document',
     description: '',
   })
   const [editCategory, setEditCategory] = useState({
     name: '',
     type: 'expense' as 'income' | 'expense',
-    color: '#3B82F6',
+    color: '#22c55e',
     icon: 'document',
     description: '',
   })
@@ -38,7 +38,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
       setNewCategory({
         name: '',
         type: 'expense',
-        color: '#3B82F6',
+        color: '#22c55e',
         icon: 'document',
         description: '',
       })
@@ -73,7 +73,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
       setEditCategory({
         name: '',
         type: 'expense',
-        color: '#3B82F6',
+        color: '#22c55e',
         icon: 'document',
         description: '',
       })
@@ -419,7 +419,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                    className="text-green-600 hover:text-green-800 text-sm px-2 py-1 rounded hover:bg-green-50 transition-colors"
                   >
                     編集
                   </button>
@@ -463,7 +463,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                    className="text-green-600 hover:text-green-800 text-sm px-2 py-1 rounded hover:bg-green-50 transition-colors"
                   >
                     編集
                   </button>
