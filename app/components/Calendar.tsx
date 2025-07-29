@@ -198,8 +198,8 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
               <div className="h-full flex flex-col">
                 {/* 日付 */}
                 <div className="flex items-center justify-between mb-1 sm:mb-2">
-                  <span className={`text-xs sm:text-sm font-medium ${
-                    isTodayDate ? 'bg-blue-600 text-white w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs' : 
+                  <span className={`text-xs font-medium ${
+                    isTodayDate ? 'bg-blue-600 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-xs' : 
                     isSelected ? 'text-blue-600' : 
                     !isCurrentMonth ? 'text-gray-400' :
                     isWeekend ? (dayOfWeek === 0 ? 'text-red-500' : 'text-blue-600') : 'text-gray-900'
@@ -216,14 +216,14 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                   <div className="flex-1 space-y-0.5 sm:space-y-1 overflow-hidden">
                     {/* 収入表示（緑色） */}
                     {dayData.income > 0 && (
-                      <div className="bg-green-100 text-green-700 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium truncate">
+                      <div className="bg-green-100 text-green-700 px-1 py-0.5 rounded text-xs font-medium truncate">
                         +¥{formatAmount(dayData.income)}
                       </div>
                     )}
                     
                     {/* 支出表示（赤色） */}
                     {dayData.expense > 0 && (
-                      <div className="bg-red-100 text-red-700 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium truncate">
+                      <div className="bg-red-100 text-red-700 px-1 py-0.5 rounded text-xs font-medium truncate">
                         -¥{formatAmount(dayData.expense)}
                       </div>
                     )}

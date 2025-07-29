@@ -76,12 +76,12 @@ export default function DayTransactions({
       {/* 取引一覧 */}
       <div className="card">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-base font-semibold text-gray-900">
             取引履歴 ({dayTransactions.length}件)
           </h3>
           <button
             onClick={() => onAddTransaction(selectedDate)}
-            className="btn-primary text-sm px-3 py-1.5"
+            className="btn-primary text-xs px-2 py-1"
           >
             取引を追加
           </button>
@@ -108,10 +108,10 @@ export default function DayTransactions({
                   >
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 text-sm">
+                    <h4 className="font-medium text-gray-900 text-xs">
                       {transaction.description || transaction.category.name}
                     </h4>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-500">
                       {transaction.category.name}
                     </p>
                   </div>
