@@ -43,11 +43,6 @@ export default function CategoryAnalysis() {
       const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
       const previousNextMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-      // 固定費合計を計算
-      const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
-      const fixedTotal = activeFixedExpenses.reduce((sum, fe) => sum + fe.amount, 0)
-      setFixedExpensesTotal(fixedTotal)
-
       // カテゴリ別支出を集計
       const categoryMap = new Map<number, CategorySpendingData>()
       
@@ -88,19 +83,45 @@ export default function CategoryAnalysis() {
           }
         })
 
+      // 固定費を各カテゴリに追加（固定費のカテゴリIDに基づいて）
+      const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
+      activeFixedExpenses.forEach(fixedExpense => {
+        if (fixedExpense.categoryId) {
+          const data = categoryMap.get(fixedExpense.categoryId)
+          if (data) {
+            // 固定費は毎月発生するものとして今月と先月の両方に追加
+            data.currentMonth += fixedExpense.amount
+            data.previousMonth += fixedExpense.amount
+            // 固定費は取引件数にはカウントしない（自動生成のため）
+          }
+        }
+      })
+
+      // 固定費の合計を計算（表示用）
+      const fixedTotal = activeFixedExpenses.reduce((sum, fe) => sum + fe.amount, 0)
+      setFixedExpensesTotal(fixedTotal)
+
       // トレンドと平均を計算
-      let totalCurrentSpending = fixedTotal
+      let totalCurrentSpending = 0
       categoryMap.forEach(data => {
         totalCurrentSpending += data.currentMonth
         
-        // 平均取引金額
+        // 固定費を除いた取引データのみで平均取引金額を計算
+        const fixedExpenseForCategory = activeFixedExpenses
+          .filter(fe => fe.categoryId === data.categoryId)
+          .reduce((sum, fe) => sum + fe.amount, 0)
+        
+        const transactionOnlyAmount = data.currentMonth - fixedExpenseForCategory
         data.averagePerTransaction = data.transactionCount > 0 
-          ? data.currentMonth / data.transactionCount 
+          ? transactionOnlyAmount / data.transactionCount 
           : 0
 
-        // トレンド計算
-        if (data.previousMonth > 0) {
-          const percentage = ((data.currentMonth - data.previousMonth) / data.previousMonth) * 100
+        // 固定費を除いた取引データのみでトレンド計算
+        const currentTransactionAmount = data.currentMonth - fixedExpenseForCategory
+        const previousTransactionAmount = data.previousMonth - fixedExpenseForCategory
+        
+        if (previousTransactionAmount > 0) {
+          const percentage = ((currentTransactionAmount - previousTransactionAmount) / previousTransactionAmount) * 100
           data.trendPercentage = percentage
           
           if (percentage > 5) {
@@ -110,6 +131,10 @@ export default function CategoryAnalysis() {
           } else {
             data.trend = 'stable'
           }
+        } else if (currentTransactionAmount > 0) {
+          // 前月は固定費のみで今月に取引がある場合
+          data.trend = 'up'
+          data.trendPercentage = 100
         }
       })
 
@@ -171,27 +196,6 @@ export default function CategoryAnalysis() {
         </div>
 
         <div className="space-y-4">
-          {/* 固定費を最初に表示 */}
-          {fixedExpensesTotal > 0 && (
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">🏠</span>
-                </div>
-                <div>
-                  <h4 className="font-medium text-gray-900">固定費</h4>
-                  <p className="text-sm text-gray-500">
-                    {((fixedExpensesTotal / totalSpending) * 100).toFixed(1)}% of total
-                  </p>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="font-semibold text-gray-900">{formatCurrency(fixedExpensesTotal)}</div>
-                <div className="text-sm text-gray-500">固定</div>
-              </div>
-            </div>
-          )}
-
           {getTopCategories().map((data, index) => (
             <div key={data.categoryId} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <div className="flex items-center space-x-3">

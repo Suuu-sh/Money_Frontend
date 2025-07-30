@@ -1258,6 +1258,9 @@ video {
 .border-t {
   border-top-width: 1px;
 }
+.border-l-4 {
+  border-left-width: 4px;
+}
 .border-blue-200 {
   --tw-border-opacity: 1;
   border-color: rgb(191 219 254 / var(--tw-border-opacity, 1));
@@ -1316,6 +1319,18 @@ video {
 .border-yellow-200 {
   --tw-border-opacity: 1;
   border-color: rgb(254 240 138 / var(--tw-border-opacity, 1));
+}
+.border-blue-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(96 165 250 / var(--tw-border-opacity, 1));
+}
+.border-green-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(74 222 128 / var(--tw-border-opacity, 1));
+}
+.border-yellow-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(250 204 21 / var(--tw-border-opacity, 1));
 }
 .bg-black {
   --tw-bg-opacity: 1;
@@ -1549,6 +1564,11 @@ video {
   --tw-gradient-to: rgb(20 83 45 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+.from-red-400 {
+  --tw-gradient-from: #f87171 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(248 113 113 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
 .via-blue-900 {
   --tw-gradient-to: rgb(30 58 138 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), #1e3a8a var(--tw-gradient-via-position), var(--tw-gradient-to);
@@ -1564,6 +1584,10 @@ video {
 .via-emerald-900 {
   --tw-gradient-to: rgb(6 78 59 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), #064e3b var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+.via-yellow-400 {
+  --tw-gradient-to: rgb(250 204 21 / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #facc15 var(--tw-gradient-via-position), var(--tw-gradient-to);
 }
 .to-blue-100 {
   --tw-gradient-to: #dbeafe var(--tw-gradient-to-position);
@@ -1609,6 +1633,9 @@ video {
 }
 .to-teal-900 {
   --tw-gradient-to: #134e4a var(--tw-gradient-to-position);
+}
+.to-green-400 {
+  --tw-gradient-to: #4ade80 var(--tw-gradient-to-position);
 }
 .bg-clip-text {
   -webkit-background-clip: text;
@@ -1991,6 +2018,10 @@ video {
 .text-green-400 {
   --tw-text-opacity: 1;
   color: rgb(74 222 128 / var(--tw-text-opacity, 1));
+}
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 .underline {
   text-decoration-line: underline;
