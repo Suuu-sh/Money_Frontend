@@ -46,7 +46,7 @@ export default function TransactionList({ transactions, categories, onTransactio
     <div className="card">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 whitespace-nowrap">取引履歴</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white whitespace-nowrap">取引履歴</h2>
         </div>
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
           <select
@@ -76,15 +76,15 @@ export default function TransactionList({ transactions, categories, onTransactio
 
       {filteredTransactions.length === 0 ? (
         <div className="text-center py-8">
-          <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+            <svg className="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <h3 className="text-sm font-medium text-gray-900 mb-1">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
             取引が見つかりません
           </h3>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             フィルターを変更するか、新しい取引を追加してください
           </p>
         </div>
@@ -93,7 +93,7 @@ export default function TransactionList({ transactions, categories, onTransactio
           {filteredTransactions.map((transaction) => (
             <div
               key={transaction.id}
-              className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+              className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2 min-w-0 flex-1">
@@ -104,10 +104,10 @@ export default function TransactionList({ transactions, categories, onTransactio
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500 flex-shrink-0">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
                         {format(new Date(transaction.date), 'MM/dd')}
                       </span>
-                      <span className="text-xs font-medium text-gray-900 truncate">
+                      <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
                         {transaction.description || transaction.category.name}
                       </span>
                     </div>
@@ -116,13 +116,13 @@ export default function TransactionList({ transactions, categories, onTransactio
                 
                 <div className="flex items-center space-x-2 flex-shrink-0">
                   <span className={`text-xs font-semibold ${
-                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                    transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                   }`}>
                     {formatAmount(transaction.amount, transaction.type)}
                   </span>
                   <button
                     onClick={() => handleDelete(transaction.id)}
-                    className="text-gray-400 hover:text-red-600 p-1 rounded transition-colors"
+                    className="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 p-1 rounded transition-colors"
                     title="削除"
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

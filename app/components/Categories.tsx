@@ -167,11 +167,11 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
       {/* カテゴリ作成フォーム */}
       {isCreating && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">新しいカテゴリ</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">新しいカテゴリ</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   カテゴリ名 *
                 </label>
                 <input
@@ -185,7 +185,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   タイプ
                 </label>
                 <select
@@ -200,7 +200,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 アイコン
               </label>
               <div className="grid grid-cols-5 gap-3">
@@ -211,8 +211,8 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     onClick={() => setNewCategory({ ...newCategory, icon: option.key })}
                     className={`p-3 rounded-lg border-2 transition-colors flex flex-col items-center space-y-1 ${
                       newCategory.icon === option.key
-                        ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-600 dark:text-gray-400'
                     }`}
                   >
                     {renderIcon(option.key)}
@@ -223,7 +223,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 カラー
               </label>
               <div className="grid grid-cols-10 gap-2">
@@ -234,8 +234,8 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     onClick={() => setNewCategory({ ...newCategory, color })}
                     className={`w-8 h-8 rounded border-2 transition-all ${
                       newCategory.color === color
-                        ? 'border-gray-800 scale-110'
-                        : 'border-gray-300'
+                        ? 'border-gray-800 dark:border-gray-200 scale-110'
+                        : 'border-gray-300 dark:border-gray-600'
                     }`}
                     style={{ backgroundColor: color }}
                   />
@@ -244,7 +244,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 説明
               </label>
               <input
@@ -278,11 +278,11 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
       {/* カテゴリ編集フォーム */}
       {isEditing && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">カテゴリを編集</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">カテゴリを編集</h3>
           <form onSubmit={handleEditSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   カテゴリ名 *
                 </label>
                 <input
@@ -296,7 +296,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   タイプ
                 </label>
                 <select
@@ -311,7 +311,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 アイコン
               </label>
               <div className="grid grid-cols-5 gap-3">
@@ -322,8 +322,8 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     onClick={() => setEditCategory({ ...editCategory, icon: option.key })}
                     className={`p-3 rounded-lg border-2 transition-colors flex flex-col items-center space-y-1 ${
                       editCategory.icon === option.key
-                        ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-600 dark:text-gray-400'
                     }`}
                   >
                     {renderIcon(option.key)}
@@ -334,7 +334,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 カラー
               </label>
               <div className="grid grid-cols-10 gap-2">
@@ -345,8 +345,8 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     onClick={() => setEditCategory({ ...editCategory, color })}
                     className={`w-8 h-8 rounded border-2 transition-all ${
                       editCategory.color === color
-                        ? 'border-gray-800 scale-110'
-                        : 'border-gray-300'
+                        ? 'border-gray-800 dark:border-gray-200 scale-110'
+                        : 'border-gray-300 dark:border-gray-600'
                     }`}
                     style={{ backgroundColor: color }}
                   />
@@ -355,7 +355,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 説明
               </label>
               <input
@@ -393,15 +393,15 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* 支出カテゴリ */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <svg className="w-5 h-5 text-expense-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
+            <svg className="w-5 h-5 text-expense-500 dark:text-expense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <span>支出カテゴリ</span>
           </h3>
           <div className="space-y-3">
             {expenseCategories.map((category) => (
-              <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+              <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center"
@@ -410,22 +410,22 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     {renderIcon(category.icon, "w-4 h-4 text-white")}
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">{category.name}</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-white">{category.name}</h4>
                     {category.description && (
-                      <p className="text-sm text-gray-600">{category.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{category.description}</p>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="text-green-600 hover:text-green-800 text-sm px-2 py-1 rounded hover:bg-green-50 transition-colors"
+                    className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm px-2 py-1 rounded hover:bg-green-50 dark:hover:bg-green-900 transition-colors"
                   >
                     編集
                   </button>
                   <button
                     onClick={() => handleDelete(category.id)}
-                    className="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900 transition-colors"
                   >
                     削除
                   </button>
@@ -437,15 +437,15 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
 
         {/* 収入カテゴリ */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <svg className="w-5 h-5 text-income-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
+            <svg className="w-5 h-5 text-income-500 dark:text-income-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
             </svg>
             <span>収入カテゴリ</span>
           </h3>
           <div className="space-y-3">
             {incomeCategories.map((category) => (
-              <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+              <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center"
@@ -454,22 +454,22 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     {renderIcon(category.icon, "w-4 h-4 text-white")}
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">{category.name}</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-white">{category.name}</h4>
                     {category.description && (
-                      <p className="text-sm text-gray-600">{category.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{category.description}</p>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="text-green-600 hover:text-green-800 text-sm px-2 py-1 rounded hover:bg-green-50 transition-colors"
+                    className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm px-2 py-1 rounded hover:bg-green-50 dark:hover:bg-green-900 transition-colors"
                   >
                     編集
                   </button>
                   <button
                     onClick={() => handleDelete(category.id)}
-                    className="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900 transition-colors"
                   >
                     削除
                   </button>

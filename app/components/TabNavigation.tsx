@@ -9,15 +9,15 @@ export default function TabNavigation() {
   return (
     <>
       {/* Desktop Tab Navigation */}
-      <nav className="bg-white border-b border-gray-200 hidden md:block">
+      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             <Link
               href="/dashboard"
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                 pathname === '/dashboard'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,8 +30,8 @@ export default function TabNavigation() {
               href="/transactions"
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                 pathname === '/transactions'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,8 +45,8 @@ export default function TabNavigation() {
               href="/categories"
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                 pathname === '/categories'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,8 +59,8 @@ export default function TabNavigation() {
               href="/budget"
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                 pathname === '/budget'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,8 +73,8 @@ export default function TabNavigation() {
               href="/analytics"
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                 pathname === '/analytics'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,14 +87,14 @@ export default function TabNavigation() {
       </nav>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
         <div className="grid grid-cols-5 h-16">
           <Link
             href="/dashboard"
             className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
               pathname === '/dashboard'
-                ? 'text-primary-600 bg-primary-50'
-                : 'text-gray-500'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900'
+                : 'text-gray-500 dark:text-gray-400'
             }`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,8 +107,8 @@ export default function TabNavigation() {
             href="/transactions"
             className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
               pathname === '/transactions'
-                ? 'text-primary-600 bg-primary-50'
-                : 'text-gray-500'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900'
+                : 'text-gray-500 dark:text-gray-400'
             }`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,8 +121,8 @@ export default function TabNavigation() {
             href="/categories"
             className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
               pathname === '/categories'
-                ? 'text-primary-600 bg-primary-50'
-                : 'text-gray-500'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900'
+                : 'text-gray-500 dark:text-gray-400'
             }`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,8 +135,8 @@ export default function TabNavigation() {
             href="/budget"
             className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
               pathname === '/budget'
-                ? 'text-primary-600 bg-primary-50'
-                : 'text-gray-500'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900'
+                : 'text-gray-500 dark:text-gray-400'
             }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,8 +149,8 @@ export default function TabNavigation() {
             href="/analytics"
             className={`flex flex-col items-center justify-center space-y-1 touch-manipulation ${
               pathname === '/analytics'
-                ? 'text-primary-600 bg-primary-50'
-                : 'text-gray-500'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900'
+                : 'text-gray-500 dark:text-gray-400'
             }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

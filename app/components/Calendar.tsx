@@ -118,9 +118,9 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
   const calendarDays = getCalendarDays()
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col md:h-full">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col md:h-full">
       {/* カレンダーヘッダー */}
-      <div className="bg-white border-b border-gray-200 px-4 py-2 flex-shrink-0">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex-shrink-0">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <button
@@ -129,14 +129,14 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                 e.stopPropagation()
                 goToPreviousMonth()
               }}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
               type="button"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-base font-medium text-gray-900 min-w-[100px] text-center">
+            <h1 className="text-base font-medium text-gray-900 dark:text-white min-w-[100px] text-center">
               {format(currentMonth, 'yyyy/MM')}
             </h1>
             <button
@@ -145,7 +145,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                 e.stopPropagation()
                 goToNextMonth()
               }}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
               type="button"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,10 +163,10 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
       </div>
 
       {/* 曜日ヘッダー */}
-      <div className="grid grid-cols-7 border-b border-gray-200 flex-shrink-0">
+      <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
         {weekDays.map((day, index) => (
-          <div key={day} className={`py-2 sm:py-3 text-center text-xs sm:text-sm font-medium border-r border-gray-100 last:border-r-0 ${
-            index === 5 ? 'text-blue-600' : index === 6 ? 'text-red-500' : 'text-gray-500'
+          <div key={day} className={`py-2 sm:py-3 text-center text-xs sm:text-sm font-medium border-r border-gray-100 dark:border-gray-700 last:border-r-0 ${
+            index === 5 ? 'text-blue-600 dark:text-blue-400' : index === 6 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'
           }`}>
             {day}
           </div>
@@ -187,10 +187,10 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
               key={index}
               onClick={() => onDateClick(date)}
               className={`
-                border-r border-b border-gray-100 cursor-pointer transition-all hover:bg-gray-50 relative p-1 sm:p-2 touch-manipulation min-h-[60px] md:min-h-[80px]
-                ${isSelected ? 'bg-blue-50 ring-1 ring-blue-200' : ''}
-                ${isTodayDate ? 'bg-blue-50' : ''}
-                ${!isCurrentMonth ? 'bg-gray-50/50' : ''}
+                border-r border-b border-gray-100 dark:border-gray-700 cursor-pointer transition-all hover:bg-gray-50 dark:hover:bg-gray-700 relative p-1 sm:p-2 touch-manipulation min-h-[60px] md:min-h-[80px]
+                ${isSelected ? 'bg-blue-50 dark:bg-blue-900 ring-1 ring-blue-200 dark:ring-blue-700' : ''}
+                ${isTodayDate ? 'bg-blue-50 dark:bg-blue-900' : ''}
+                ${!isCurrentMonth ? 'bg-gray-50/50 dark:bg-gray-800/50' : ''}
                 ${index % 7 === 6 ? 'border-r-0' : ''}
                 ${index >= 35 ? 'border-b-0' : ''}
               `}
@@ -200,9 +200,9 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                 <div className="flex items-center justify-between mb-1 sm:mb-2">
                   <span className={`text-xs font-medium ${
                     isTodayDate ? 'bg-blue-600 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-xs' : 
-                    isSelected ? 'text-blue-600' : 
-                    !isCurrentMonth ? 'text-gray-400' :
-                    isWeekend ? (dayOfWeek === 0 ? 'text-red-500' : 'text-blue-600') : 'text-gray-900'
+                    isSelected ? 'text-blue-600 dark:text-blue-400' : 
+                    !isCurrentMonth ? 'text-gray-400 dark:text-gray-500' :
+                    isWeekend ? (dayOfWeek === 0 ? 'text-red-500 dark:text-red-400' : 'text-blue-600 dark:text-blue-400') : 'text-gray-900 dark:text-white'
                   }`}>
                     {format(date, 'd')}
                   </span>
@@ -216,21 +216,21 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                   <div className="flex-1 space-y-0.5 sm:space-y-1 overflow-hidden">
                     {/* 収入表示（緑色） */}
                     {dayData.income > 0 && (
-                      <div className="bg-green-100 text-green-700 px-1 py-0.5 rounded text-xs font-medium truncate">
+                      <div className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-1 py-0.5 rounded text-xs font-medium truncate">
                         +¥{formatAmount(dayData.income)}
                       </div>
                     )}
                     
                     {/* 支出表示（赤色） */}
                     {dayData.expense > 0 && (
-                      <div className="bg-red-100 text-red-700 px-1 py-0.5 rounded text-xs font-medium truncate">
+                      <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-1 py-0.5 rounded text-xs font-medium truncate">
                         -¥{formatAmount(dayData.expense)}
                       </div>
                     )}
                     
                     {/* 取引件数が多い場合の表示 */}
                     {dayData.count > 2 && (
-                      <div className="text-xs text-gray-500 font-medium">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                         他{dayData.count - 2}件
                       </div>
                     )}
@@ -238,7 +238,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                     {/* 取引がない場合のプレースホルダー */}
                     {dayData.count === 0 && (
                       <div className="flex-1 flex items-center justify-center">
-                        <div className="text-lg text-gray-300 font-light">
+                        <div className="text-lg text-gray-300 dark:text-gray-600 font-light">
                           +
                         </div>
                       </div>

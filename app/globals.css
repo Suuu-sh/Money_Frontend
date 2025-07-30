@@ -10,7 +10,7 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg transition-colors touch-manipulation;
+    @apply bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors touch-manipulation;
   }
   
   .btn-secondary {
@@ -18,19 +18,19 @@
   }
   
   .btn-income {
-    @apply bg-income-500 hover:bg-income-600 text-white font-medium py-2 px-4 rounded-lg transition-colors touch-manipulation;
+    @apply bg-income-500 hover:bg-income-600 dark:bg-income-600 dark:hover:bg-income-700 text-white font-medium py-2 px-4 rounded-lg transition-colors touch-manipulation;
   }
   
   .btn-expense {
-    @apply bg-expense-500 hover:bg-expense-600 text-white font-medium py-2 px-4 rounded-lg transition-colors touch-manipulation;
+    @apply bg-expense-500 hover:bg-expense-600 dark:bg-expense-600 dark:hover:bg-expense-700 text-white font-medium py-2 px-4 rounded-lg transition-colors touch-manipulation;
   }
   
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors;
   }
   
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white touch-manipulation;
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 touch-manipulation transition-colors;
   }
   
   .amount-income {

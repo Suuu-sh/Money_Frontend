@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,10 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
-        <div className="min-h-screen">
-          {children}
-        </div>
+      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors`}>
+        <ThemeProvider>
+          <div className="min-h-screen">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   )

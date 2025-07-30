@@ -64,14 +64,14 @@ export default function StatsCards({ stats }: StatsCardsProps) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
       {cards.map((card, index) => (
-        <div key={index} className="bg-white rounded-lg border border-gray-200 p-3">
+        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
           <div className="flex flex-col items-center text-center">
             <div className={`${card.color} rounded-lg p-2 mb-2 text-white`}>
               {card.icon}
             </div>
             <div className="w-full">
-              <p className="text-xs font-medium text-gray-600 mb-1">{card.title}</p>
-              <p className={`text-sm font-bold ${card.textColor} break-all`}>{card.value}</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{card.title}</p>
+              <p className={`text-sm font-bold ${card.textColor} dark:${card.textColor.replace('600', '400')} break-all`}>{card.value}</p>
             </div>
           </div>
         </div>
