@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
 import { fetchTransactions, fetchCategories, fetchFixedExpenses } from '../../lib/api'
-import { ChartPieIcon, TrendingUpIcon, TrendingDownIcon } from '@heroicons/react/24/outline'
+import { ChartPieIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline'
 
 interface CategorySpendingData {
   categoryId: number
@@ -212,8 +212,8 @@ export default function CategoryAnalysis() {
               <div className="text-right">
                 <div className="font-semibold text-gray-900">{formatCurrency(data.currentMonth)}</div>
                 <div className="flex items-center space-x-1">
-                  {data.trend === 'up' && <TrendingUpIcon className="w-3 h-3 text-red-500" />}
-                  {data.trend === 'down' && <TrendingDownIcon className="w-3 h-3 text-green-500" />}
+                  {data.trend === 'up' && <ArrowTrendingUpIcon className="w-3 h-3 text-red-500" />}
+                  {data.trend === 'down' && <ArrowTrendingDownIcon className="w-3 h-3 text-green-500" />}
                   <span className={`text-xs ${
                     data.trend === 'up' ? 'text-red-600' : 
                     data.trend === 'down' ? 'text-green-600' : 'text-gray-500'
@@ -232,7 +232,7 @@ export default function CategoryAnalysis() {
       {getGrowingCategories().length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center space-x-2 mb-6">
-            <TrendingUpIcon className="w-6 h-6 text-red-500" />
+            <ArrowTrendingUpIcon className="w-6 h-6 text-red-500" />
             <h3 className="text-lg font-semibold text-gray-900">支出増加カテゴリ</h3>
           </div>
 
@@ -253,7 +253,7 @@ export default function CategoryAnalysis() {
                 </div>
                 <div className="text-right">
                   <div className="flex items-center space-x-1">
-                    <TrendingUpIcon className="w-4 h-4 text-red-500" />
+                    <ArrowTrendingUpIcon className="w-4 h-4 text-red-500" />
                     <span className="font-semibold text-red-600">
                       +{data.trendPercentage.toFixed(1)}%
                     </span>
@@ -300,8 +300,8 @@ export default function CategoryAnalysis() {
                   </td>
                   <td className="text-right py-3 px-4">
                     <div className="flex items-center justify-end space-x-1">
-                      {data.trend === 'up' && <TrendingUpIcon className="w-3 h-3 text-red-500" />}
-                      {data.trend === 'down' && <TrendingDownIcon className="w-3 h-3 text-green-500" />}
+                      {data.trend === 'up' && <ArrowTrendingUpIcon className="w-3 h-3 text-red-500" />}
+                      {data.trend === 'down' && <ArrowTrendingDownIcon className="w-3 h-3 text-green-500" />}
                       <span className={`text-xs ${
                         data.trend === 'up' ? 'text-red-600' : 
                         data.trend === 'down' ? 'text-green-600' : 'text-gray-500'

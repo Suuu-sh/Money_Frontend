@@ -3,7 +3,11 @@
 import { useState, useEffect } from 'react'
 import { Transaction, FixedExpense } from '../../types'
 import { fetchTransactions, fetchFixedExpenses } from '../../lib/api'
-import { TrendingDownIcon, TrendingUpIcon, CalendarIcon } from '@heroicons/react/24/outline'
+import { 
+  ArrowTrendingDownIcon, 
+  ArrowTrendingUpIcon, 
+  CalendarIcon 
+} from '@heroicons/react/24/outline'
 
 interface MonthlyData {
   month: string
@@ -165,8 +169,8 @@ export default function SpendingTrendAnalysis() {
                 前月比
               </p>
               <div className="flex items-center space-x-1">
-                {trend.trend === 'up' && <TrendingUpIcon className="w-5 h-5 text-red-500" />}
-                {trend.trend === 'down' && <TrendingDownIcon className="w-5 h-5 text-green-500" />}
+                {trend.trend === 'up' && <ArrowTrendingUpIcon className="w-5 h-5 text-red-500" />}
+                {trend.trend === 'down' && <ArrowTrendingDownIcon className="w-5 h-5 text-green-500" />}
                 <p className={`text-xl font-bold ${
                   trend.trend === 'up' ? 'text-red-900' : trend.trend === 'down' ? 'text-green-900' : 'text-gray-900'
                 }`}>
