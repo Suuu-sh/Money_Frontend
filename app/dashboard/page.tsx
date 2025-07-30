@@ -8,6 +8,7 @@ import Dashboard from '../components/Dashboard'
 import Calendar from '../components/Calendar'
 import DayTransactions from '../components/DayTransactions'
 import AddTransactionModal from '../components/AddTransactionModal'
+import SettingsModal from '../components/SettingsModal'
 import { Transaction, Category, Stats } from '../types'
 import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
 
@@ -18,6 +19,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -101,10 +103,11 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header 
         onAddTransaction={() => setIsAddModalOpen(true)}
         onLogout={handleLogout}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <TabNavigation />
       
@@ -175,6 +178,11 @@ export default function DashboardPage() {
           defaultDate={modalDate || undefined}
         />
       )}
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   )
 }

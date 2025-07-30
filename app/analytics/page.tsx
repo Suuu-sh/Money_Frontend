@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
+import SettingsModal from '../components/SettingsModal'
 import SpendingTrendAnalysis from '../components/analytics/SpendingTrendAnalysis'
 import IncomeTrendAnalysis from '../components/analytics/IncomeTrendAnalysis'
 import CategoryAnalysis from '../components/analytics/CategoryAnalysis'
@@ -17,6 +18,7 @@ export default function AnalyticsPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'trends' | 'categories' | 'recommendations' | 'insights'>('trends')
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -65,10 +67,11 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header 
         onAddTransaction={() => setIsAddModalOpen(true)}
         onLogout={handleLogout}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <TabNavigation />
       
@@ -155,6 +158,11 @@ export default function AnalyticsPage() {
           onTransactionAdded={handleTransactionAdded}
         />
       )}
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import Categories from '../components/Categories'
 import AddTransactionModal from '../components/AddTransactionModal'
+import SettingsModal from '../components/SettingsModal'
 import { Category } from '../types'
 import { fetchCategories } from '../lib/api'
 
@@ -14,6 +15,7 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   useEffect(() => {
     // Check if user is authenticated
@@ -64,10 +66,11 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header 
         onAddTransaction={() => setIsAddModalOpen(true)}
         onLogout={handleLogout}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <TabNavigation />
       
@@ -85,6 +88,11 @@ export default function CategoriesPage() {
           onTransactionAdded={handleTransactionAdded}
         />
       )}
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   )
 }

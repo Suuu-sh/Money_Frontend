@@ -7,6 +7,7 @@ import { fetchBudgetAnalysis, fetchCategories } from '../lib/api'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
+import SettingsModal from '../components/SettingsModal'
 import BudgetOverview from '../components/budget/BudgetOverview'
 import BudgetProgress from '../components/budget/BudgetProgress'
 import BudgetAlerts from '../components/budget/BudgetAlerts'
@@ -33,6 +34,7 @@ export default function BudgetPage() {
   const [showTransactionModal, setShowTransactionModal] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<FixedTransaction | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
   const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
 
@@ -103,10 +105,11 @@ export default function BudgetPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header 
         onAddTransaction={() => setIsAddModalOpen(true)}
         onLogout={handleLogout}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <TabNavigation />
       
@@ -211,6 +214,11 @@ export default function BudgetPage() {
           onTransactionAdded={handleTransactionAdded}
         />
       )}
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   )
 }
