@@ -18,9 +18,9 @@ export default function BudgetOverview() {
     try {
       setLoading(true)
       setError(null)
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth() + 1
+      // 7月のデータを表示
+      const year = 2024
+      const month = 7
       
       const data = await fetchBudgetAnalysis(year, month)
       setAnalysis(data)

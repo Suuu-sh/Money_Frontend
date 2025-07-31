@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [modalDate, setModalDate] = useState<Date | null>(null)
-  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [currentMonth, setCurrentMonth] = useState(new Date(2024, 6, 1)) // 2024年7月
 
   useEffect(() => {
     // Check if user is authenticated
@@ -31,7 +31,8 @@ export default function DashboardPage() {
       router.push('/login')
       return
     }
-    loadData()
+    // 初回読み込み時に7月のデータを取得
+    loadData(new Date(2024, 6, 1))
   }, [router])
 
   const loadData = async (month?: Date) => {
