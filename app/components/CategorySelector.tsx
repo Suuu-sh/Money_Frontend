@@ -2,7 +2,28 @@
 
 import React, { useState } from 'react';
 import { Category } from '../types';
-import { Search, Check } from 'lucide-react';
+import { 
+  Search, 
+  Check, 
+  Utensils, 
+  Car, 
+  Home, 
+  Zap, 
+  ShoppingBag, 
+  Heart, 
+  GraduationCap, 
+  Gamepad2, 
+  Shirt, 
+  Sparkles, 
+  Package, 
+  FileText, 
+  Briefcase, 
+  Laptop, 
+  TrendingUp, 
+  Gift, 
+  DollarSign,
+  Smartphone
+} from 'lucide-react';
 
 interface CategorySelectorProps {
   categories: Category[];
@@ -12,29 +33,32 @@ interface CategorySelectorProps {
   className?: string;
 }
 
-// カテゴリアイコンのマッピング
-const getCategoryIcon = (name: string, icon?: string) => {
-  if (icon) return icon;
+// カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+const getCategoryIcon = (name: string, iconColor: string = '#6B7280') => {
+  const iconProps = { size: 20, color: iconColor, strokeWidth: 2 };
   
-  const iconMap: { [key: string]: string } = {
-    '食費': '🍽️',
-    '交通費': '🚗',
-    '娯楽費': '🎮',
-    '光熱費': '⚡',
-    '日用品': '🧴',
-    '医療費': '🏥',
-    '住居費': '🏠',
-    '教育費': '📚',
-    '美容費': '💄',
-    '衣服費': '👕',
-    '貯金・投資': '💰',
-    '通信費': '📱',
-    'その他支出': '📄',
-    '給与': '💼',
-    'その他収入': '💵',
+  const iconMap: { [key: string]: JSX.Element } = {
+    '食費': <Utensils {...iconProps} />,
+    '交通費': <Car {...iconProps} />,
+    '娯楽費': <Gamepad2 {...iconProps} />,
+    '光熱費': <Zap {...iconProps} />,
+    '日用品': <Package {...iconProps} />,
+    '医療費': <Heart {...iconProps} />,
+    '住居費': <Home {...iconProps} />,
+    '教育費': <GraduationCap {...iconProps} />,
+    '美容費': <Sparkles {...iconProps} />,
+    '衣服費': <Shirt {...iconProps} />,
+    '貯金・投資': <TrendingUp {...iconProps} />,
+    '通信費': <Smartphone {...iconProps} />,
+    'その他支出': <FileText {...iconProps} />,
+    '給与': <Briefcase {...iconProps} />,
+    '副業': <Laptop {...iconProps} />,
+    '投資': <TrendingUp {...iconProps} />,
+    '賞与': <Gift {...iconProps} />,
+    'その他収入': <DollarSign {...iconProps} />,
   };
   
-  return iconMap[name] || '📁';
+  return iconMap[name] || <ShoppingBag {...iconProps} />;
 };
 
 // カテゴリのテーマカラーを取得（実際のcolorプロパティを使用）
@@ -107,17 +131,18 @@ export default function CategorySelector({
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 max-h-80 overflow-y-auto">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
-          const icon = getCategoryIcon(category.name, category.icon);
           const themeColor = getCategoryThemeColor(category);
+          const iconColor = isSelected ? '#3B82F6' : themeColor.border;
+          const icon = getCategoryIcon(category.name, iconColor);
           
           return (
             <button
               key={category.id}
               onClick={() => onSelect(category)}
               className={`
-                relative p-2 rounded-lg border-2 transition-all duration-200 
+                relative p-3 rounded-lg border-2 transition-all duration-200 
                 hover:shadow-md hover:scale-105 active:scale-95
-                flex flex-col items-center justify-center min-h-[60px]
+                flex flex-col items-center justify-center min-h-[70px]
                 ${isSelected 
                   ? 'border-blue-500 shadow-md ring-2 ring-blue-200' 
                   : 'border-transparent'
@@ -146,7 +171,7 @@ export default function CategorySelector({
               )}
               
               {/* アイコン */}
-              <div className="text-xl mb-1">
+              <div className="mb-2">
                 {icon}
               </div>
               
