@@ -146,11 +146,11 @@ export default function CategorySelector({
               )}
               
               {/* アイコン */}
-              <div className="text-lg mb-1">
+              <div className="text-xl mb-1">
                 {icon}
               </div>
               
-              {/* カテゴリ名 */}
+              {/* カテゴリ名（日本語のみ） */}
               <span className={`text-xs font-medium text-center leading-tight ${
                 isSelected ? 'text-blue-700' : 'text-gray-800'
               }`}>
