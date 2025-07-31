@@ -126,63 +126,76 @@ export default function FixedTransactionModal({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
-            {transaction ? '固定収支を編集' : '固定収支を追加'}
-          </h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-2xl mx-4 shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {transaction ? '固定収支を編集' : '固定収支を追加'}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {transaction ? '既存の固定収支を変更します' : '新しい固定収支を設定します'}
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
-            <XMarkIcon className="w-5 h-5" />
+            <XMarkIcon className="w-6 h-6" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* 収入・支出タイプ選択 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               タイプ
             </label>
-            <div className="flex space-x-4">
-              <label className="flex items-center">
+            <div className="grid grid-cols-2 gap-3">
+              <label className={`flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                formData.type === 'income'
+                  ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                  : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+              }`}>
                 <input
                   type="radio"
                   name="type"
                   value="income"
                   checked={formData.type === 'income'}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as 'income' | 'expense', categoryId: 0 })}
-                  className="mr-2"
+                  className="sr-only"
                 />
-                <span className="text-green-600">収入</span>
+                <span className="font-medium">💰 収入</span>
               </label>
-              <label className="flex items-center">
+              <label className={`flex items-center justify-center p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                formData.type === 'expense'
+                  ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
+                  : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+              }`}>
                 <input
                   type="radio"
                   name="type"
                   value="expense"
                   checked={formData.type === 'expense'}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as 'income' | 'expense', categoryId: 0 })}
-                  className="mr-2"
+                  className="sr-only"
                 />
-                <span className="text-red-600">支出</span>
+                <span className="font-medium">💸 支出</span>
               </label>
             </div>
           </div>
 
           {/* 名前 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               名前 <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors ${
+                errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
               placeholder={formData.type === 'income' ? '給与、副業収入など' : '家賃、光熱費など'}
             />
@@ -193,20 +206,23 @@ export default function FixedTransactionModal({
 
           {/* 金額 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               金額 <span className="text-red-500">*</span>
             </label>
-            <input
-              type="number"
-              value={formData.amount}
-              onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.amount ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="金額を入力"
-              min="0"
-              step="1"
-            />
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">¥</span>
+              <input
+                type="number"
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                className={`w-full pl-8 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors ${
+                  errors.amount ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                }`}
+                placeholder="金額を入力"
+                min="0"
+                step="1"
+              />
+            </div>
             {errors.amount && (
               <p className="text-red-500 text-xs mt-1">{errors.amount}</p>
             )}
@@ -214,10 +230,10 @@ export default function FixedTransactionModal({
 
           {/* カテゴリ */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               カテゴリ <span className="text-red-500">*</span>
             </label>
-            <div className={`${errors.categoryId ? 'border-2 border-red-500 rounded-lg p-2' : ''}`}>
+            <div className={`${errors.categoryId ? 'border-2 border-red-500 rounded-xl p-3' : ''}`}>
               <CategorySelector
                 categories={categories}
                 selectedCategoryId={formData.categoryId || undefined}
@@ -232,45 +248,49 @@ export default function FixedTransactionModal({
 
           {/* 説明 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               説明
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors resize-none"
               rows={3}
               placeholder="詳細な説明（任意）"
             />
           </div>
 
           {/* 有効/無効 */}
-          <div className="flex items-center">
+          <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
             <input
               type="checkbox"
               id="isActive"
               checked={formData.isActive}
               onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-              className="mr-2"
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
-            <label htmlFor="isActive" className="text-sm text-gray-700">
-              有効にする
+            <label htmlFor="isActive" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+              この固定収支を有効にする
             </label>
           </div>
 
           {/* ボタン */}
-          <div className="flex space-x-3 pt-4">
+          <div className="flex space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              className="flex-1 px-6 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl font-medium transition-colors"
             >
               キャンセル
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              className={`flex-1 px-6 py-3 text-white font-medium rounded-xl transition-colors disabled:opacity-50 ${
+                formData.type === 'income'
+                  ? 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600'
+                  : 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600'
+              }`}
             >
               {loading ? '保存中...' : transaction ? '更新' : '追加'}
             </button>
