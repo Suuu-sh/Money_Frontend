@@ -94,10 +94,32 @@ export default function CategorySelector({
   type,
   className = ''
 }: CategorySelectorProps) {
-  // タイプでフィルタリング
-  const filteredCategories = type 
+  // カテゴリの一般的な順序を定義
+  const getCategoryOrder = (categoryName: string, categoryType: string) => {
+    if (categoryType === 'income') {
+      const incomeOrder = ['給与', '賞与', '副業', '投資', 'その他収入'];
+      const index = incomeOrder.indexOf(categoryName);
+      return index === -1 ? 999 : index;
+    } else {
+      const expenseOrder = [
+        '食費', '住居費', '光熱費', '通信費', '交通費', 
+        '医療費', '日用品', '衣服費', '美容費', '教育費', 
+        '娯楽費', 'その他支出'
+      ];
+      const index = expenseOrder.indexOf(categoryName);
+      return index === -1 ? 999 : index;
+    }
+  };
+
+  // タイプでフィルタリングして、一般的な順序でソート
+  const filteredCategories = (type 
     ? categories.filter(cat => cat.type === type)
-    : categories;
+    : categories
+  ).sort((a, b) => {
+    const orderA = getCategoryOrder(a.name, a.type);
+    const orderB = getCategoryOrder(b.name, b.type);
+    return orderA - orderB;
+  });
 
   return (
     <div className={`w-full ${className}`}>
