@@ -15,22 +15,24 @@ interface DashboardProps {
   categories: Category[]
   stats: Stats | null
   selectedDate?: Date | null
+  currentMonth?: Date
   onTransactionUpdated?: () => void
   onAddTransaction?: (date: Date) => void
 }
 
-export default function Dashboard({ transactions, categories, stats, selectedDate, onTransactionUpdated, onAddTransaction }: DashboardProps) {
+export default function Dashboard({ transactions, categories, stats, selectedDate, currentMonth, onTransactionUpdated, onAddTransaction }: DashboardProps) {
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
 
   useEffect(() => {
     loadBudgetAnalysis()
-  }, [])
+  }, [currentMonth])
 
   const loadBudgetAnalysis = async () => {
     try {
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth() + 1
+      // currentMonthが指定されている場合はその月のデータを取得、なければ現在の月
+      const targetDate = currentMonth || new Date()
+      const year = targetDate.getFullYear()
+      const month = targetDate.getMonth() + 1
       
       const data = await fetchBudgetAnalysis(year, month)
       setBudgetAnalysis(data)
@@ -74,7 +76,7 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 予算概要 */}
         <div>
-          <BudgetOverview />
+          <BudgetOverview currentMonth={currentMonth} />
         </div>
         
         {/* 右側：取引履歴 */}

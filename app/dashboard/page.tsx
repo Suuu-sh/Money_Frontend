@@ -137,6 +137,7 @@ export default function DashboardPage() {
               categories={categories}
               stats={stats}
               selectedDate={selectedDate}
+              currentMonth={currentMonth}
               onTransactionUpdated={handleTransactionUpdated}
               onAddTransaction={handleAddTransactionForDate}
             />
@@ -153,6 +154,7 @@ export default function DashboardPage() {
             categories={categories}
             stats={stats}
             selectedDate={selectedDate}
+            currentMonth={currentMonth}
             onTransactionUpdated={handleTransactionUpdated}
             onAddTransaction={handleAddTransactionForDate}
           />

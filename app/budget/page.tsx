@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { BudgetAnalysis, FixedExpense, FixedTransaction, Category, CategoryBudget } from '../types'
-import { fetchBudgetAnalysis, fetchCategories } from '../lib/api'
+import { fetchBudgetAnalysis, fetchCategories, processMonthlyFixedTransactions } from '../lib/api'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
@@ -103,6 +103,18 @@ export default function BudgetPage() {
     loadBudgetAnalysis()
   }
 
+  const handleProcessMonthlyTransactions = async () => {
+    try {
+      await processMonthlyFixedTransactions()
+      alert('固定収支の月次処理が完了しました。毎月1日の取引として記録されました。')
+      // データを再読み込みして更新を反映
+      handleBudgetUpdated()
+    } catch (error) {
+      console.error('月次処理エラー:', error)
+      alert('月次処理に失敗しました。')
+    }
+  }
+
   const handleLogout = () => {
     localStorage.removeItem('token')
     router.push('/')
@@ -133,11 +145,11 @@ export default function BudgetPage() {
 
         {/* テスト用：月次レポート表示ボタン */}
         <div className="mb-6">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-sm font-medium text-yellow-800">テスト機能</h3>
-                <p className="text-sm text-yellow-700 mt-1">
+                <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">テスト機能</h3>
+                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
                   月次予算レポートの表示をテストできます
                 </p>
               </div>
@@ -148,6 +160,25 @@ export default function BudgetPage() {
                 <DocumentChartBarIcon className="w-5 h-5 mr-2" />
                 月次レポートを表示
               </button>
+            </div>
+            <div className="border-t border-yellow-200 dark:border-yellow-800 pt-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">固定収支の月次処理</h4>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                    固定収支を毎月1日の取引として生成します
+                  </p>
+                </div>
+                <button
+                  onClick={handleProcessMonthlyTransactions}
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  月次処理を実行
+                </button>
+              </div>
             </div>
           </div>
         </div>

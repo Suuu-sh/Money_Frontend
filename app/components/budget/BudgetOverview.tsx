@@ -5,22 +5,27 @@ import { BudgetAnalysis } from '../../types'
 import { fetchBudgetAnalysis } from '../../lib/api'
 import { CurrencyDollarIcon, CalendarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
-export default function BudgetOverview() {
+interface BudgetOverviewProps {
+  currentMonth?: Date
+}
+
+export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     loadBudgetAnalysis()
-  }, [])
+  }, [currentMonth])
 
   const loadBudgetAnalysis = async () => {
     try {
       setLoading(true)
       setError(null)
-      // 7月のデータを表示
-      const year = 2024
-      const month = 7
+      // currentMonthが指定されている場合はその月のデータを取得、なければ現在の月
+      const targetDate = currentMonth || new Date()
+      const year = targetDate.getFullYear()
+      const month = targetDate.getMonth() + 1
       
       const data = await fetchBudgetAnalysis(year, month)
       setAnalysis(data)
