@@ -64,6 +64,14 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
     return 'bg-green-50 dark:bg-green-900'
   }
 
+  const getMonthName = (month: number) => {
+    const monthNames = [
+      '1月', '2月', '3月', '4月', '5月', '6月',
+      '7月', '8月', '9月', '10月', '11月', '12月'
+    ]
+    return monthNames[month - 1] || `${month}月`
+  }
+
   if (loading) {
     return (
       <div className="card">
@@ -97,7 +105,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
           <CurrencyDollarIcon className="w-5 h-5 mr-2" />
-          今月の予算
+          {getMonthName(analysis.month)}の予算
         </h3>
         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
           <CalendarIcon className="w-4 h-4 mr-1" />
@@ -142,7 +150,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
             <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.totalFixedExpenses)}</div>
           </div>
           <div>
-            <div className="text-gray-600 dark:text-gray-400">今月の支出</div>
+            <div className="text-gray-600 dark:text-gray-400">{getMonthName(analysis.month)}の支出</div>
             <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.currentSpending)}</div>
           </div>
           <div>
@@ -154,7 +162,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
         {/* 残り日数 */}
         {analysis.daysRemaining > 0 && (
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-            今月残り {analysis.daysRemaining} 日
+            {getMonthName(analysis.month)}残り {analysis.daysRemaining} 日
           </div>
         )}
       </div>
