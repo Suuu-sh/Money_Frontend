@@ -72,23 +72,23 @@ const getCategoryThemeColor = (category: Category) => {
     };
   }
   
-  // フォールバック用のカラーマッピング（通常時も見える薄い背景色）
+  // フォールバック用のカラーマッピング（非常に薄い背景色）
   const colorMap: { [key: string]: { background: string; border: string; hover: string } } = {
-    '食費': { background: '#FEE2E2', border: '#FB923C', hover: '#FED7AA' },
-    '交通費': { background: '#DBEAFE', border: '#3B82F6', hover: '#BFDBFE' },
-    '娯楽費': { background: '#EDE9FE', border: '#8B5CF6', hover: '#DDD6FE' },
-    '光熱費': { background: '#FEF3C7', border: '#F59E0B', hover: '#FDE68A' },
-    '日用品': { background: '#D1FAE5', border: '#10B981', hover: '#BBF7D0' },
-    '医療費': { background: '#FEE2E2', border: '#EF4444', hover: '#FECACA' },
-    '住居費': { background: '#E0E7FF', border: '#6366F1', hover: '#C7D2FE' },
-    '教育費': { background: '#CCFBF1', border: '#14B8A6', hover: '#99F6E4' },
-    '美容費': { background: '#FCE7F3', border: '#EC4899', hover: '#FBCFE8' },
-    '衣服費': { background: '#CFFAFE', border: '#06B6D4', hover: '#A5F3FC' },
-    '貯金・投資': { background: '#D1FAE5', border: '#059669', hover: '#A7F3D0' },
-    '通信費': { background: '#F1F5F9', border: '#64748B', hover: '#CBD5E1' },
-    'その他支出': { background: '#F3F4F6', border: '#6B7280', hover: '#E5E7EB' },
-    '給与': { background: '#D1FAE5', border: '#10B981', hover: '#BBF7D0' },
-    'その他収入': { background: '#DBEAFE', border: '#3B82F6', hover: '#BFDBFE' },
+    '食費': { background: '#FEF7F7', border: '#FB923C', hover: '#FEE2E2' },
+    '交通費': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
+    '娯楽費': { background: '#FAF5FF', border: '#8B5CF6', hover: '#EDE9FE' },
+    '光熱費': { background: '#FFFCF5', border: '#F59E0B', hover: '#FEF3C7' },
+    '日用品': { background: '#F7FEF9', border: '#10B981', hover: '#D1FAE5' },
+    '医療費': { background: '#FEF7F7', border: '#EF4444', hover: '#FEE2E2' },
+    '住居費': { background: '#F7F9FF', border: '#6366F1', hover: '#E0E7FF' },
+    '教育費': { background: '#F5FFFE', border: '#14B8A6', hover: '#CCFBF1' },
+    '美容費': { background: '#FEF7FB', border: '#EC4899', hover: '#FCE7F3' },
+    '衣服費': { background: '#F0FDFF', border: '#06B6D4', hover: '#CFFAFE' },
+    '貯金・投資': { background: '#F7FEF9', border: '#059669', hover: '#D1FAE5' },
+    '通信費': { background: '#FAFBFC', border: '#64748B', hover: '#F1F5F9' },
+    'その他支出': { background: '#FAFBFC', border: '#6B7280', hover: '#F3F4F6' },
+    '給与': { background: '#F7FEF9', border: '#10B981', hover: '#D1FAE5' },
+    'その他収入': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
   };
   
   return colorMap[category.name] || { background: '#E5E7EB', border: '#6B7280', hover: '#D1D5DB' };
@@ -127,8 +127,8 @@ export default function CategorySelector({
         />
       </div>
 
-      {/* カテゴリグリッド */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 max-h-80 overflow-y-auto">
+      {/* カテゴリグリッド（横長カード） */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-80 overflow-y-auto">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
           const themeColor = getCategoryThemeColor(category);
@@ -140,9 +140,9 @@ export default function CategorySelector({
               key={category.id}
               onClick={() => onSelect(category)}
               className={`
-                relative p-3 rounded-lg border-2 transition-all duration-200 
+                relative px-4 py-3 rounded-lg border-2 transition-all duration-200 
                 hover:shadow-md hover:scale-105 active:scale-95
-                flex flex-col items-center justify-center min-h-[70px]
+                flex items-center justify-start min-h-[50px]
                 ${isSelected 
                   ? 'border-blue-500 shadow-md ring-2 ring-blue-200' 
                   : 'border-transparent'
@@ -171,12 +171,12 @@ export default function CategorySelector({
               )}
               
               {/* アイコン */}
-              <div className="mb-2">
+              <div className="mr-3 flex-shrink-0">
                 {icon}
               </div>
               
               {/* カテゴリ名（日本語のみ） */}
-              <span className={`text-xs font-medium text-center leading-tight ${
+              <span className={`text-sm font-medium ${
                 isSelected ? 'text-blue-700' : 'text-gray-800'
               }`}>
                 {category.name}
