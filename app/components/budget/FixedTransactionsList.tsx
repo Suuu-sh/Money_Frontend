@@ -75,6 +75,14 @@ export default function FixedTransactionsList({
     return type === 'income' ? `+${formatted}` : formatted
   }
 
+  // 16進数カラーコードをRGBAに変換する関数
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
   }
@@ -242,32 +250,27 @@ export default function FixedTransactionsList({
           sortedTransactions.map((transaction) => (
             <div
               key={transaction.id}
-              className={`border rounded-md p-2 ${
-                transaction.isActive ? 'border-gray-200 dark:border-gray-600' : 'border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700'
+              className={`rounded-md p-2 transition-colors ${
+                !transaction.isActive ? 'opacity-60' : ''
               }`}
+              style={{
+                backgroundColor: transaction.category 
+                  ? hexToRgba(transaction.category.color, 0.1)
+                  : transaction.type === 'income' 
+                    ? 'rgba(34, 197, 94, 0.1)' // green-500 with 10% opacity
+                    : 'rgba(239, 68, 68, 0.1)', // red-500 with 10% opacity
+                borderLeft: `4px solid ${
+                  transaction.category 
+                    ? transaction.category.color
+                    : transaction.type === 'income' 
+                      ? '#22c55e' // green-500
+                      : '#ef4444' // red-500
+                }`
+              }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
-                    <div className={`w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center ${
-                      transaction.type === 'income' 
-                        ? 'bg-green-500' 
-                        : 'bg-red-500'
-                    }`}>
-                      {transaction.type === 'income' ? (
-                        <ArrowTrendingUpIcon className="w-2.5 h-2.5 text-white" />
-                      ) : (
-                        <ArrowTrendingDownIcon className="w-2.5 h-2.5 text-white" />
-                      )}
-                    </div>
-                    {transaction.category && (
-                      <div
-                        className="w-4 h-4 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: transaction.category.color }}
-                        title={transaction.category.name}
-                      >
-                      </div>
-                    )}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center space-x-2">
                         <h3 className={`text-sm font-medium truncate ${
@@ -275,6 +278,11 @@ export default function FixedTransactionsList({
                         }`}>
                           {transaction.name}
                         </h3>
+                        <span className={`text-xs px-1.5 py-0.5 rounded text-white font-medium ${
+                          transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
+                        }`}>
+                          {transaction.type === 'income' ? '収入' : '支出'}
+                        </span>
                         {transaction.category && (
                           <span className="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">
                             {transaction.category.name}

@@ -226,3 +226,27 @@ export const fetchCategoryBudgetAnalysis = async (year: number, month: number): 
   const response = await api.get(`/category-budgets/analysis/${year}/${month}`)
   return response.data
 }
+
+// Monthly Budget Report API
+export const fetchMonthlyBudgetReport = async (year: number, month: number): Promise<{
+  month: string
+  year: number
+  categories: {
+    id: string
+    name: string
+    budgetAmount: number
+    actualAmount: number
+    percentage: number
+    status: 'over' | 'under' | 'exact'
+  }[]
+  totalBudget: number
+  totalSpent: number
+  overallStatus: 'over' | 'under' | 'exact'
+}> => {
+  const response = await api.get(`/budget/monthly-report/${year}/${month}`)
+  return response.data
+}
+
+export const continueBudgetSettings = async (year: number, month: number): Promise<void> => {
+  await api.post(`/budget/continue/${year}/${month}`)
+}

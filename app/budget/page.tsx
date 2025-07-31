@@ -20,7 +20,9 @@ import BudgetHistory from '../components/budget/BudgetHistory'
 import CategoryBudgetOverview from '../components/budget/CategoryBudgetOverview'
 import CategoryBudgetList from '../components/budget/CategoryBudgetList'
 import CategoryBudgetModal from '../components/budget/CategoryBudgetModal'
-import { CurrencyDollarIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
+import MonthlyBudgetReport from '../components/budget/MonthlyBudgetReport'
+import { useMonthlyBudgetReport } from '../hooks/useMonthlyBudgetReport'
+import { CurrencyDollarIcon, Cog6ToothIcon, DocumentChartBarIcon } from '@heroicons/react/24/outline'
 
 export default function BudgetPage() {
   const router = useRouter()
@@ -37,6 +39,16 @@ export default function BudgetPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
   const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
+  
+  // 月次レポート機能
+  const {
+    shouldShowReport,
+    reportData,
+    showTestReport,
+    closeReport,
+    continueBudget,
+    modifyBudget
+  } = useMonthlyBudgetReport()
 
   useEffect(() => {
     // Check if user is authenticated
@@ -117,6 +129,27 @@ export default function BudgetPage() {
         {/* アラート表示 */}
         <div className="mb-6">
           <BudgetAlerts analysis={analysis} />
+        </div>
+
+        {/* テスト用：月次レポート表示ボタン */}
+        <div className="mb-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium text-yellow-800">テスト機能</h3>
+                <p className="text-sm text-yellow-700 mt-1">
+                  月次予算レポートの表示をテストできます
+                </p>
+              </div>
+              <button
+                onClick={showTestReport}
+                className="flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                <DocumentChartBarIcon className="w-5 h-5 mr-2" />
+                月次レポートを表示
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* メインセクション: カテゴリ別予算 */}
@@ -219,6 +252,17 @@ export default function BudgetPage() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
       />
+
+      {/* 月次予算レポートモーダル */}
+      {shouldShowReport && reportData && (
+        <MonthlyBudgetReport
+          isOpen={shouldShowReport}
+          onClose={closeReport}
+          reportData={reportData}
+          onContinueBudget={continueBudget}
+          onModifyBudget={modifyBudget}
+        />
+      )}
     </div>
   )
 }
