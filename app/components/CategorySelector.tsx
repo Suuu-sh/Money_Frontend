@@ -72,23 +72,23 @@ const getCategoryThemeColor = (category: Category) => {
     };
   }
   
-  // フォールバック用のカラーマッピング（より薄い背景色）
+  // フォールバック用のカラーマッピング（通常時も見える薄い背景色）
   const colorMap: { [key: string]: { background: string; border: string; hover: string } } = {
-    '食費': { background: '#FEF2F2', border: '#FB923C', hover: '#FED7AA' },
-    '交通費': { background: '#EFF6FF', border: '#3B82F6', hover: '#BFDBFE' },
-    '娯楽費': { background: '#F5F3FF', border: '#8B5CF6', hover: '#DDD6FE' },
-    '光熱費': { background: '#FFFBEB', border: '#F59E0B', hover: '#FEF3C7' },
-    '日用品': { background: '#F0FDF4', border: '#10B981', hover: '#BBF7D0' },
-    '医療費': { background: '#FEF2F2', border: '#EF4444', hover: '#FECACA' },
-    '住居費': { background: '#EEF2FF', border: '#6366F1', hover: '#C7D2FE' },
-    '教育費': { background: '#F0FDFA', border: '#14B8A6', hover: '#99F6E4' },
-    '美容費': { background: '#FDF2F8', border: '#EC4899', hover: '#FBCFE8' },
-    '衣服費': { background: '#ECFEFF', border: '#06B6D4', hover: '#A5F3FC' },
-    '貯金・投資': { background: '#ECFDF5', border: '#059669', hover: '#A7F3D0' },
-    '通信費': { background: '#F8FAFC', border: '#64748B', hover: '#CBD5E1' },
-    'その他支出': { background: '#F9FAFB', border: '#6B7280', hover: '#E5E7EB' },
-    '給与': { background: '#F0FDF4', border: '#10B981', hover: '#BBF7D0' },
-    'その他収入': { background: '#EFF6FF', border: '#3B82F6', hover: '#BFDBFE' },
+    '食費': { background: '#FEE2E2', border: '#FB923C', hover: '#FED7AA' },
+    '交通費': { background: '#DBEAFE', border: '#3B82F6', hover: '#BFDBFE' },
+    '娯楽費': { background: '#EDE9FE', border: '#8B5CF6', hover: '#DDD6FE' },
+    '光熱費': { background: '#FEF3C7', border: '#F59E0B', hover: '#FDE68A' },
+    '日用品': { background: '#D1FAE5', border: '#10B981', hover: '#BBF7D0' },
+    '医療費': { background: '#FEE2E2', border: '#EF4444', hover: '#FECACA' },
+    '住居費': { background: '#E0E7FF', border: '#6366F1', hover: '#C7D2FE' },
+    '教育費': { background: '#CCFBF1', border: '#14B8A6', hover: '#99F6E4' },
+    '美容費': { background: '#FCE7F3', border: '#EC4899', hover: '#FBCFE8' },
+    '衣服費': { background: '#CFFAFE', border: '#06B6D4', hover: '#A5F3FC' },
+    '貯金・投資': { background: '#D1FAE5', border: '#059669', hover: '#A7F3D0' },
+    '通信費': { background: '#F1F5F9', border: '#64748B', hover: '#CBD5E1' },
+    'その他支出': { background: '#F3F4F6', border: '#6B7280', hover: '#E5E7EB' },
+    '給与': { background: '#D1FAE5', border: '#10B981', hover: '#BBF7D0' },
+    'その他収入': { background: '#DBEAFE', border: '#3B82F6', hover: '#BFDBFE' },
   };
   
   return colorMap[category.name] || { background: '#E5E7EB', border: '#6B7280', hover: '#D1D5DB' };
