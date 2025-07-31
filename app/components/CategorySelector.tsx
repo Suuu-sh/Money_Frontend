@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Category } from '../types';
 import { 
-  Search, 
   Check, 
   Utensils, 
   Car, 
@@ -95,32 +94,13 @@ export default function CategorySelector({
   type,
   className = ''
 }: CategorySelectorProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-
   // タイプでフィルタリング
-  const filteredByType = type 
+  const filteredCategories = type 
     ? categories.filter(cat => cat.type === type)
     : categories;
 
-  // 検索でフィルタリング
-  const filteredCategories = filteredByType.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className={`w-full ${className}`}>
-      {/* 検索バー */}
-      <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-        <input
-          type="text"
-          placeholder="カテゴリを検索..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
-
       {/* カテゴリグリッド（横長カード） */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-80 overflow-y-auto">
         {filteredCategories.map((category) => {
@@ -180,16 +160,11 @@ export default function CategorySelector({
         })}
       </div>
 
-      {/* 結果が見つからない場合 */}
+      {/* カテゴリが見つからない場合 */}
       {filteredCategories.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-2">🔍</div>
-          <p>該当するカテゴリが見つかりません</p>
-          {searchTerm && (
-            <p className="text-sm mt-1">
-              「{searchTerm}」の検索結果
-            </p>
-          )}
+          <div className="text-4xl mb-2">📂</div>
+          <p>該当するカテゴリがありません</p>
         </div>
       )}
     </div>
