@@ -37,29 +37,37 @@ const getCategoryIcon = (name: string, icon?: string) => {
   return iconMap[name] || '📁';
 };
 
-// カテゴリカラーのマッピング
-const getCategoryColor = (name: string, color?: string) => {
-  if (color) return color;
+// カテゴリのテーマカラーを取得（実際のcolorプロパティを使用）
+const getCategoryThemeColor = (category: Category) => {
+  // カテゴリのcolorプロパティがある場合はそれを使用
+  if (category.color) {
+    return {
+      background: category.color,
+      border: category.color,
+      hover: category.color
+    };
+  }
   
-  const colorMap: { [key: string]: string } = {
-    '食費': 'bg-orange-100 border-orange-200 hover:bg-orange-200',
-    '交通費': 'bg-blue-100 border-blue-200 hover:bg-blue-200',
-    '娯楽費': 'bg-purple-100 border-purple-200 hover:bg-purple-200',
-    '光熱費': 'bg-yellow-100 border-yellow-200 hover:bg-yellow-200',
-    '日用品': 'bg-green-100 border-green-200 hover:bg-green-200',
-    '医療費': 'bg-red-100 border-red-200 hover:bg-red-200',
-    '住居費': 'bg-indigo-100 border-indigo-200 hover:bg-indigo-200',
-    '教育費': 'bg-teal-100 border-teal-200 hover:bg-teal-200',
-    '美容費': 'bg-pink-100 border-pink-200 hover:bg-pink-200',
-    '衣服費': 'bg-cyan-100 border-cyan-200 hover:bg-cyan-200',
-    '貯金・投資': 'bg-emerald-100 border-emerald-200 hover:bg-emerald-200',
-    '通信費': 'bg-slate-100 border-slate-200 hover:bg-slate-200',
-    'その他支出': 'bg-gray-100 border-gray-200 hover:bg-gray-200',
-    '給与': 'bg-green-100 border-green-200 hover:bg-green-200',
-    'その他収入': 'bg-blue-100 border-blue-200 hover:bg-blue-200',
+  // フォールバック用のカラーマッピング
+  const colorMap: { [key: string]: { background: string; border: string; hover: string } } = {
+    '食費': { background: '#FED7AA', border: '#FB923C', hover: '#FDBA74' },
+    '交通費': { background: '#BFDBFE', border: '#3B82F6', hover: '#93C5FD' },
+    '娯楽費': { background: '#DDD6FE', border: '#8B5CF6', hover: '#C4B5FD' },
+    '光熱費': { background: '#FEF3C7', border: '#F59E0B', hover: '#FDE68A' },
+    '日用品': { background: '#BBF7D0', border: '#10B981', hover: '#86EFAC' },
+    '医療費': { background: '#FECACA', border: '#EF4444', hover: '#FCA5A5' },
+    '住居費': { background: '#C7D2FE', border: '#6366F1', hover: '#A5B4FC' },
+    '教育費': { background: '#99F6E4', border: '#14B8A6', hover: '#5EEAD4' },
+    '美容費': { background: '#FBCFE8', border: '#EC4899', hover: '#F9A8D4' },
+    '衣服費': { background: '#A5F3FC', border: '#06B6D4', hover: '#67E8F9' },
+    '貯金・投資': { background: '#A7F3D0', border: '#059669', hover: '#6EE7B7' },
+    '通信費': { background: '#CBD5E1', border: '#64748B', hover: '#94A3B8' },
+    'その他支出': { background: '#E5E7EB', border: '#6B7280', hover: '#D1D5DB' },
+    '給与': { background: '#BBF7D0', border: '#10B981', hover: '#86EFAC' },
+    'その他収入': { background: '#BFDBFE', border: '#3B82F6', hover: '#93C5FD' },
   };
   
-  return colorMap[name] || 'bg-gray-100 border-gray-200 hover:bg-gray-200';
+  return colorMap[category.name] || { background: '#E5E7EB', border: '#6B7280', hover: '#D1D5DB' };
 };
 
 export default function CategorySelector({
@@ -96,41 +104,55 @@ export default function CategorySelector({
       </div>
 
       {/* カテゴリグリッド */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-80 overflow-y-auto">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 max-h-80 overflow-y-auto">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
           const icon = getCategoryIcon(category.name, category.icon);
-          const colorClass = getCategoryColor(category.name, category.color);
+          const themeColor = getCategoryThemeColor(category);
           
           return (
             <button
               key={category.id}
               onClick={() => onSelect(category)}
               className={`
-                relative p-4 rounded-lg border-2 transition-all duration-200 
-                ${isSelected 
-                  ? 'border-blue-500 bg-blue-50 shadow-md' 
-                  : `${colorClass} border-2`
-                }
+                relative p-2 rounded-lg border-2 transition-all duration-200 
                 hover:shadow-md hover:scale-105 active:scale-95
-                flex flex-col items-center justify-center min-h-[80px]
+                flex flex-col items-center justify-center min-h-[60px]
+                ${isSelected 
+                  ? 'border-blue-500 shadow-md ring-2 ring-blue-200' 
+                  : 'border-transparent'
+                }
               `}
+              style={{
+                backgroundColor: isSelected ? '#EBF8FF' : themeColor.background,
+                borderColor: isSelected ? '#3B82F6' : themeColor.border,
+              }}
+              onMouseEnter={(e) => {
+                if (!isSelected) {
+                  e.currentTarget.style.backgroundColor = themeColor.hover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isSelected) {
+                  e.currentTarget.style.backgroundColor = themeColor.background;
+                }
+              }}
             >
               {/* 選択チェックマーク */}
               {isSelected && (
-                <div className="absolute top-1 right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                  <Check className="w-3 h-3 text-white" />
+                <div className="absolute top-1 right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5 text-white" />
                 </div>
               )}
               
               {/* アイコン */}
-              <div className="text-2xl mb-1">
+              <div className="text-lg mb-1">
                 {icon}
               </div>
               
               {/* カテゴリ名 */}
               <span className={`text-xs font-medium text-center leading-tight ${
-                isSelected ? 'text-blue-700' : 'text-gray-700'
+                isSelected ? 'text-blue-700' : 'text-gray-800'
               }`}>
                 {category.name}
               </span>
