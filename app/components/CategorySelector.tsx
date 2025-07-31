@@ -61,37 +61,31 @@ const getCategoryIcon = (name: string, iconColor: string = '#6B7280') => {
   return iconMap[name] || <ShoppingBag {...iconProps} />;
 };
 
-// カテゴリのテーマカラーを取得（実際のcolorプロパティを使用）
+// カテゴリのテーマカラーを取得（薄い色を強制使用）
 const getCategoryThemeColor = (category: Category) => {
-  // カテゴリのcolorプロパティがある場合はそれを使用
-  if (category.color) {
-    return {
-      background: category.color,
-      border: category.color,
-      hover: category.color
-    };
-  }
-  
-  // フォールバック用のカラーマッピング（非常に薄い背景色）
+  // データベースの濃い色は使用せず、常に薄い色を使用
   const colorMap: { [key: string]: { background: string; border: string; hover: string } } = {
-    '食費': { background: '#FEF7F7', border: '#FB923C', hover: '#FEE2E2' },
-    '交通費': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
-    '娯楽費': { background: '#FAF5FF', border: '#8B5CF6', hover: '#EDE9FE' },
-    '光熱費': { background: '#FFFCF5', border: '#F59E0B', hover: '#FEF3C7' },
-    '日用品': { background: '#F7FEF9', border: '#10B981', hover: '#D1FAE5' },
-    '医療費': { background: '#FEF7F7', border: '#EF4444', hover: '#FEE2E2' },
-    '住居費': { background: '#F7F9FF', border: '#6366F1', hover: '#E0E7FF' },
-    '教育費': { background: '#F5FFFE', border: '#14B8A6', hover: '#CCFBF1' },
+    '食費': { background: '#FEF7F7', border: '#EF4444', hover: '#FEE2E2' },
+    '交通費': { background: '#F0F9FF', border: '#22C55E', hover: '#DBEAFE' },
+    '娯楽費': { background: '#FAF5FF', border: '#F59E0B', hover: '#EDE9FE' },
+    '光熱費': { background: '#FFFCF5', border: '#EAB308', hover: '#FEF3C7' },
+    '日用品': { background: '#F7FEF9', border: '#84CC16', hover: '#D1FAE5' },
+    '医療費': { background: '#FEF7F7', border: '#EC4899', hover: '#FEE2E2' },
+    '住居費': { background: '#F7F9FF', border: '#F97316', hover: '#E0E7FF' },
+    '教育費': { background: '#F5FFFE', border: '#8B5CF6', hover: '#CCFBF1' },
     '美容費': { background: '#FEF7FB', border: '#EC4899', hover: '#FCE7F3' },
     '衣服費': { background: '#F0FDFF', border: '#06B6D4', hover: '#CFFAFE' },
     '貯金・投資': { background: '#F7FEF9', border: '#059669', hover: '#D1FAE5' },
-    '通信費': { background: '#FAFBFC', border: '#64748B', hover: '#F1F5F9' },
+    '通信費': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
     'その他支出': { background: '#FAFBFC', border: '#6B7280', hover: '#F3F4F6' },
     '給与': { background: '#F7FEF9', border: '#10B981', hover: '#D1FAE5' },
+    '副業': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
+    '投資': { background: '#FAF5FF', border: '#8B5CF6', hover: '#EDE9FE' },
+    '賞与': { background: '#FFFCF5', border: '#F59E0B', hover: '#FEF3C7' },
     'その他収入': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
   };
   
-  return colorMap[category.name] || { background: '#E5E7EB', border: '#6B7280', hover: '#D1D5DB' };
+  return colorMap[category.name] || { background: '#FAFBFC', border: '#6B7280', hover: '#F3F4F6' };
 };
 
 export default function CategorySelector({
