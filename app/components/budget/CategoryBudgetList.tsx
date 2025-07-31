@@ -77,6 +77,14 @@ export default function CategoryBudgetList({
     return 'bg-green-500'
   }
 
+  // 16進数カラーコードをRGBAに変換する関数
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+
   if (loading) {
     return (
       <div className="card">
@@ -131,7 +139,14 @@ export default function CategoryBudgetList({
             const isOverBudget = totalSpent > item.budgetAmount
             
             return (
-              <div key={item.categoryId} className="bg-gray-50 dark:bg-gray-700 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+              <div 
+                key={item.categoryId} 
+                className="rounded-md p-2 transition-colors"
+                style={{ 
+                  backgroundColor: hexToRgba(item.categoryColor, 0.1),
+                  borderLeft: `4px solid ${item.categoryColor}`
+                }}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center space-x-1.5">
                     <div 
