@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Category, CategoryBudget } from '../../types'
 import { createCategoryBudget, updateCategoryBudget } from '../../lib/api'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import CategorySelector from '../CategorySelector'
 
 interface CategoryBudgetModalProps {
   isOpen: boolean
@@ -122,38 +123,17 @@ export default function CategoryBudgetModal({
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
               カテゴリ
             </label>
-            <select
-              value={formData.categoryId}
-              onChange={(e) => setFormData({ ...formData, categoryId: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              disabled={!!budget}
-            >
-              <option value={0}>カテゴリを選択</option>
-              {expenseCategories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.icon} {category.name}
-                </option>
-              ))}
-            </select>
+            <CategorySelector
+              categories={categories}
+              selectedCategoryId={formData.categoryId || undefined}
+              onSelect={(category) => setFormData({ ...formData, categoryId: category.id })}
+              type="expense"
+              className={budget ? 'pointer-events-none opacity-50' : ''}
+            />
           </div>
-
-          {selectedCategory && (
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md">
-              <div 
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm"
-                style={{ backgroundColor: selectedCategory.color }}
-              >
-                {selectedCategory.icon}
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">{selectedCategory.name}</p>
-                <p className="text-sm text-gray-500">{selectedCategory.description}</p>
-              </div>
-            </div>
-          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

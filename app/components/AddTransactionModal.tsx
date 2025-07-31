@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Category } from '../types'
 import { createTransaction } from '../lib/api'
+import CategorySelector from './CategorySelector'
 
 interface AddTransactionModalProps {
   categories: Category[]
@@ -128,22 +129,15 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
                 カテゴリ *
               </label>
-              <select
-                required
-                value={formData.categoryId}
-                onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                className="input-field text-base"
-              >
-                <option value="">カテゴリを選択</option>
-                {filteredCategories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.icon} {category.name}
-                  </option>
-                ))}
-              </select>
+              <CategorySelector
+                categories={categories}
+                selectedCategoryId={formData.categoryId ? parseInt(formData.categoryId) : undefined}
+                onSelect={(category) => setFormData({ ...formData, categoryId: category.id.toString() })}
+                type={formData.type}
+              />
             </div>
 
             <div>

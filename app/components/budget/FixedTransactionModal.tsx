@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { FixedTransaction, Category, FixedTransactionRequest } from '../../types'
 import { fetchCategories, createFixedTransaction, updateFixedTransaction } from '../../lib/api'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import CategorySelector from '../CategorySelector'
 
 interface FixedTransactionModalProps {
   isOpen: boolean
@@ -211,23 +212,17 @@ export default function FixedTransactionModal({
 
           {/* カテゴリ */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
               カテゴリ <span className="text-red-500">*</span>
             </label>
-            <select
-              value={formData.categoryId || ''}
-              onChange={(e) => setFormData({ ...formData, categoryId: e.target.value ? Number(e.target.value) : 0 })}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.categoryId ? 'border-red-500' : 'border-gray-300'
-              }`}
-            >
-              <option value="">カテゴリを選択してください</option>
-              {filteredCategories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.icon} {category.name}
-                </option>
-              ))}
-            </select>
+            <div className={`${errors.categoryId ? 'border-2 border-red-500 rounded-lg p-2' : ''}`}>
+              <CategorySelector
+                categories={categories}
+                selectedCategoryId={formData.categoryId || undefined}
+                onSelect={(category) => setFormData({ ...formData, categoryId: category.id })}
+                type={formData.type}
+              />
+            </div>
             {errors.categoryId && (
               <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>
             )}
