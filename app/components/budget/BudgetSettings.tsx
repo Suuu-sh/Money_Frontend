@@ -151,7 +151,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="block w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="300000"
+              placeholder="金額を入力"
               min="0"
               step="1000"
               required

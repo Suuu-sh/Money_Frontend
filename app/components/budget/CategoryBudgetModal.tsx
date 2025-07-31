@@ -148,7 +148,7 @@ export default function CategoryBudgetModal({
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                 className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="0"
+                placeholder="金額を入力"
                 min="0"
                 step="1"
               />

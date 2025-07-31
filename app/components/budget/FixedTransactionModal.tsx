@@ -19,10 +19,10 @@ export default function FixedTransactionModal({
   onSave,
   transaction
 }: FixedTransactionModalProps) {
-  const [formData, setFormData] = useState<FixedTransactionRequest>({
+  const [formData, setFormData] = useState({
     name: '',
-    amount: 0,
-    type: 'expense',
+    amount: '',
+    type: 'expense' as 'income' | 'expense',
     categoryId: 0,
     description: '',
     isActive: true
@@ -37,7 +37,7 @@ export default function FixedTransactionModal({
       if (transaction) {
         setFormData({
           name: transaction.name,
-          amount: transaction.amount,
+          amount: transaction.amount.toString(),
           type: transaction.type,
           categoryId: transaction.categoryId,
           description: transaction.description,
@@ -46,7 +46,7 @@ export default function FixedTransactionModal({
       } else {
         setFormData({
           name: '',
-          amount: 0,
+          amount: '',
           type: 'expense',
           categoryId: 0,
           description: '',
@@ -73,7 +73,8 @@ export default function FixedTransactionModal({
       newErrors.name = '名前は必須です'
     }
 
-    if (formData.amount <= 0) {
+    const amountValue = parseFloat(formData.amount)
+    if (!formData.amount || isNaN(amountValue) || amountValue <= 0) {
       newErrors.amount = '金額は0より大きい値を入力してください'
     }
 
@@ -98,7 +99,7 @@ export default function FixedTransactionModal({
       // 新しい固定収支APIを使用
       const requestData: FixedTransactionRequest = {
         name: formData.name,
-        amount: formData.amount,
+        amount: parseFloat(formData.amount),
         type: formData.type,
         categoryId: formData.categoryId,
         description: formData.description,
@@ -198,10 +199,11 @@ export default function FixedTransactionModal({
             <input
               type="number"
               value={formData.amount}
-              onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
+              onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.amount ? 'border-red-500' : 'border-gray-300'
               }`}
+              placeholder="金額を入力"
               min="0"
               step="1"
             />
