@@ -52,20 +52,20 @@ export default function BudgetOverview() {
   }
 
   const getBudgetBgColor = (remainingBudget: number, monthlyBudget: number) => {
-    if (remainingBudget < 0) return 'bg-red-50'
+    if (remainingBudget < 0) return 'bg-red-50 dark:bg-red-900'
     const percentage = (remainingBudget / monthlyBudget) * 100
-    if (percentage < 10) return 'bg-red-50'
-    if (percentage < 20) return 'bg-yellow-50'
-    return 'bg-green-50'
+    if (percentage < 10) return 'bg-red-50 dark:bg-red-900'
+    if (percentage < 20) return 'bg-yellow-50 dark:bg-yellow-900'
+    return 'bg-green-50 dark:bg-green-900'
   }
 
   if (loading) {
     return (
       <div className="card">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-8 bg-gray-200 rounded w-1/2 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/4 mb-4"></div>
+          <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded w-1/2 mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
         </div>
       </div>
     )
@@ -74,7 +74,7 @@ export default function BudgetOverview() {
   if (error) {
     return (
       <div className="card">
-        <div className="flex items-center space-x-2 text-gray-500">
+        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
           <ExclamationTriangleIcon className="w-5 h-5" />
           <span>{error}</span>
         </div>
@@ -90,11 +90,11 @@ export default function BudgetOverview() {
   return (
     <div className={`card ${getBudgetBgColor(analysis.remainingBudget, analysis.monthlyBudget)}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
           <CurrencyDollarIcon className="w-5 h-5 mr-2" />
           今月の予算
         </h3>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
           <CalendarIcon className="w-4 h-4 mr-1" />
           {analysis.year}年{analysis.month}月
         </div>
@@ -103,19 +103,19 @@ export default function BudgetOverview() {
       <div className="space-y-4">
         {/* 残り予算 */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${getBudgetColor(analysis.remainingBudget, analysis.monthlyBudget)}`}>
+          <div className={`text-3xl font-bold ${getBudgetColor(analysis.remainingBudget, analysis.monthlyBudget)} dark:${getBudgetColor(analysis.remainingBudget, analysis.monthlyBudget).replace('600', '400')}`}>
             {formatAmount(analysis.remainingBudget)}
           </div>
-          <div className="text-sm text-gray-600">残り使用可能金額</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">残り使用可能金額</div>
         </div>
 
         {/* 予算進捗バー */}
         <div className="space-y-2">
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>使用済み</span>
             <span>{progressPercentage.toFixed(1)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
             <div
               className={`h-3 rounded-full transition-all duration-300 ${
                 progressPercentage > 90 ? 'bg-red-500' :
@@ -129,26 +129,26 @@ export default function BudgetOverview() {
         {/* 詳細情報 */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-gray-600">月次予算</div>
-            <div className="font-semibold">{formatAmount(analysis.monthlyBudget)}</div>
+            <div className="text-gray-600 dark:text-gray-400">月次予算</div>
+            <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.monthlyBudget)}</div>
           </div>
           <div>
-            <div className="text-gray-600">固定費</div>
-            <div className="font-semibold">{formatAmount(analysis.totalFixedExpenses)}</div>
+            <div className="text-gray-600 dark:text-gray-400">固定費</div>
+            <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.totalFixedExpenses)}</div>
           </div>
           <div>
-            <div className="text-gray-600">今月の支出</div>
-            <div className="font-semibold">{formatAmount(analysis.currentSpending)}</div>
+            <div className="text-gray-600 dark:text-gray-400">今月の支出</div>
+            <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.currentSpending)}</div>
           </div>
           <div>
-            <div className="text-gray-600">1日あたり</div>
-            <div className="font-semibold">{formatAmount(analysis.dailyAverage)}</div>
+            <div className="text-gray-600 dark:text-gray-400">1日あたり</div>
+            <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.dailyAverage)}</div>
           </div>
         </div>
 
         {/* 残り日数 */}
         {analysis.daysRemaining > 0 && (
-          <div className="text-center text-sm text-gray-600">
+          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
             今月残り {analysis.daysRemaining} 日
           </div>
         )}

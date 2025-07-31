@@ -130,15 +130,15 @@ export default function SpendingTrendAnalysis() {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">支出トレンド分析</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">支出トレンド分析</h3>
         <div className="flex items-center space-x-2">
-          <CalendarIcon className="w-4 h-4 text-gray-500" />
+          <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
           <select
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value as any)}
-            className="text-sm border border-gray-300 rounded px-2 py-1"
+            className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="3months">過去3ヶ月</option>
             <option value="6months">過去6ヶ月</option>
@@ -149,22 +149,22 @@ export default function SpendingTrendAnalysis() {
 
       {/* トレンドサマリー */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-50 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-600 font-medium">月平均支出</p>
-              <p className="text-xl font-bold text-blue-900">{formatCurrency(averageSpending)}</p>
+              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">月平均支出</p>
+              <p className="text-xl font-bold text-blue-900 dark:text-blue-100">{formatCurrency(averageSpending)}</p>
             </div>
           </div>
         </div>
 
         <div className={`rounded-lg p-4 ${
-          trend.trend === 'up' ? 'bg-red-50' : trend.trend === 'down' ? 'bg-green-50' : 'bg-gray-50'
+          trend.trend === 'up' ? 'bg-red-50 dark:bg-red-900' : trend.trend === 'down' ? 'bg-green-50 dark:bg-green-900' : 'bg-gray-50 dark:bg-gray-700'
         }`}>
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${
-                trend.trend === 'up' ? 'text-red-600' : trend.trend === 'down' ? 'text-green-600' : 'text-gray-600'
+                trend.trend === 'up' ? 'text-red-600 dark:text-red-400' : trend.trend === 'down' ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'
               }`}>
                 前月比
               </p>
@@ -172,7 +172,7 @@ export default function SpendingTrendAnalysis() {
                 {trend.trend === 'up' && <ArrowTrendingUpIcon className="w-5 h-5 text-red-500" />}
                 {trend.trend === 'down' && <ArrowTrendingDownIcon className="w-5 h-5 text-green-500" />}
                 <p className={`text-xl font-bold ${
-                  trend.trend === 'up' ? 'text-red-900' : trend.trend === 'down' ? 'text-green-900' : 'text-gray-900'
+                  trend.trend === 'up' ? 'text-red-900 dark:text-red-100' : trend.trend === 'down' ? 'text-green-900 dark:text-green-100' : 'text-gray-900 dark:text-gray-100'
                 }`}>
                   {trend.percentage > 0 ? '+' : ''}{trend.percentage.toFixed(1)}%
                 </p>
@@ -181,11 +181,11 @@ export default function SpendingTrendAnalysis() {
           </div>
         </div>
 
-        <div className="bg-orange-50 rounded-lg p-4">
+        <div className="bg-orange-50 dark:bg-orange-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-orange-600 font-medium">最高支出月</p>
-              <p className="text-xl font-bold text-orange-900">{formatCurrency(maxSpending)}</p>
+              <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">最高支出月</p>
+              <p className="text-xl font-bold text-orange-900 dark:text-orange-100">{formatCurrency(maxSpending)}</p>
             </div>
           </div>
         </div>
@@ -193,37 +193,37 @@ export default function SpendingTrendAnalysis() {
 
       {/* 月別支出グラフ */}
       <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">月別支出推移</h4>
+        <h4 className="font-medium text-gray-900 dark:text-white">月別支出推移</h4>
         {monthlyData.map((data) => (
           <div key={data.month} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">{formatMonth(data.month)}</span>
-              <span className="font-medium text-gray-900">{formatCurrency(data.spending)}</span>
+              <span className="text-gray-600 dark:text-gray-400">{formatMonth(data.month)}</span>
+              <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(data.spending)}</span>
             </div>
             
             <div className="space-y-1">
               {/* 固定費バー */}
               <div className="flex items-center space-x-2">
-                <div className="w-16 bg-gray-200 rounded-full h-2">
+                <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                   <div
                     className="h-2 rounded-full bg-gray-500"
                     style={{ width: `${maxSpending > 0 ? (data.fixedExpenses / maxSpending) * 100 : 0}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   固定費: {formatCurrency(data.fixedExpenses)}
                 </span>
               </div>
               
               {/* 変動費バー */}
               <div className="flex items-center space-x-2">
-                <div className="w-16 bg-gray-200 rounded-full h-2">
+                <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                   <div
                     className="h-2 rounded-full bg-blue-500"
                     style={{ width: `${maxSpending > 0 ? (data.variableExpenses / maxSpending) * 100 : 0}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   変動費: {formatCurrency(data.variableExpenses)} ({data.transactionCount}件)
                 </span>
               </div>
@@ -233,14 +233,14 @@ export default function SpendingTrendAnalysis() {
       </div>
 
       {/* 凡例 */}
-      <div className="flex items-center space-x-4 mt-4 pt-4 border-t border-gray-200">
+      <div className="flex items-center space-x-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-gray-500 rounded"></div>
-          <span className="text-xs text-gray-600">固定費</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400">固定費</span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-blue-500 rounded"></div>
-          <span className="text-xs text-gray-600">変動費</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400">変動費</span>
         </div>
       </div>
     </div>

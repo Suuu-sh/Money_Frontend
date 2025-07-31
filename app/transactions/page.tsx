@@ -160,7 +160,7 @@ export default function TransactionsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* 支出内訳 */}
               <div className="card">
-                <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                   <span>支出内訳</span>
                 </h3>
@@ -180,7 +180,7 @@ export default function TransactionsPage() {
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                       />
                     </svg>
-                    <p className="text-gray-500 text-sm">支出データがありません</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">支出データがありません</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -223,9 +223,9 @@ export default function TransactionsPage() {
                               className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                               style={{ backgroundColor: item.color }}
                             ></div>
-                            <span className="text-xs font-medium text-gray-900 truncate">{item.name}</span>
+                            <span className="text-xs font-medium text-gray-900 dark:text-white truncate">{item.name}</span>
                           </div>
-                          <div className="text-xs text-gray-600 font-medium">
+                          <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">
                             {formatAmount(item.value)}
                           </div>
                         </div>
@@ -237,7 +237,7 @@ export default function TransactionsPage() {
 
               {/* 収入内訳 */}
               <div className="card">
-                <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <span>収入内訳</span>
                 </h3>
@@ -257,7 +257,7 @@ export default function TransactionsPage() {
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                       />
                     </svg>
-                    <p className="text-gray-500 text-sm">収入データがありません</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">収入データがありません</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -300,9 +300,9 @@ export default function TransactionsPage() {
                               className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                               style={{ backgroundColor: item.color }}
                             ></div>
-                            <span className="text-xs font-medium text-gray-900 truncate">{item.name}</span>
+                            <span className="text-xs font-medium text-gray-900 dark:text-white truncate">{item.name}</span>
                           </div>
-                          <div className="text-xs text-gray-600 font-medium">
+                          <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">
                             {formatAmount(item.value)}
                           </div>
                         </div>
@@ -315,7 +315,7 @@ export default function TransactionsPage() {
 
             {/* 月別収支推移 */}
             <div className="card">
-              <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                 <svg
                   className="w-4 h-4"
                   fill="none"

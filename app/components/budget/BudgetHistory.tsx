@@ -55,9 +55,9 @@ function BudgetHistory() {
     return (
       <div className="card">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-32 bg-gray-200 rounded"></div>
-          <div className="h-20 bg-gray-200 rounded"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/4"></div>
+          <div className="h-32 bg-gray-200 dark:bg-gray-600 rounded"></div>
+          <div className="h-20 bg-gray-200 dark:bg-gray-600 rounded"></div>
         </div>
       </div>
     )
@@ -66,7 +66,7 @@ function BudgetHistory() {
   if (error) {
     return (
       <div className="card">
-        <div className="text-center text-red-600 py-8">{error}</div>
+        <div className="text-center text-red-600 dark:text-red-400 py-8">{error}</div>
       </div>
     )
   }
@@ -79,12 +79,12 @@ function BudgetHistory() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <ChartBarIcon className="w-6 h-6 mr-2 text-blue-500" />
-          <h2 className="text-xl font-semibold text-gray-900">予算履歴</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">予算履歴</h2>
         </div>
         <select
           value={selectedMonths}
           onChange={(e) => setSelectedMonths(Number(e.target.value))}
-          className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
         >
           <option value={1}>過去1ヶ月</option>
           <option value={2}>過去2ヶ月</option>
@@ -94,28 +94,28 @@ function BudgetHistory() {
       </div>
 
       {history.length === 0 ? (
-        <div className="text-center text-gray-500 py-8">
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
           予算履歴がありません
         </div>
       ) : (
         <div className="space-y-6">
           {/* サマリー統計 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 rounded-lg p-4">
-              <div className="text-sm text-blue-600 mb-1">平均月間支出</div>
-              <div className="text-xl font-bold text-blue-800">
+            <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
+              <div className="text-sm text-blue-600 dark:text-blue-400 mb-1">平均月間支出</div>
+              <div className="text-xl font-bold text-blue-800 dark:text-blue-200">
                 {formatAmount(averageSpending)}
               </div>
             </div>
-            <div className="bg-red-50 rounded-lg p-4">
-              <div className="text-sm text-red-600 mb-1">予算超過月数</div>
-              <div className="text-xl font-bold text-red-800">
+            <div className="bg-red-50 dark:bg-red-900 rounded-lg p-4">
+              <div className="text-sm text-red-600 dark:text-red-400 mb-1">予算超過月数</div>
+              <div className="text-xl font-bold text-red-800 dark:text-red-200">
                 {exceededMonths}ヶ月
               </div>
             </div>
-            <div className="bg-green-50 rounded-lg p-4">
-              <div className="text-sm text-green-600 mb-1">平均貯蓄率</div>
-              <div className="text-xl font-bold text-green-800">
+            <div className="bg-green-50 dark:bg-green-900 rounded-lg p-4">
+              <div className="text-sm text-green-600 dark:text-green-400 mb-1">平均貯蓄率</div>
+              <div className="text-xl font-bold text-green-800 dark:text-green-200">
                 {history.length > 0 
                   ? (history.reduce((sum, h) => sum + h.savingsRate, 0) / history.length).toFixed(1)
                   : '0.0'
@@ -134,21 +134,21 @@ function BudgetHistory() {
                 <div
                   key={`${item.year}-${item.month}`}
                   className={`border rounded-lg p-4 ${
-                    item.budgetExceeded ? 'border-red-200 bg-red-50' : 'border-gray-200'
-                  } ${isCurrentMonth ? 'ring-2 ring-blue-200' : ''}`}
+                    item.budgetExceeded ? 'border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900' : 'border-gray-200 dark:border-gray-700'
+                  } ${isCurrentMonth ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-gray-900 dark:text-white">
                         {getMonthName(item.year, item.month)}
                       </h3>
                       {isCurrentMonth && (
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
                           今月
                         </span>
                       )}
                       {item.budgetExceeded && (
-                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                        <span className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded">
                           予算超過
                         </span>
                       )}
@@ -160,7 +160,7 @@ function BudgetHistory() {
                         <ArrowDownIcon className="w-4 h-4 text-red-500" />
                       )}
                       <span className={`text-sm font-medium ${
-                        item.savingsRate >= 0 ? 'text-green-600' : 'text-red-600'
+                        item.savingsRate >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
                         {item.savingsRate.toFixed(1)}%
                       </span>
@@ -170,24 +170,24 @@ function BudgetHistory() {
                   {/* 予算 vs 実績 */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
-                      <div className="text-gray-600">予算</div>
-                      <div className="font-semibold">
+                      <div className="text-gray-600 dark:text-gray-400">予算</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">
                         {item.budget > 0 ? formatAmount(item.budget) : '未設定'}
                       </div>
                     </div>
                     <div>
-                      <div className="text-gray-600">実際の支出</div>
-                      <div className="font-semibold">{formatAmount(item.actualSpending)}</div>
+                      <div className="text-gray-600 dark:text-gray-400">実際の支出</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(item.actualSpending)}</div>
                     </div>
                     <div>
-                      <div className="text-gray-600">固定費</div>
-                      <div className="font-semibold">{formatAmount(item.fixedExpenses)}</div>
+                      <div className="text-gray-600 dark:text-gray-400">固定費</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(item.fixedExpenses)}</div>
                     </div>
                     <div>
-                      <div className="text-gray-600">使用率</div>
+                      <div className="text-gray-600 dark:text-gray-400">使用率</div>
                       <div className={`font-semibold ${
-                        budgetUtilization > 100 ? 'text-red-600' : 
-                        budgetUtilization > 80 ? 'text-yellow-600' : 'text-green-600'
+                        budgetUtilization > 100 ? 'text-red-600 dark:text-red-400' : 
+                        budgetUtilization > 80 ? 'text-yellow-600 dark:text-yellow-400' : 'text-green-600 dark:text-green-400'
                       }`}>
                         {budgetUtilization.toFixed(1)}%
                       </div>
@@ -197,7 +197,7 @@ function BudgetHistory() {
                   {/* 進捗バー */}
                   {item.budget > 0 && (
                     <div className="mt-3">
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all duration-300 ${
                             budgetUtilization > 100 ? 'bg-red-500' :
@@ -215,11 +215,11 @@ function BudgetHistory() {
 
           {/* 改善提案 */}
           {exceededMonths > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-yellow-800 mb-2">
+            <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
+              <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
                 予算管理の改善提案
               </h3>
-              <ul className="text-sm text-yellow-700 space-y-1">
+              <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
                 {exceededMonths >= 3 && (
                   <li>• 過去3ヶ月以上予算を超過しています。予算額の見直しを検討してください</li>
                 )}

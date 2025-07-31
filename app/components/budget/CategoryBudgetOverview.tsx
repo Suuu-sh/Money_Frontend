@@ -68,7 +68,7 @@ export default function CategoryBudgetOverview() {
       <div className="card">
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
-          <p className="text-gray-500 mt-2">読み込み中...</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">読み込み中...</p>
         </div>
       </div>
     )
@@ -76,27 +76,27 @@ export default function CategoryBudgetOverview() {
 
   if (analysis.length === 0) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">月間予算サマリー</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">月間予算サマリー</h2>
         <div className="text-center py-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
-            <ChartBarIcon className="w-8 h-8 text-blue-500" />
+          <div className="w-16 h-16 mx-auto mb-4 bg-blue-50 dark:bg-blue-900 rounded-full flex items-center justify-center">
+            <ChartBarIcon className="w-8 h-8 text-blue-500 dark:text-blue-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">カテゴリ別予算を設定しましょう</h3>
-          <p className="text-gray-500 mb-4">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">カテゴリ別予算を設定しましょう</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
             カテゴリごとに予算を設定することで、<br />
             より詳細な支出管理ができます
           </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-4">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0">
-                <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div className="text-left">
-                <p className="text-sm font-medium text-blue-800 mb-1">予算設定のメリット</p>
-                <ul className="text-xs text-blue-700 space-y-1">
+                <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">予算設定のメリット</p>
+                <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
                   <li>• カテゴリごとの支出状況を把握</li>
                   <li>• 予算超過の早期発見</li>
                   <li>• 計画的な家計管理</li>
@@ -104,7 +104,7 @@ export default function CategoryBudgetOverview() {
               </div>
             </div>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             右側の「予算を追加」ボタンから<br />
             カテゴリ別予算を設定してください
           </p>
@@ -114,16 +114,16 @@ export default function CategoryBudgetOverview() {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-6">月間予算サマリー</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">月間予算サマリー</h2>
       
       {/* サマリー統計 */}
       <div className="space-y-4 mb-6">
-        <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-700 font-medium">総予算</p>
-              <p className="text-xl font-bold text-blue-900">{formatCurrency(totalBudget)}</p>
+              <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">総予算</p>
+              <p className="text-xl font-bold text-blue-900 dark:text-blue-100">{formatCurrency(totalBudget)}</p>
             </div>
             <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,11 +133,11 @@ export default function CategoryBudgetOverview() {
           </div>
         </div>
         
-        <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
+        <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 p-4 rounded-lg border border-orange-200 dark:border-orange-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-orange-700 font-medium">使用済み</p>
-              <p className="text-xl font-bold text-orange-900">{formatCurrency(totalSpent)}</p>
+              <p className="text-sm text-orange-700 dark:text-orange-300 font-medium">使用済み</p>
+              <p className="text-xl font-bold text-orange-900 dark:text-orange-100">{formatCurrency(totalSpent)}</p>
             </div>
             <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,13 +147,13 @@ export default function CategoryBudgetOverview() {
           </div>
         </div>
         
-        <div className={`p-4 rounded-lg border ${totalRemaining >= 0 ? 'bg-gradient-to-r from-green-50 to-green-100 border-green-200' : 'bg-gradient-to-r from-red-50 to-red-100 border-red-200'}`}>
+        <div className={`p-4 rounded-lg border ${totalRemaining >= 0 ? 'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 border-green-200 dark:border-green-700' : 'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 border-red-200 dark:border-red-700'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm font-medium ${totalRemaining >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+              <p className={`text-sm font-medium ${totalRemaining >= 0 ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
                 残り予算
               </p>
-              <p className={`text-xl font-bold ${totalRemaining >= 0 ? 'text-green-900' : 'text-red-900'}`}>
+              <p className={`text-xl font-bold ${totalRemaining >= 0 ? 'text-green-900 dark:text-green-100' : 'text-red-900 dark:text-red-100'}`}>
                 {formatCurrency(totalRemaining)}
               </p>
             </div>

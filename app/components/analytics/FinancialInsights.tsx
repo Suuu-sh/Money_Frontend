@@ -259,12 +259,12 @@ export default function FinancialInsights() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-1/3"></div>
           <div className="space-y-3">
-            <div className="h-4 bg-gray-200 rounded"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
           </div>
         </div>
       </div>
@@ -274,20 +274,20 @@ export default function FinancialInsights() {
   return (
     <div className="space-y-6">
       {/* 財務健全性スコア */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">財務健全性スコア</h3>
-          <ChartBarIcon className="w-6 h-6 text-gray-500" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">財務健全性スコア</h3>
+          <ChartBarIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />
         </div>
         
         <div className="flex items-center space-x-4 mb-4">
-          <div className="text-3xl font-bold text-gray-900">{financialHealth.score}</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white">{financialHealth.score}</div>
           <div className={`px-3 py-1 rounded-full text-sm font-medium ${getHealthColor(financialHealth.level)}`}>
             {getHealthLabel(financialHealth.level)}
           </div>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 mb-4">
           <div
             className="h-3 rounded-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-400"
             style={{ width: `${Math.min(financialHealth.score, 100)}%` }}
@@ -296,8 +296,8 @@ export default function FinancialInsights() {
         
         {financialHealth.factors.length > 0 && (
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-700">評価要因:</p>
-            <ul className="text-sm text-gray-600 space-y-1">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">評価要因:</p>
+            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
               {financialHealth.factors.map((factor, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
@@ -310,14 +310,14 @@ export default function FinancialInsights() {
       </div>
 
       {/* インサイト一覧 */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">財務インサイト</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">財務インサイト</h3>
         
         {insights.length === 0 ? (
           <div className="text-center py-8">
             <InformationCircleIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-500">分析に十分なデータがありません</p>
-            <p className="text-sm text-gray-400">取引データを追加してインサイトを確認しましょう</p>
+            <p className="text-gray-500 dark:text-gray-400">分析に十分なデータがありません</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">取引データを追加してインサイトを確認しましょう</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -326,24 +326,24 @@ export default function FinancialInsights() {
                 key={insight.id}
                 className={`p-4 rounded-lg border-l-4 ${
                   insight.type === 'positive'
-                    ? 'bg-green-50 border-green-400'
+                    ? 'bg-green-50 dark:bg-green-900 border-green-400'
                     : insight.type === 'warning'
-                    ? 'bg-yellow-50 border-yellow-400'
-                    : 'bg-blue-50 border-blue-400'
+                    ? 'bg-yellow-50 dark:bg-yellow-900 border-yellow-400'
+                    : 'bg-blue-50 dark:bg-blue-900 border-blue-400'
                 }`}
               >
                 <div className="flex items-start space-x-3">
                   {getInsightIcon(insight.type)}
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-medium text-gray-900">{insight.title}</h4>
+                      <h4 className="font-medium text-gray-900 dark:text-white">{insight.title}</h4>
                       {insight.value && (
-                        <span className="text-sm font-medium text-gray-700">{insight.value}</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{insight.value}</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{insight.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{insight.description}</p>
                     {insight.recommendation && (
-                      <p className="text-sm font-medium text-gray-800 bg-white bg-opacity-50 p-2 rounded">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 bg-opacity-50 p-2 rounded">
                         💡 {insight.recommendation}
                       </p>
                     )}

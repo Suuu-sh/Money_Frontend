@@ -278,19 +278,19 @@ export default function SavingsRecommendations() {
   return (
     <div className="space-y-6">
       {/* 削減ポテンシャルサマリー */}
-      <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200 p-6">
+      <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg border border-green-200 dark:border-green-700 p-6">
         <div className="flex items-center space-x-3 mb-4">
-          <CurrencyYenIcon className="w-8 h-8 text-green-600" />
+          <CurrencyYenIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
           <div>
-            <h3 className="text-lg font-semibold text-green-900">削減ポテンシャル</h3>
-            <p className="text-sm text-green-700">以下の提案を実行することで期待できる節約効果</p>
+            <h3 className="text-lg font-semibold text-green-900 dark:text-green-100">削減ポテンシャル</h3>
+            <p className="text-sm text-green-700 dark:text-green-300">以下の提案を実行することで期待できる節約効果</p>
           </div>
         </div>
         
-        <div className="text-3xl font-bold text-green-900 mb-2">
+        <div className="text-3xl font-bold text-green-900 dark:text-green-100 mb-2">
           {formatCurrency(totalPotentialSavings)}/月
         </div>
-        <div className="text-sm text-green-700">
+        <div className="text-sm text-green-700 dark:text-green-300">
           年間では約{formatCurrency(totalPotentialSavings * 12)}の節約が期待できます
         </div>
       </div>
@@ -298,10 +298,10 @@ export default function SavingsRecommendations() {
       {/* 削減提案リスト */}
       <div className="space-y-4">
         {recommendations.length === 0 ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
             <LightBulbIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">素晴らしい家計管理です！</h3>
-            <p className="text-gray-600">現在、特に大きな削減提案はありません。このまま良い家計管理を続けてください。</p>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">素晴らしい家計管理です！</h3>
+            <p className="text-gray-600 dark:text-gray-400">現在、特に大きな削減提案はありません。このまま良い家計管理を続けてください。</p>
           </div>
         ) : (
           recommendations.map((recommendation) => (
@@ -317,7 +317,7 @@ export default function SavingsRecommendations() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <h4 className="font-semibold text-gray-900">{recommendation.title}</h4>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">{recommendation.title}</h4>
                       {recommendation.categoryColor && (
                         <div
                           className="w-4 h-4 rounded-full"
@@ -326,20 +326,20 @@ export default function SavingsRecommendations() {
                       )}
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-medium text-gray-600">{getPriorityText(recommendation.priority)}</div>
-                      <div className="text-lg font-bold text-green-600">
+                      <div className="text-sm font-medium text-gray-600 dark:text-gray-400">{getPriorityText(recommendation.priority)}</div>
+                      <div className="text-lg font-bold text-green-600 dark:text-green-400">
                         {formatCurrency(recommendation.potentialSavings)}/月
                       </div>
                     </div>
                   </div>
                   
-                  <p className="text-gray-700 mb-4">{recommendation.description}</p>
+                  <p className="text-gray-700 dark:text-gray-300 mb-4">{recommendation.description}</p>
                   
                   <div>
-                    <h5 className="font-medium text-gray-900 mb-2">推奨アクション:</h5>
+                    <h5 className="font-medium text-gray-900 dark:text-white mb-2">推奨アクション:</h5>
                     <ul className="space-y-1">
                       {recommendation.actionItems.map((action, index) => (
-                        <li key={index} className="flex items-start space-x-2 text-sm text-gray-600">
+                        <li key={index} className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-400">
                           <span className="text-gray-400 mt-1">•</span>
                           <span>{action}</span>
                         </li>
@@ -354,16 +354,16 @@ export default function SavingsRecommendations() {
       </div>
 
       {/* 節約のコツ */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
         <div className="flex items-center space-x-2 mb-4">
           <LightBulbIcon className="w-6 h-6 text-yellow-500" />
-          <h3 className="text-lg font-semibold text-gray-900">節約のコツ</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">節約のコツ</h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">固定費の見直し</h4>
-            <ul className="space-y-1 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">固定費の見直し</h4>
+            <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
               <li>• 携帯電話プランの最適化</li>
               <li>• 保険の見直し</li>
               <li>• サブスクリプションの整理</li>
@@ -372,8 +372,8 @@ export default function SavingsRecommendations() {
           </div>
           
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">変動費の管理</h4>
-            <ul className="space-y-1 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">変動費の管理</h4>
+            <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
               <li>• 予算上限の設定</li>
               <li>• まとめ買いの活用</li>
               <li>• 代替手段の検討</li>

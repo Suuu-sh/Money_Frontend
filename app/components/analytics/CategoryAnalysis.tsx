@@ -189,15 +189,15 @@ export default function CategoryAnalysis() {
   return (
     <div className="space-y-6">
       {/* カテゴリ別支出ランキング */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
         <div className="flex items-center space-x-2 mb-6">
           <ChartPieIcon className="w-6 h-6 text-blue-500" />
-          <h3 className="text-lg font-semibold text-gray-900">カテゴリ別支出ランキング</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">カテゴリ別支出ランキング</h3>
         </div>
 
         <div className="space-y-4">
           {getTopCategories().map((data, index) => (
-            <div key={data.categoryId} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <div key={data.categoryId} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-bold text-gray-400 w-6">#{index + 1}</span>
@@ -207,20 +207,20 @@ export default function CategoryAnalysis() {
                   />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900">{data.categoryName}</h4>
-                  <p className="text-sm text-gray-500">
+                  <h4 className="font-medium text-gray-900 dark:text-white">{data.categoryName}</h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {data.percentage.toFixed(1)}% • {data.transactionCount}件
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-semibold text-gray-900">{formatCurrency(data.currentMonth)}</div>
+                <div className="font-semibold text-gray-900 dark:text-white">{formatCurrency(data.currentMonth)}</div>
                 <div className="flex items-center space-x-1">
                   {data.trend === 'up' && <ArrowTrendingUpIcon className="w-3 h-3 text-red-500" />}
                   {data.trend === 'down' && <ArrowTrendingDownIcon className="w-3 h-3 text-green-500" />}
                   <span className={`text-xs ${
-                    data.trend === 'up' ? 'text-red-600' : 
-                    data.trend === 'down' ? 'text-green-600' : 'text-gray-500'
+                    data.trend === 'up' ? 'text-red-600 dark:text-red-400' : 
+                    data.trend === 'down' ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
                   }`}>
                     {data.trend === 'stable' ? '変化なし' : 
                      `${data.trendPercentage > 0 ? '+' : ''}${data.trendPercentage.toFixed(1)}%`}
@@ -234,23 +234,23 @@ export default function CategoryAnalysis() {
 
       {/* 支出増加カテゴリ */}
       {getGrowingCategories().length > 0 && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center space-x-2 mb-6">
             <ArrowTrendingUpIcon className="w-6 h-6 text-red-500" />
-            <h3 className="text-lg font-semibold text-gray-900">支出増加カテゴリ</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">支出増加カテゴリ</h3>
           </div>
 
           <div className="space-y-3">
             {getGrowingCategories().map((data) => (
-              <div key={data.categoryId} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+              <div key={data.categoryId} className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div
                     className="w-6 h-6 rounded-full"
                     style={{ backgroundColor: data.categoryColor }}
                   />
                   <div>
-                    <h4 className="font-medium text-gray-900">{data.categoryName}</h4>
-                    <p className="text-sm text-gray-500">
+                    <h4 className="font-medium text-gray-900 dark:text-white">{data.categoryName}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       前月: {formatCurrency(data.previousMonth)} → 今月: {formatCurrency(data.currentMonth)}
                     </p>
                   </div>
@@ -258,11 +258,11 @@ export default function CategoryAnalysis() {
                 <div className="text-right">
                   <div className="flex items-center space-x-1">
                     <ArrowTrendingUpIcon className="w-4 h-4 text-red-500" />
-                    <span className="font-semibold text-red-600">
+                    <span className="font-semibold text-red-600 dark:text-red-400">
                       +{data.trendPercentage.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     +{formatCurrency(data.currentMonth - data.previousMonth)}
                   </div>
                 </div>
@@ -273,33 +273,33 @@ export default function CategoryAnalysis() {
       )}
 
       {/* カテゴリ別詳細分析 */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">カテゴリ別詳細分析</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">カテゴリ別詳細分析</h3>
         
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-medium text-gray-900">カテゴリ</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-900">今月支出</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-900">前月比</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-900">取引数</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-900">平均単価</th>
+              <tr className="border-b border-gray-200 dark:border-gray-700">
+                <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">カテゴリ</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">今月支出</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">前月比</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">取引数</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">平均単価</th>
               </tr>
             </thead>
             <tbody>
               {categoryData.map((data) => (
-                <tr key={data.categoryId} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr key={data.categoryId} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="py-3 px-4">
                     <div className="flex items-center space-x-2">
                       <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: data.categoryColor }}
                       />
-                      <span className="text-sm font-medium text-gray-900">{data.categoryName}</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{data.categoryName}</span>
                     </div>
                   </td>
-                  <td className="text-right py-3 px-4 text-sm text-gray-900">
+                  <td className="text-right py-3 px-4 text-sm text-gray-900 dark:text-white">
                     {formatCurrency(data.currentMonth)}
                   </td>
                   <td className="text-right py-3 px-4">
@@ -307,18 +307,18 @@ export default function CategoryAnalysis() {
                       {data.trend === 'up' && <ArrowTrendingUpIcon className="w-3 h-3 text-red-500" />}
                       {data.trend === 'down' && <ArrowTrendingDownIcon className="w-3 h-3 text-green-500" />}
                       <span className={`text-xs ${
-                        data.trend === 'up' ? 'text-red-600' : 
-                        data.trend === 'down' ? 'text-green-600' : 'text-gray-500'
+                        data.trend === 'up' ? 'text-red-600 dark:text-red-400' : 
+                        data.trend === 'down' ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
                       }`}>
                         {data.trend === 'stable' ? '±0%' : 
                          `${data.trendPercentage > 0 ? '+' : ''}${data.trendPercentage.toFixed(1)}%`}
                       </span>
                     </div>
                   </td>
-                  <td className="text-right py-3 px-4 text-sm text-gray-600">
+                  <td className="text-right py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
                     {data.transactionCount}件
                   </td>
-                  <td className="text-right py-3 px-4 text-sm text-gray-600">
+                  <td className="text-right py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
                     {data.averagePerTransaction > 0 ? formatCurrency(data.averagePerTransaction) : '-'}
                   </td>
                 </tr>

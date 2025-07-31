@@ -115,30 +115,30 @@ export default function IncomeTrendAnalysis() {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">収入トレンド分析</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">収入トレンド分析</h3>
         <BanknotesIcon className="w-6 h-6 text-green-500" />
       </div>
 
       {/* 収入サマリー */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-green-50 rounded-lg p-4">
+        <div className="bg-green-50 dark:bg-green-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-green-600 font-medium">月平均収入</p>
-              <p className="text-xl font-bold text-green-900">{formatCurrency(averageIncome)}</p>
+              <p className="text-sm text-green-600 dark:text-green-400 font-medium">月平均収入</p>
+              <p className="text-xl font-bold text-green-900 dark:text-green-100">{formatCurrency(averageIncome)}</p>
             </div>
           </div>
         </div>
 
         <div className={`rounded-lg p-4 ${
-          trend.trend === 'up' ? 'bg-green-50' : trend.trend === 'down' ? 'bg-red-50' : 'bg-gray-50'
+          trend.trend === 'up' ? 'bg-green-50 dark:bg-green-900' : trend.trend === 'down' ? 'bg-red-50 dark:bg-red-900' : 'bg-gray-50 dark:bg-gray-700'
         }`}>
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${
-                trend.trend === 'up' ? 'text-green-600' : trend.trend === 'down' ? 'text-red-600' : 'text-gray-600'
+                trend.trend === 'up' ? 'text-green-600 dark:text-green-400' : trend.trend === 'down' ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'
               }`}>
                 前月比
               </p>
@@ -146,7 +146,7 @@ export default function IncomeTrendAnalysis() {
                 {trend.trend === 'up' && <ArrowTrendingUpIcon className="w-5 h-5 text-green-500" />}
                 {trend.trend === 'down' && <ArrowTrendingDownIcon className="w-5 h-5 text-red-500" />}
                 <p className={`text-xl font-bold ${
-                  trend.trend === 'up' ? 'text-green-900' : trend.trend === 'down' ? 'text-red-900' : 'text-gray-900'
+                  trend.trend === 'up' ? 'text-green-900 dark:text-green-100' : trend.trend === 'down' ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-gray-100'
                 }`}>
                   {trend.percentage > 0 ? '+' : ''}{trend.percentage.toFixed(1)}%
                 </p>
@@ -155,11 +155,11 @@ export default function IncomeTrendAnalysis() {
           </div>
         </div>
 
-        <div className="bg-blue-50 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-600 font-medium">6ヶ月合計</p>
-              <p className="text-xl font-bold text-blue-900">{formatCurrency(totalIncome)}</p>
+              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">6ヶ月合計</p>
+              <p className="text-xl font-bold text-blue-900 dark:text-blue-100">{formatCurrency(totalIncome)}</p>
             </div>
           </div>
         </div>
@@ -167,22 +167,22 @@ export default function IncomeTrendAnalysis() {
 
       {/* 月別収入グラフ */}
       <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">月別収入推移</h4>
+        <h4 className="font-medium text-gray-900 dark:text-white">月別収入推移</h4>
         {monthlyData.map((data) => (
           <div key={data.month} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">{formatMonth(data.month)}</span>
+              <span className="text-gray-600 dark:text-gray-400">{formatMonth(data.month)}</span>
               <div className="text-right">
-                <div className="font-medium text-gray-900">{formatCurrency(data.income)}</div>
+                <div className="font-medium text-gray-900 dark:text-white">{formatCurrency(data.income)}</div>
                 {data.transactionCount > 0 && (
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
                     {data.transactionCount}件 (平均: {formatCurrency(data.averagePerTransaction)})
                   </div>
                 )}
               </div>
             </div>
             
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
               <div
                 className="h-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 transition-all duration-300"
                 style={{ width: `${maxIncome > 0 ? (data.income / maxIncome) * 100 : 0}%` }}
@@ -193,13 +193,13 @@ export default function IncomeTrendAnalysis() {
       </div>
 
       {/* 収入の安定性分析 */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <h4 className="font-medium text-gray-900 mb-3">収入の安定性</h4>
-        <div className="bg-gray-50 rounded-lg p-4">
+      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h4 className="font-medium text-gray-900 dark:text-white mb-3">収入の安定性</h4>
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
           {(() => {
             const incomes = monthlyData.map(d => d.income).filter(i => i > 0)
             if (incomes.length === 0) {
-              return <p className="text-sm text-gray-600">収入データが不足しています</p>
+              return <p className="text-sm text-gray-600 dark:text-gray-400">収入データが不足しています</p>
             }
 
             const average = incomes.reduce((sum, income) => sum + income, 0) / incomes.length
@@ -208,23 +208,23 @@ export default function IncomeTrendAnalysis() {
             const coefficientOfVariation = average > 0 ? (standardDeviation / average) * 100 : 0
 
             let stabilityLevel = '安定'
-            let stabilityColor = 'text-green-600'
+            let stabilityColor = 'text-green-600 dark:text-green-400'
             
             if (coefficientOfVariation > 30) {
               stabilityLevel = '不安定'
-              stabilityColor = 'text-red-600'
+              stabilityColor = 'text-red-600 dark:text-red-400'
             } else if (coefficientOfVariation > 15) {
               stabilityLevel = 'やや不安定'
-              stabilityColor = 'text-yellow-600'
+              stabilityColor = 'text-yellow-600 dark:text-yellow-400'
             }
 
             return (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">収入の安定性</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">収入の安定性</span>
                   <span className={`text-sm font-medium ${stabilityColor}`}>{stabilityLevel}</span>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-gray-500 dark:text-gray-400">
                   変動係数: {coefficientOfVariation.toFixed(1)}% 
                   {coefficientOfVariation < 15 && ' (安定した収入です)'}
                   {coefficientOfVariation >= 15 && coefficientOfVariation <= 30 && ' (やや変動があります)'}
