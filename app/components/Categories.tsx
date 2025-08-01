@@ -28,8 +28,31 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
     description: '',
   })
 
-  const incomeCategories = categories.filter(cat => cat.type === 'income')
-  const expenseCategories = categories.filter(cat => cat.type === 'expense')
+  // カテゴリの一般的な順序を定義
+  const getCategoryOrder = (categoryName: string, categoryType: string) => {
+    if (categoryType === 'income') {
+      const incomeOrder = ['給与', '賞与', '副業', '投資', 'その他収入']
+      const index = incomeOrder.indexOf(categoryName)
+      return index === -1 ? 999 : index
+    } else {
+      const expenseOrder = [
+        '食費', '住居費', '光熱費', '通信費', '交通費', 
+        '医療費', '日用品', '衣服費', '美容費', '教育費', 
+        '娯楽費', '交際費', '投資費', 'その他支出'
+      ]
+      const index = expenseOrder.indexOf(categoryName)
+      return index === -1 ? 999 : index
+    }
+  }
+
+  // カテゴリを一般的な順序でソート
+  const incomeCategories = categories
+    .filter(cat => cat.type === 'income')
+    .sort((a, b) => getCategoryOrder(a.name, a.type) - getCategoryOrder(b.name, b.type))
+  
+  const expenseCategories = categories
+    .filter(cat => cat.type === 'expense')
+    .sort((a, b) => getCategoryOrder(a.name, a.type) - getCategoryOrder(b.name, b.type))
 
   // カテゴリカラーを薄くする関数
   const getLightColor = (color: string, opacity: number = 0.1) => {
@@ -433,18 +456,24 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     )}
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm px-2 py-1 rounded hover:bg-green-50 dark:hover:bg-green-900 transition-colors"
+                    className="p-2 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                    title="編集"
                   >
-                    編集
+                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                   </button>
                   <button
                     onClick={() => handleDelete(category.id)}
-                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900 transition-colors"
+                    className="p-2 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
+                    title="削除"
                   >
-                    削除
+                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1H8a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -480,18 +509,24 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
                     )}
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm px-2 py-1 rounded hover:bg-green-50 dark:hover:bg-green-900 transition-colors"
+                    className="p-2 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                    title="編集"
                   >
-                    編集
+                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                   </button>
                   <button
                     onClick={() => handleDelete(category.id)}
-                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900 transition-colors"
+                    className="p-2 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
+                    title="削除"
                   >
-                    削除
+                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1H8a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </button>
                 </div>
               </div>
