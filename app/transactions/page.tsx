@@ -6,6 +6,7 @@ import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import TransactionList from '../components/TransactionList'
 import AddTransactionModal from '../components/AddTransactionModal'
+import EditTransactionModal from '../components/EditTransactionModal'
 import SettingsModal from '../components/SettingsModal'
 import { Transaction, Category, CategorySummary, MonthlySummary } from '../types'
 import { fetchTransactions, fetchCategories, fetchCategorySummary, fetchMonthlySummary } from '../lib/api'
@@ -20,6 +21,8 @@ export default function TransactionsPage() {
   const [monthlySummary, setMonthlySummary] = useState<MonthlySummary[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   useEffect(() => {
@@ -71,7 +74,14 @@ export default function TransactionsPage() {
   }
 
   const handleTransactionUpdated = () => {
+    setIsEditModalOpen(false)
+    setEditingTransaction(null)
     loadData()
+  }
+
+  const handleEditTransaction = (transaction: Transaction) => {
+    setEditingTransaction(transaction)
+    setIsEditModalOpen(true)
   }
 
   const handleLogout = () => {
@@ -386,6 +396,7 @@ export default function TransactionsPage() {
               transactions={transactions}
               categories={categories}
               onTransactionUpdated={handleTransactionUpdated}
+              onEditTransaction={handleEditTransaction}
             />
           </div>
         </div>
@@ -396,6 +407,18 @@ export default function TransactionsPage() {
           categories={categories}
           onClose={() => setIsAddModalOpen(false)}
           onTransactionAdded={handleTransactionAdded}
+        />
+      )}
+
+      {isEditModalOpen && editingTransaction && (
+        <EditTransactionModal
+          transaction={editingTransaction}
+          categories={categories}
+          onClose={() => {
+            setIsEditModalOpen(false)
+            setEditingTransaction(null)
+          }}
+          onTransactionUpdated={handleTransactionUpdated}
         />
       )}
 
