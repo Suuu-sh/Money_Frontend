@@ -129,7 +129,22 @@ export default function CategoryBudgetList({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          {analysis.sort((a, b) => b.budgetAmount - a.budgetAmount).map((item) => {
+          {analysis.sort((a, b) => {
+            // CategorySelectorと同じ順序を適用
+            const getCategoryOrder = (categoryName: string) => {
+              const expenseOrder = [
+                '食費', '住居費', '光熱費', '通信費', '交通費', 
+                '医療費', '日用品', '衣服費', '美容費', '教育費', 
+                '娯楽費', 'その他支出'
+              ];
+              const index = expenseOrder.indexOf(categoryName);
+              return index === -1 ? 999 : index;
+            };
+            
+            const orderA = getCategoryOrder(a.categoryName);
+            const orderB = getCategoryOrder(b.categoryName);
+            return orderA - orderB;
+          }).map((item) => {
             const budget = budgets.find(b => b.categoryId === item.categoryId)
             
             // 取引履歴からのみ使用済み金額を計算（固定費から生成された取引も含む）
