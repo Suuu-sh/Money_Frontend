@@ -52,7 +52,10 @@ export default function SpendingPrediction() {
         endDate: endOfMonth.toISOString().split('T')[0]
       })
 
-      const expenseTransactions = transactions.filter(t => t.type === 'expense')
+      // 固定費から自動生成された取引を除外
+      const expenseTransactions = transactions
+        .filter(t => t.type === 'expense')
+        .filter(t => !t.description?.startsWith('固定収支:') && !t.description?.startsWith('固定支出:'))
       
       // 現在までの支出
       const currentSpending = expenseTransactions
@@ -83,7 +86,11 @@ export default function SpendingPrediction() {
         endDate: startOfMonth.toISOString().split('T')[0]
       })
 
-      const weeklyPattern = calculateWeeklyPattern(historicalTransactions.filter(t => t.type === 'expense'))
+      const weeklyPattern = calculateWeeklyPattern(
+        historicalTransactions
+          .filter(t => t.type === 'expense')
+          .filter(t => !t.description?.startsWith('固定収支:') && !t.description?.startsWith('固定支出:'))
+      )
       
       // 予測計算
       const predictionResult = calculateMonthlyPrediction(
