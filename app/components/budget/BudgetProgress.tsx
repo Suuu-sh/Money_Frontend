@@ -8,10 +8,14 @@ interface BudgetProgressProps {
 
 export default function BudgetProgress({ analysis }: BudgetProgressProps) {
   const formatAmount = (amount: number) => {
+    // 数値の精度問題を回避するため、整数に丸める
+    const roundedAmount = Math.round(amount)
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-    }).format(amount)
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(roundedAmount)
   }
 
   const progressPercentage = Math.min((analysis.budgetUtilization || 0), 100)
