@@ -8,6 +8,7 @@ import AddTransactionModal from '../components/AddTransactionModal'
 import SettingsModal from '../components/SettingsModal'
 import SpendingTrendAnalysis from '../components/analytics/SpendingTrendAnalysis'
 import IncomeTrendAnalysis from '../components/analytics/IncomeTrendAnalysis'
+import SpendingPrediction from '../components/analytics/SpendingPrediction'
 import CategoryAnalysis from '../components/analytics/CategoryAnalysis'
 import SavingsRecommendations from '../components/analytics/SavingsRecommendations'
 import FinancialInsights from '../components/analytics/FinancialInsights'
@@ -131,6 +132,7 @@ export default function AnalyticsPage() {
           <div className="p-6">
             {activeTab === 'trends' && (
               <div className="space-y-6">
+                <SpendingPrediction />
                 <SpendingTrendAnalysis />
                 <IncomeTrendAnalysis />
               </div>
