@@ -135,7 +135,7 @@ export default function CategoryBudgetList({
               const expenseOrder = [
                 '食費', '住居費', '光熱費', '通信費', '交通費', 
                 '医療費', '日用品', '衣服費', '美容費', '教育費', 
-                '娯楽費', 'その他支出'
+                '娯楽費', '交際費', '投資費', 'その他支出'
               ];
               const index = expenseOrder.indexOf(categoryName);
               return index === -1 ? 999 : index;

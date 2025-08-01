@@ -21,7 +21,9 @@ import {
   TrendingUp, 
   Gift, 
   DollarSign,
-  Smartphone
+  Smartphone,
+  Users,
+  PiggyBank
 } from 'lucide-react';
 
 interface CategorySelectorProps {
@@ -49,6 +51,8 @@ const getCategoryIcon = (name: string, iconColor: string = '#6B7280') => {
     '衣服費': <Shirt {...iconProps} />,
     '貯金・投資': <TrendingUp {...iconProps} />,
     '通信費': <Smartphone {...iconProps} />,
+    '交際費': <Users {...iconProps} />,
+    '投資費': <PiggyBank {...iconProps} />,
     'その他支出': <FileText {...iconProps} />,
     '給与': <Briefcase {...iconProps} />,
     '副業': <Laptop {...iconProps} />,
@@ -76,6 +80,8 @@ const getCategoryThemeColor = (category: Category) => {
     '衣服費': { background: '#F0FDFF', border: '#06B6D4', hover: '#CFFAFE' },
     '貯金・投資': { background: '#F7FEF9', border: '#059669', hover: '#D1FAE5' },
     '通信費': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
+    '交際費': { background: '#FEF7FB', border: '#EC4899', hover: '#FCE7F3' },
+    '投資費': { background: '#F7FEF9', border: '#059669', hover: '#D1FAE5' },
     'その他支出': { background: '#FAFBFC', border: '#6B7280', hover: '#F3F4F6' },
     '給与': { background: '#F7FEF9', border: '#10B981', hover: '#D1FAE5' },
     '副業': { background: '#F0F9FF', border: '#3B82F6', hover: '#DBEAFE' },
@@ -104,7 +110,7 @@ export default function CategorySelector({
       const expenseOrder = [
         '食費', '住居費', '光熱費', '通信費', '交通費', 
         '医療費', '日用品', '衣服費', '美容費', '教育費', 
-        '娯楽費', 'その他支出'
+        '娯楽費', '交際費', '投資費', 'その他支出'
       ];
       const index = expenseOrder.indexOf(categoryName);
       return index === -1 ? 999 : index;
