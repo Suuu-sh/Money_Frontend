@@ -11,6 +11,7 @@ interface DayTransactionsProps {
   categories: Category[]
   onTransactionUpdated: () => void
   onAddTransaction: (date: Date) => void
+  onEditTransaction?: (transaction: Transaction) => void
 }
 
 export default function DayTransactions({ 
@@ -18,7 +19,8 @@ export default function DayTransactions({
   transactions, 
   categories, 
   onTransactionUpdated,
-  onAddTransaction 
+  onAddTransaction,
+  onEditTransaction
 }: DayTransactionsProps) {
   if (!selectedDate) {
     return (
@@ -94,44 +96,88 @@ export default function DayTransactions({
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {dayTransactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center justify-between p-2 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <div className="flex items-center space-x-2">
-                  <div 
-                    className="w-6 h-6 rounded-full"
-                    style={{ backgroundColor: transaction.category.color }}
-                    title={transaction.category.name}
-                  >
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white text-xs">
-                      {transaction.description || transaction.category.name}
-                    </h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {transaction.category.name}
-                    </p>
+          <div className="space-y-1.5">
+            {dayTransactions.map((transaction) => {
+              // カテゴリカラーを薄くした背景色を生成
+              const hexToRgb = (hex: string) => {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                  r: parseInt(result[1], 16),
+                  g: parseInt(result[2], 16),
+                  b: parseInt(result[3], 16)
+                } : null;
+              };
+              
+              const rgb = hexToRgb(transaction.category.color);
+              const lightBackgroundColor = rgb 
+                ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` 
+                : 'rgba(156, 163, 175, 0.1)';
+              
+              return (
+                <div
+                  key={transaction.id}
+                  className="border rounded-md p-2 hover:shadow-sm transition-all duration-200"
+                  style={{ 
+                    backgroundColor: lightBackgroundColor,
+                    borderColor: transaction.category.color + '20'
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <div 
+                        className="w-4 h-4 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: transaction.category.color }}
+                        title={transaction.category.name}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
+                            {transaction.description || transaction.category.name}
+                          </span>
+                          <span className="text-xs text-gray-400 flex-shrink-0">
+                            {transaction.category.name}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 flex-shrink-0">
+                      <span className={`text-sm font-semibold ${
+                        transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                      }`}>
+                        {formatAmount(transaction.amount, transaction.type)}
+                      </span>
+                      
+                      <div className="flex items-center space-x-1">
+                        {/* 編集ボタン */}
+                        {onEditTransaction && (
+                          <button
+                            onClick={() => onEditTransaction(transaction)}
+                            className="group relative p-1.5 rounded-md bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200 hover:shadow-sm"
+                            title="編集"
+                          >
+                            <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                        )}
+                        
+                        {/* 削除ボタン */}
+                        <button
+                          onClick={() => handleDelete(transaction.id)}
+                          className="group relative p-1.5 rounded-md bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 border border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700 transition-all duration-200 hover:shadow-sm"
+                          title="削除"
+                        >
+                          <svg className="w-3.5 h-3.5 text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="flex items-center space-x-2">
-                  <div className={`font-medium text-sm ${
-                    transaction.type === 'income' ? 'text-income-600 dark:text-income-400' : 'text-expense-600 dark:text-expense-400'
-                  }`}>
-                    {formatAmount(transaction.amount, transaction.type)}
-                  </div>
-                  <button
-                    onClick={() => handleDelete(transaction.id)}
-                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-xs"
-                  >
-                    削除
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

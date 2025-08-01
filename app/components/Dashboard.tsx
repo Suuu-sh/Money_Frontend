@@ -18,9 +18,10 @@ interface DashboardProps {
   currentMonth?: Date
   onTransactionUpdated?: () => void
   onAddTransaction?: (date: Date) => void
+  onEditTransaction?: (transaction: Transaction) => void
 }
 
-export default function Dashboard({ transactions, categories, stats, selectedDate, currentMonth, onTransactionUpdated, onAddTransaction }: DashboardProps) {
+export default function Dashboard({ transactions, categories, stats, selectedDate, currentMonth, onTransactionUpdated, onAddTransaction, onEditTransaction }: DashboardProps) {
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
               categories={categories}
               onTransactionUpdated={onTransactionUpdated}
               onAddTransaction={onAddTransaction}
+              onEditTransaction={onEditTransaction}
             />
           </div>
         </div>

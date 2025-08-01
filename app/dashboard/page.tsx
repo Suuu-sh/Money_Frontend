@@ -8,6 +8,7 @@ import Dashboard from '../components/Dashboard'
 import Calendar from '../components/Calendar'
 import DayTransactions from '../components/DayTransactions'
 import AddTransactionModal from '../components/AddTransactionModal'
+import EditTransactionModal from '../components/EditTransactionModal'
 import SettingsModal from '../components/SettingsModal'
 import { Transaction, Category, Stats } from '../types'
 import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
@@ -19,6 +20,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [modalDate, setModalDate] = useState<Date | null>(null)
@@ -78,7 +81,14 @@ export default function DashboardPage() {
   }
 
   const handleTransactionUpdated = () => {
+    setIsEditModalOpen(false)
+    setEditingTransaction(null)
     loadData()
+  }
+
+  const handleEditTransaction = (transaction: Transaction) => {
+    setEditingTransaction(transaction)
+    setIsEditModalOpen(true)
   }
 
   const handleDateClick = (date: Date) => {
@@ -140,6 +150,7 @@ export default function DashboardPage() {
               currentMonth={currentMonth}
               onTransactionUpdated={handleTransactionUpdated}
               onAddTransaction={handleAddTransactionForDate}
+              onEditTransaction={handleEditTransaction}
             />
           </div>
         </div>
@@ -157,6 +168,7 @@ export default function DashboardPage() {
             currentMonth={currentMonth}
             onTransactionUpdated={handleTransactionUpdated}
             onAddTransaction={handleAddTransactionForDate}
+            onEditTransaction={handleEditTransaction}
           />
           
           {/* Compact Calendar */}
@@ -179,6 +191,18 @@ export default function DashboardPage() {
           onClose={() => setIsAddModalOpen(false)}
           onTransactionAdded={handleTransactionAdded}
           defaultDate={modalDate || undefined}
+        />
+      )}
+
+      {isEditModalOpen && editingTransaction && (
+        <EditTransactionModal
+          transaction={editingTransaction}
+          categories={categories}
+          onClose={() => {
+            setIsEditModalOpen(false)
+            setEditingTransaction(null)
+          }}
+          onTransactionUpdated={handleTransactionUpdated}
         />
       )}
 
