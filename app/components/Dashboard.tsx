@@ -73,27 +73,21 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
       {/* 予算アラート */}
       <BudgetAlerts analysis={budgetAnalysis} />
 
-      {/* 予算概要と取引履歴 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* 予算概要 */}
-        <div>
-          <BudgetOverview currentMonth={currentMonth} />
-        </div>
-        
-        {/* 右側：取引履歴 */}
-        <div className="space-y-4">
-          {/* 取引履歴 */}
-          <div className="max-h-64 overflow-y-auto">
-            <DayTransactions 
-              selectedDate={selectedDate}
-              transactions={transactions}
-              categories={categories}
-              onTransactionUpdated={onTransactionUpdated}
-              onAddTransaction={onAddTransaction}
-              onEditTransaction={onEditTransaction}
-            />
-          </div>
-        </div>
+      {/* 予算概要 */}
+      <div>
+        <BudgetOverview currentMonth={currentMonth} />
+      </div>
+
+      {/* 取引履歴 - 予算ブロックの下に配置 */}
+      <div className="w-full">
+        <DayTransactions 
+          selectedDate={selectedDate}
+          transactions={transactions}
+          categories={categories}
+          onTransactionUpdated={onTransactionUpdated}
+          onAddTransaction={onAddTransaction}
+          onEditTransaction={onEditTransaction}
+        />
       </div>
 
       {transactions.length === 0 && (
