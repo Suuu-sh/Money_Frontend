@@ -30,11 +30,16 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
 
   const incomeCategories = categories.filter(cat => cat.type === 'income')
   const expenseCategories = categories.filter(cat => cat.type === 'expense')
-  
-  // デバッグ用ログ
-  console.log('All categories:', categories)
-  console.log('Expense categories:', expenseCategories)
-  console.log('Income categories:', incomeCategories)
+
+  // カテゴリカラーを薄くする関数
+  const getLightColor = (color: string, opacity: number = 0.1) => {
+    // HEXカラーをRGBAに変換して透明度を適用
+    const hex = color.replace('#', '')
+    const r = parseInt(hex.substr(0, 2), 16)
+    const g = parseInt(hex.substr(2, 2), 16)
+    const b = parseInt(hex.substr(4, 2), 16)
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -132,11 +137,6 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
   ]
 
   const renderIcon = (iconKey: string, className = "w-5 h-5") => {
-    // 絵文字の場合は直接表示
-    if (/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(iconKey)) {
-      return <span className="text-lg">{iconKey}</span>
-    }
-    
     const iconMap: { [key: string]: JSX.Element } = {
       briefcase: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6" /></svg>,
       home: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
@@ -415,13 +415,16 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
           </h3>
           <div className="space-y-3">
             {expenseCategories.map((category) => (
-              <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div 
+                key={category.id} 
+                className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg"
+                style={{ backgroundColor: getLightColor(category.color, 0.1) }}
+              >
                 <div className="flex items-center space-x-3">
-                  <div 
-                    className="w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: category.color }}
-                  >
-                    {renderIcon(category.icon, "w-4 h-4 text-white")}
+                  <div className="flex items-center justify-center">
+                    <div style={{ color: category.color }}>
+                      {renderIcon(category.icon, "w-5 h-5")}
+                    </div>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white">{category.name}</h4>
@@ -459,13 +462,16 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
           </h3>
           <div className="space-y-3">
             {incomeCategories.map((category) => (
-              <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div 
+                key={category.id} 
+                className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg"
+                style={{ backgroundColor: getLightColor(category.color, 0.1) }}
+              >
                 <div className="flex items-center space-x-3">
-                  <div 
-                    className="w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: category.color }}
-                  >
-                    {renderIcon(category.icon, "w-4 h-4 text-white")}
+                  <div className="flex items-center justify-center">
+                    <div style={{ color: category.color }}>
+                      {renderIcon(category.icon, "w-5 h-5")}
+                    </div>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white">{category.name}</h4>
