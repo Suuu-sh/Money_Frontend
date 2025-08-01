@@ -28,8 +28,8 @@ export default function IncomeTrendAnalysis() {
       const now = new Date()
       const monthlyMap = new Map<string, MonthlyIncomeData>()
 
-      // 過去6ヶ月のデータを初期化
-      for (let i = 5; i >= 0; i--) {
+      // 過去3ヶ月のデータを初期化
+      for (let i = 2; i >= 0; i--) {
         const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
         monthlyMap.set(monthKey, {
@@ -161,7 +161,7 @@ export default function IncomeTrendAnalysis() {
         <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">6ヶ月合計</p>
+              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">3ヶ月合計</p>
               <p className="text-xl font-bold text-blue-900 dark:text-blue-100">{formatCurrency(totalIncome)}</p>
             </div>
           </div>

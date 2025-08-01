@@ -20,7 +20,7 @@ interface MonthlyData {
 export default function SpendingTrendAnalysis() {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedPeriod, setSelectedPeriod] = useState<'3months' | '6months' | '12months'>('6months')
+  const [selectedPeriod, setSelectedPeriod] = useState<'3months' | '6months' | '12months'>('3months')
 
   useEffect(() => {
     loadSpendingData()

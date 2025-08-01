@@ -314,7 +314,7 @@ export default function SpendingPrediction() {
             onChange={(e) => setSelectedMonth(e.target.value)}
             className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
-            {Array.from({ length: 6 }, (_, i) => {
+            {Array.from({ length: 3 }, (_, i) => {
               const date = new Date()
               date.setMonth(date.getMonth() - i)
               const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
@@ -459,9 +459,9 @@ export default function SpendingPrediction() {
         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
           <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">予測について</h4>
           <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <p>• 過去の支出パターンと現在の傾向を分析して予測しています</p>
+            <p>• 過去3ヶ月の支出パターンと現在の傾向を分析して予測しています</p>
             <p>• 月の経過日数が多いほど予測精度が向上します</p>
-            <p>• 週別の支出パターンも考慮されています</p>
+            <p>• 週別の支出パターン（過去3ヶ月）も考慮されています</p>
             <p className={getConfidenceColor(prediction.confidence)}>
               • 現在の予測精度: {getConfidenceText(prediction.confidence)}
             </p>
