@@ -134,6 +134,7 @@ export default function CategorySelector({
           return (
             <button
               key={category.id}
+              type="button"
               onClick={() => onSelect(category)}
               className={`
                 relative px-4 py-3 rounded-lg border-2 transition-all duration-200 
