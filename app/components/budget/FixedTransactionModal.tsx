@@ -99,7 +99,7 @@ export default function FixedTransactionModal({
       // 新しい固定収支APIを使用
       const requestData: FixedTransactionRequest = {
         name: formData.name,
-        amount: parseFloat(formData.amount),
+        amount: Number(formData.amount),
         type: formData.type,
         categoryId: formData.categoryId,
         description: formData.description,

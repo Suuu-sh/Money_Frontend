@@ -159,11 +159,21 @@ export default function FixedExpenseModal({
                 type="number"
                 id="amount"
                 value={formData.amount || ''}
-                onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    handleInputChange('amount', 0)
+                  } else {
+                    const numValue = Number(value)
+                    if (!isNaN(numValue)) {
+                      handleInputChange('amount', numValue)
+                    }
+                  }
+                }}
                 className="block w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="金額を入力"
                 min="0"
-                step="100"
+                step="1"
                 required
               />
             </div>
