@@ -30,6 +30,11 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
 
   const incomeCategories = categories.filter(cat => cat.type === 'income')
   const expenseCategories = categories.filter(cat => cat.type === 'expense')
+  
+  // デバッグ用ログ
+  console.log('All categories:', categories)
+  console.log('Expense categories:', expenseCategories)
+  console.log('Income categories:', incomeCategories)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
