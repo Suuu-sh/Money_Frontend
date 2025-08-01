@@ -13,10 +13,7 @@ import {
 
 interface PredictionData {
   currentSpending: number
-  currentSpendingWithFixed: number
   predictedTotal: number
-  predictedTotalWithFixed: number
-  fixedExpenses: number
   dailyAverage: number
   remainingDays: number
   confidence: 'high' | 'medium' | 'low'
@@ -116,10 +113,7 @@ export default function SpendingPrediction() {
 
       setPrediction({
         currentSpending,
-        currentSpendingWithFixed,
         predictedTotal: predictionResult.predictedTotal,
-        predictedTotalWithFixed: predictionResult.predictedTotal + totalFixedExpenses,
-        fixedExpenses: totalFixedExpenses,
         dailyAverage: predictionResult.dailyAverage,
         remainingDays: daysInMonth - currentDay,
         confidence: predictionResult.confidence,
@@ -300,8 +294,8 @@ export default function SpendingPrediction() {
     )
   }
 
-  const remainingBudget = prediction.predictedTotalWithFixed - prediction.currentSpendingWithFixed
-  const isOverspending = prediction.predictedTotalWithFixed > prediction.currentSpendingWithFixed * 1.2
+  const remainingBudget = prediction.predictedTotal - prediction.currentSpending
+  const isOverspending = prediction.predictedTotal > prediction.currentSpending * 1.5
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
@@ -326,24 +320,14 @@ export default function SpendingPrediction() {
       </div>
 
       {/* 予測サマリー */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
-          <div className="text-sm text-blue-600 dark:text-blue-400 mb-1">現在の支出（変動費）</div>
+          <div className="text-sm text-blue-600 dark:text-blue-400 mb-1">現在の支出</div>
           <div className="text-xl font-bold text-blue-900 dark:text-blue-100">
             {formatCurrency(prediction.currentSpending)}
           </div>
           <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
             月の{prediction.monthlyProgress.toFixed(0)}%経過
-          </div>
-        </div>
-
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">現在の総支出</div>
-          <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            {formatCurrency(prediction.currentSpendingWithFixed)}
-          </div>
-          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-            固定費: {formatCurrency(prediction.fixedExpenses)}
           </div>
         </div>
 
@@ -353,12 +337,12 @@ export default function SpendingPrediction() {
           <div className={`text-sm mb-1 ${
             isOverspending ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
           }`}>
-            月末予測（総額）
+            月末予測
           </div>
           <div className={`text-xl font-bold ${
             isOverspending ? 'text-red-900 dark:text-red-100' : 'text-green-900 dark:text-green-100'
           }`}>
-            {formatCurrency(prediction.predictedTotalWithFixed)}
+            {formatCurrency(prediction.predictedTotal)}
           </div>
           <div className={`text-xs mt-1 flex items-center space-x-1 ${
             isOverspending ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
@@ -370,7 +354,7 @@ export default function SpendingPrediction() {
         </div>
 
         <div className="bg-purple-50 dark:bg-purple-900 rounded-lg p-4">
-          <div className="text-sm text-purple-600 dark:text-purple-400 mb-1">日平均支出（変動費）</div>
+          <div className="text-sm text-purple-600 dark:text-purple-400 mb-1">日平均支出</div>
           <div className="text-xl font-bold text-purple-900 dark:text-purple-100">
             {formatCurrency(prediction.dailyAverage)}
           </div>
@@ -397,30 +381,10 @@ export default function SpendingPrediction() {
           </div>
         </div>
 
-        {/* 支出予測バー（総額） */}
+        {/* 支出予測バー */}
         <div>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600 dark:text-gray-400">支出予測（総額）</span>
-            <span className="text-gray-900 dark:text-white">
-              {formatCurrency(prediction.currentSpendingWithFixed)} / {formatCurrency(prediction.predictedTotalWithFixed)}
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
-            <div
-              className={`h-3 rounded-full transition-all duration-300 ${
-                prediction.currentSpendingWithFixed / prediction.predictedTotalWithFixed > 0.8
-                  ? 'bg-gradient-to-r from-red-400 to-red-600'
-                  : 'bg-gradient-to-r from-green-400 to-green-600'
-              }`}
-              style={{ width: `${Math.min((prediction.currentSpendingWithFixed / prediction.predictedTotalWithFixed) * 100, 100)}%` }}
-            />
-          </div>
-        </div>
-
-        {/* 変動費予測バー */}
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600 dark:text-gray-400">変動費予測</span>
+            <span className="text-gray-600 dark:text-gray-400">支出予測</span>
             <span className="text-gray-900 dark:text-white">
               {formatCurrency(prediction.currentSpending)} / {formatCurrency(prediction.predictedTotal)}
             </span>
@@ -429,8 +393,8 @@ export default function SpendingPrediction() {
             <div
               className={`h-3 rounded-full transition-all duration-300 ${
                 prediction.currentSpending / prediction.predictedTotal > 0.8
-                  ? 'bg-gradient-to-r from-orange-400 to-orange-600'
-                  : 'bg-gradient-to-r from-blue-400 to-blue-600'
+                  ? 'bg-gradient-to-r from-red-400 to-red-600'
+                  : 'bg-gradient-to-r from-green-400 to-green-600'
               }`}
               style={{ width: `${Math.min((prediction.currentSpending / prediction.predictedTotal) * 100, 100)}%` }}
             />
@@ -447,7 +411,7 @@ export default function SpendingPrediction() {
                   支出ペースが高めです
                 </h4>
                 <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  現在のペースで支出を続けると、月末までに{formatCurrency(prediction.predictedTotalWithFixed)}（固定費込み）になる予測です。
+                  現在のペースで支出を続けると、月末までに{formatCurrency(prediction.predictedTotal)}になる予測です。
                   残り{prediction.remainingDays}日で{formatCurrency(Math.max(0, remainingBudget))}の支出が見込まれます。
                 </p>
               </div>
