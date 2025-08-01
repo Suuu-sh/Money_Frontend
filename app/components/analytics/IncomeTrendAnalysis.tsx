@@ -59,7 +59,9 @@ export default function IncomeTrendAnalysis() {
         data.averagePerTransaction = data.transactionCount > 0 ? data.income / data.transactionCount : 0
       })
 
-      setMonthlyData(Array.from(monthlyMap.values()))
+      // 最新月が上に来るように逆順でソート
+      const sortedData = Array.from(monthlyMap.values()).reverse()
+      setMonthlyData(sortedData)
     } catch (error) {
       console.error('収入データの取得に失敗しました:', error)
     } finally {
@@ -82,9 +84,9 @@ export default function IncomeTrendAnalysis() {
   const calculateTrend = () => {
     if (monthlyData.length < 2) return { trend: 'stable', percentage: 0 }
     
-    const recent = monthlyData.slice(-2)
-    const current = recent[1].income
-    const previous = recent[0].income
+    // データが逆順になったので、最初の2つを取得（現在月と前月）
+    const current = monthlyData[0].income  // 現在月（最新）
+    const previous = monthlyData[1].income // 前月
     
     if (previous === 0) return { trend: 'stable', percentage: 0 }
     

@@ -75,7 +75,9 @@ export default function SpendingTrendAnalysis() {
         data.spending += totalFixedExpenses
       })
 
-      setMonthlyData(Array.from(monthlyMap.values()))
+      // 最新月が上に来るように逆順でソート
+      const sortedData = Array.from(monthlyMap.values()).reverse()
+      setMonthlyData(sortedData)
     } catch (error) {
       console.error('支出データの取得に失敗しました:', error)
     } finally {
@@ -98,9 +100,9 @@ export default function SpendingTrendAnalysis() {
   const calculateTrend = () => {
     if (monthlyData.length < 2) return { trend: 'stable', percentage: 0 }
     
-    const recent = monthlyData.slice(-2)
-    const current = recent[1].spending
-    const previous = recent[0].spending
+    // データが逆順になったので、最初の2つを取得（現在月と前月）
+    const current = monthlyData[0].spending  // 現在月（最新）
+    const previous = monthlyData[1].spending // 前月
     
     if (previous === 0) return { trend: 'stable', percentage: 0 }
     
