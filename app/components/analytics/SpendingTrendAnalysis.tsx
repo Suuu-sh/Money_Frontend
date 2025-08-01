@@ -51,9 +51,10 @@ export default function SpendingTrendAnalysis() {
         })
       }
 
-      // 取引データを月別に集計
+      // 取引データを月別に集計（固定費から自動生成された取引は除外）
       transactions
         .filter(t => t.type === 'expense')
+        .filter(t => !t.description?.startsWith('固定収支:') && !t.description?.startsWith('固定支出:'))
         .forEach(transaction => {
           const date = new Date(transaction.date)
           const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
