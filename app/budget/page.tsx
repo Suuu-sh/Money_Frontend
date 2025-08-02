@@ -189,26 +189,23 @@ export default function BudgetPage() {
           </div>
         </div>
 
-        {/* メインセクション: カテゴリ別予算と予算履歴 */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-8">
-          {/* 予算履歴 */}
-          <div className="xl:col-span-2">
-            <BudgetHistory />
-          </div>
+        {/* メインセクション: カテゴリ別予算設定 */}
+        <div className="mb-8">
+          <CategoryBudgetList
+            key={budgetUpdateTrigger}
+            categories={categories}
+            onAddBudget={() => setShowCategoryBudgetModal(true)}
+            onEditBudget={(budget) => {
+              setEditingCategoryBudget(budget)
+              setShowCategoryBudgetModal(true)
+            }}
+            onBudgetUpdated={handleBudgetUpdated}
+          />
+        </div>
 
-          {/* カテゴリ別予算リスト - 縦長で狭く */}
-          <div className="xl:col-span-2">
-            <CategoryBudgetList
-              key={budgetUpdateTrigger}
-              categories={categories}
-              onAddBudget={() => setShowCategoryBudgetModal(true)}
-              onEditBudget={(budget) => {
-                setEditingCategoryBudget(budget)
-                setShowCategoryBudgetModal(true)
-              }}
-              onBudgetUpdated={handleBudgetUpdated}
-            />
-          </div>
+        {/* 予算履歴セクション */}
+        <div className="mb-8">
+          <BudgetHistory />
         </div>
 
         {/* サブセクション */}
