@@ -195,44 +195,49 @@ export default function CategoryBudgetList({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-3">
-                  <div className="text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">予算</p>
-                    <p className="font-semibold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-6">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">予算</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">使用済み</p>
+                      <p className={`font-semibold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                        {formatCurrency(totalSpent)}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">残り</p>
+                      <p className={`font-semibold ${remaining < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+                        {formatCurrency(remaining)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">使用済み</p>
-                    <p className={`font-semibold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
-                      {formatCurrency(totalSpent)}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">残り</p>
-                    <p className={`font-semibold ${remaining < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                      {formatCurrency(remaining)}
-                    </p>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">使用率</p>
+                      <p className={`font-medium ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'}`}>
+                        {Math.round(utilization)}%
+                      </p>
+                    </div>
+                    <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(utilization, isOverBudget)}`}
+                        style={{ width: `${Math.min(utilization, 100)}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <span>使用率</span>
-                    <span className={`font-medium ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'}`}>
-                      {Math.round(utilization)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(utilization, isOverBudget)}`}
-                      style={{ width: `${Math.min(utilization, 100)}%` }}
-                    />
-                  </div>
-                  {isOverBudget && (
+                
+                {isOverBudget && (
+                  <div className="mt-2 text-right">
                     <p className="text-sm text-red-600 dark:text-red-400 font-medium">
                       ⚠️ 予算を{formatCurrency(Math.abs(remaining))}超過
                     </p>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )
           })}
