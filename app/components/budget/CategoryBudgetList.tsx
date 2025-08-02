@@ -156,59 +156,75 @@ export default function CategoryBudgetList({
             return (
               <div 
                 key={item.categoryId} 
-                className="p-2 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors"
-                style={{ backgroundColor: hexToRgba(item.categoryColor, 0.1) }}
+                className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg transition-all duration-200 hover:shadow-md"
+                style={{ backgroundColor: hexToRgba(item.categoryColor, 0.08) }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+                {/* 第一列：基本情報 */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-4">
                     <div 
-                      className="w-3 h-3 rounded-full flex-shrink-0 shadow-sm"
+                      className="w-4 h-4 rounded-full flex-shrink-0 shadow-sm"
                       style={{ backgroundColor: item.categoryColor }}
                     />
-                    <div className="flex items-center space-x-4">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{item.categoryName}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">{item.transactionCount}件の取引</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">予算</span>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">使用済み</span>
-                      <span className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
-                        {formatCurrency(totalSpent)}
+                    <div className="flex items-center space-x-6">
+                      <span className="text-base font-semibold text-gray-900 dark:text-white">{item.categoryName}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                        {item.transactionCount}件の取引
                       </span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">予算</span>
+                        <span className="text-base font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">使用済み</span>
+                        <span className={`text-base font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                          {formatCurrency(totalSpent)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-3 flex-shrink-0">
+                  <div className="flex items-center space-x-4 flex-shrink-0">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500 dark:text-gray-400">使用率</span>
-                      <span className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">使用率</span>
+                      <span className={`text-xl font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                         {Math.round(utilization)}%
                       </span>
-                    </div>
-                    <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 shadow-inner">
-                      <div
-                        className={`h-2.5 rounded-full transition-all duration-500 shadow-sm ${getProgressColor(utilization, isOverBudget)}`}
-                        style={{ width: `${Math.min(utilization, 100)}%` }}
-                      />
                     </div>
                     {budget && (
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => onEditBudget(budget)}
-                          className="p-1.5 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                          className="p-2 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
                           title="編集"
                         >
-                          <PencilIcon className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                          <PencilIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         </button>
                         <button
                           onClick={() => handleDelete(budget.id)}
-                          className="p-1.5 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
+                          className="p-2 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
                           title="削除"
                         >
-                          <TrashIcon className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                          <TrashIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         </button>
                       </div>
                     )}
                   </div>
+                </div>
+
+                {/* 第二列：プログレスバー */}
+                <div className="flex items-center space-x-3">
+                  <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-4 shadow-inner">
+                    <div
+                      className={`h-4 rounded-full transition-all duration-700 shadow-sm ${getProgressColor(utilization, isOverBudget)}`}
+                      style={{ width: `${Math.min(utilization, 100)}%` }}
+                    />
+                  </div>
+                  {remaining < 0 && (
+                    <span className="text-sm text-red-600 dark:text-red-400 font-medium whitespace-nowrap">
+                      ⚠️ {formatCurrency(Math.abs(remaining))}超過
+                    </span>
+                  )}
                 </div>
                 
                 {isOverBudget && (
