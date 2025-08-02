@@ -163,11 +163,11 @@ export default function CategoryBudgetList({
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center space-x-3">
                     <div 
-                      className="w-4 h-4 rounded-full flex-shrink-0 shadow-sm"
+                      className="w-3.5 h-3.5 rounded-full flex-shrink-0 shadow-sm"
                       style={{ backgroundColor: item.categoryColor }}
                     />
-                    <span className="text-base font-semibold text-gray-900 dark:text-white">{item.categoryName}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{item.categoryName}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
                       {item.transactionCount}件の取引
                     </span>
                   </div>
@@ -194,22 +194,22 @@ export default function CategoryBudgetList({
 
                 {/* 第二列：予算・使用済み・使用率 */}
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-6">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">予算</span>
-                      <span className="text-base font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</span>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">予算</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">使用済み</span>
-                      <span className={`text-base font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">使用済み</span>
+                      <span className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
                         {formatCurrency(totalSpent)}
                       </span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">使用率</span>
-                    <span className={`text-xl font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">使用率</span>
+                    <span className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                       {Math.round(utilization)}%
                     </span>
                   </div>

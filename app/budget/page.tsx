@@ -17,6 +17,7 @@ import CategoryBudgetModal from '../components/budget/CategoryBudgetModal'
 import MonthlyBudgetReport from '../components/budget/MonthlyBudgetReport'
 import { useMonthlyBudgetReport } from '../hooks/useMonthlyBudgetReport'
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline'
+import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 
 export default function BudgetPage() {
   const router = useRouter()
