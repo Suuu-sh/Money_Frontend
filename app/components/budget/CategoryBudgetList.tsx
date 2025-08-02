@@ -156,18 +156,18 @@ export default function CategoryBudgetList({
             return (
               <div 
                 key={item.categoryId} 
-                className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors"
+                className="p-2.5 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors"
                 style={{ backgroundColor: hexToRgba(item.categoryColor, 0.1) }}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-3">
                     <div 
-                      className="w-4 h-4 rounded-full flex-shrink-0 shadow-sm"
+                      className="w-3.5 h-3.5 rounded-full flex-shrink-0 shadow-sm"
                       style={{ backgroundColor: item.categoryColor }}
                     />
                     <div>
-                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{item.categoryName}</h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                      <h4 className="text-base font-semibold text-gray-900 dark:text-white">{item.categoryName}</h4>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                         {item.transactionCount}件の取引
                       </p>
                     </div>
@@ -196,29 +196,29 @@ export default function CategoryBudgetList({
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-4">
                     <div className="text-center min-w-0">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">予算</p>
-                      <p className="text-base font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">予算</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</p>
                     </div>
                     <div className="text-center min-w-0">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">使用済み</p>
-                      <p className={`text-base font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">使用済み</p>
+                      <p className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
                         {formatCurrency(totalSpent)}
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-4 flex-shrink-0">
+                  <div className="flex items-center space-x-3 flex-shrink-0">
                     <div className="text-center">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-2">使用率</p>
-                      <p className={`text-2xl font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">使用率</p>
+                      <p className={`text-xl font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                         {Math.round(utilization)}%
                       </p>
                     </div>
-                    <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-5 shadow-inner">
+                    <div className="w-28 bg-gray-200 dark:bg-gray-600 rounded-full h-3 shadow-inner">
                       <div
-                        className={`h-5 rounded-full transition-all duration-500 shadow-sm ${getProgressColor(utilization, isOverBudget)}`}
+                        className={`h-3 rounded-full transition-all duration-500 shadow-sm ${getProgressColor(utilization, isOverBudget)}`}
                         style={{ width: `${Math.min(utilization, 100)}%` }}
                       />
                     </div>
