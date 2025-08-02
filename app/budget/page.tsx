@@ -196,51 +196,52 @@ export default function BudgetPage() {
         </div>
 
         {/* メインセクション: カテゴリ別予算と予算履歴 */}
-        <div className="flex flex-wrap gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* 予算履歴 */}
-          <ResizablePanel
-            defaultWidth="48%"
-            defaultHeight="400px"
-            minWidth={300}
-            minHeight={200}
-            storageKey="budget-history"
-            className="flex-shrink-0"
-          >
-            <BudgetHistory />
-          </ResizablePanel>
+          <div className="min-w-0">
+            <ResizablePanel
+              defaultWidth="100%"
+              defaultHeight="400px"
+              minWidth={300}
+              minHeight={200}
+              storageKey="budget-history"
+            >
+              <BudgetHistory />
+            </ResizablePanel>
+          </div>
 
           {/* カテゴリ別予算リスト */}
-          <ResizablePanel
-            defaultWidth="48%"
-            defaultHeight="400px"
-            minWidth={300}
-            minHeight={200}
-            storageKey="category-budget-list"
-            className="flex-shrink-0"
-          >
-            <CategoryBudgetList
-              key={budgetUpdateTrigger}
-              categories={categories}
-              onAddBudget={() => setShowCategoryBudgetModal(true)}
-              onEditBudget={(budget) => {
-                setEditingCategoryBudget(budget)
-                setShowCategoryBudgetModal(true)
-              }}
-              onBudgetUpdated={handleBudgetUpdated}
-            />
-          </ResizablePanel>
+          <div className="min-w-0">
+            <ResizablePanel
+              defaultWidth="100%"
+              defaultHeight="400px"
+              minWidth={300}
+              minHeight={200}
+              storageKey="category-budget-list"
+            >
+              <CategoryBudgetList
+                key={budgetUpdateTrigger}
+                categories={categories}
+                onAddBudget={() => setShowCategoryBudgetModal(true)}
+                onEditBudget={(budget) => {
+                  setEditingCategoryBudget(budget)
+                  setShowCategoryBudgetModal(true)
+                }}
+                onBudgetUpdated={handleBudgetUpdated}
+              />
+            </ResizablePanel>
+          </div>
         </div>
 
         {/* サブセクション */}
-        <div className="flex flex-wrap gap-6 mb-8">
+        <div className="mb-8">
           {/* 固定収支管理 */}
           <ResizablePanel
             defaultWidth="100%"
-            defaultHeight="300px"
+            defaultHeight="350px"
             minWidth={400}
             minHeight={200}
             storageKey="fixed-transactions"
-            className="flex-shrink-0"
           >
             <FixedTransactionsList 
               key={`fixed-transactions-${budgetUpdateTrigger}`}
