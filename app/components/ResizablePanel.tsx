@@ -12,6 +12,7 @@ interface ResizablePanelProps {
   maxHeight?: number
   className?: string
   storageKey?: string
+  enableVerticalResize?: boolean
 }
 
 export default function ResizablePanel({
@@ -23,7 +24,8 @@ export default function ResizablePanel({
   maxWidth,
   maxHeight,
   className = '',
-  storageKey
+  storageKey,
+  enableVerticalResize = false
 }: ResizablePanelProps) {
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight })
   const [isResizing, setIsResizing] = useState(false)
@@ -136,21 +138,25 @@ export default function ResizablePanel({
         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-12 bg-gray-400 dark:bg-gray-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
-      {/* 下端のリサイズハンドル（高さ調整） */}
-      <div
-        className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize bg-transparent hover:bg-blue-500/20 transition-colors group z-10"
-        onMouseDown={(e) => handleMouseDown(e, 'height')}
-      >
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gray-400 dark:bg-gray-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-      </div>
+      {/* 下端のリサイズハンドル（高さ調整） - enableVerticalResizeがtrueの場合のみ表示 */}
+      {enableVerticalResize && (
+        <div
+          className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize bg-transparent hover:bg-blue-500/20 transition-colors group z-10"
+          onMouseDown={(e) => handleMouseDown(e, 'height')}
+        >
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gray-400 dark:bg-gray-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+      )}
 
-      {/* 右下角のリサイズハンドル（両方向調整） */}
-      <div
-        className="absolute bottom-0 right-0 w-4 h-4 cursor-nw-resize bg-transparent hover:bg-blue-500/30 transition-colors group z-10"
-        onMouseDown={(e) => handleMouseDown(e, 'both')}
-      >
-        <div className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-gray-400 dark:bg-gray-500 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"></div>
-      </div>
+      {/* 右下角のリサイズハンドル（両方向調整） - enableVerticalResizeがtrueの場合のみ表示 */}
+      {enableVerticalResize && (
+        <div
+          className="absolute bottom-0 right-0 w-4 h-4 cursor-nw-resize bg-transparent hover:bg-blue-500/30 transition-colors group z-10"
+          onMouseDown={(e) => handleMouseDown(e, 'both')}
+        >
+          <div className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-gray-400 dark:bg-gray-500 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+      )}
 
       {/* リサイズ中のオーバーレイ */}
       {isResizing && (
