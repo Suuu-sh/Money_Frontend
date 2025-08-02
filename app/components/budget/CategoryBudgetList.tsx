@@ -217,11 +217,17 @@ export default function CategoryBudgetList({
 
                 {/* 第三列：プログレスバー */}
                 <div className="flex items-center space-x-3">
-                  <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-4 shadow-inner">
-                    <div
-                      className={`h-4 rounded-full transition-all duration-700 shadow-sm ${getProgressColor(utilization, isOverBudget)}`}
-                      style={{ width: `${Math.min(utilization, 100)}%` }}
-                    />
+                  <div className="flex-1 relative">
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ease-out relative ${getProgressColor(utilization, isOverBudget)}`}
+                        style={{ width: `${Math.min(utilization, 100)}%` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                      </div>
+                    </div>
+                    {/* プログレスバーの上に薄いグラデーション */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-full pointer-events-none"></div>
                   </div>
                   {remaining < 0 && (
                     <span className="text-sm text-red-600 dark:text-red-400 font-medium whitespace-nowrap">
