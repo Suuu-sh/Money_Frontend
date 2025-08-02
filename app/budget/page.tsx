@@ -12,6 +12,7 @@ import BudgetAlerts from '../components/budget/BudgetAlerts'
 import FixedTransactionsList from '../components/budget/FixedTransactionsList'
 import FixedTransactionModal from '../components/budget/FixedTransactionModal'
 import BudgetHistory from '../components/budget/BudgetHistory'
+import CategoryBudgetOverview from '../components/budget/CategoryBudgetOverview'
 import CategoryBudgetList from '../components/budget/CategoryBudgetList'
 import CategoryBudgetModal from '../components/budget/CategoryBudgetModal'
 import MonthlyBudgetReport from '../components/budget/MonthlyBudgetReport'
@@ -189,15 +190,20 @@ export default function BudgetPage() {
           </div>
         </div>
 
-        {/* メインセクション: カテゴリ別予算と予算履歴 */}
+        {/* メインセクション: 三列レイアウト */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
           {/* 予算履歴 */}
-          <div className="xl:col-span-1">
+          <div>
             <BudgetHistory />
           </div>
 
+          {/* カテゴリ別予算サマリー */}
+          <div>
+            <CategoryBudgetOverview key={budgetUpdateTrigger} />
+          </div>
+
           {/* カテゴリ別予算リスト */}
-          <div className="xl:col-span-2">
+          <div>
             <CategoryBudgetList
               key={budgetUpdateTrigger}
               categories={categories}
