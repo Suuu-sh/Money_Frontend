@@ -206,7 +206,7 @@ export default function CategoryBudgetList({
                   </div>
                   <div className="text-center">
                     <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">使用率</div>
-                    <div className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                    <div className={`text-xs font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                       {Math.round(utilization)}%
                     </div>
                   </div>
