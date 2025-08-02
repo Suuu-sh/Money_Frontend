@@ -194,11 +194,11 @@ export default function BudgetPage() {
           </div>
         </div>
 
-        {/* メインセクション: カテゴリ別予算 */}
+        {/* メインセクション: カテゴリ別予算と予算履歴 */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
-          {/* カテゴリ別予算概要 */}
+          {/* 予算履歴 */}
           <div className="xl:col-span-1">
-            <CategoryBudgetOverview key={budgetUpdateTrigger} />
+            <BudgetHistory />
           </div>
 
           {/* カテゴリ別予算リスト */}
@@ -217,7 +217,7 @@ export default function BudgetPage() {
         </div>
 
         {/* サブセクション */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 gap-6 mb-8">
           {/* 固定収支管理 */}
           <div>
             <FixedTransactionsList 
@@ -229,11 +229,6 @@ export default function BudgetPage() {
               }}
               onTransactionsUpdated={handleBudgetUpdated}
             />
-          </div>
-
-          {/* 予算履歴 */}
-          <div>
-            <BudgetHistory />
           </div>
         </div>
       </main>
