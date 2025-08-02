@@ -67,14 +67,20 @@ export default function SpendingTrendAnalysis() {
           }
         })
 
-      // 固定費を各月に追加
-      const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
-      const totalFixedExpenses = activeFixedExpenses.reduce((sum, fe) => sum + fe.amount, 0)
-      
-      monthlyMap.forEach(data => {
-        data.fixedExpenses = totalFixedExpenses
-        data.spending += totalFixedExpenses
-      })
+      // 固定費から自動生成された取引を月別に集計
+      transactions
+        .filter(t => t.type === 'expense')
+        .filter(t => t.description?.startsWith('固定支出:'))
+        .forEach(transaction => {
+          const date = new Date(transaction.date)
+          const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+          
+          if (monthlyMap.has(monthKey)) {
+            const data = monthlyMap.get(monthKey)!
+            data.fixedExpenses += transaction.amount
+            data.spending += transaction.amount
+          }
+        })
 
       // 最新月が上に来るように逆順でソート
       const sortedData = Array.from(monthlyMap.values()).reverse()
@@ -96,6 +102,25 @@ export default function SpendingTrendAnalysis() {
   const formatMonth = (monthKey: string) => {
     const [year, month] = monthKey.split('-')
     return `${year}年${parseInt(month)}月`
+  }
+
+  const calculateMonthProgress = () => {
+    const now = new Date()
+    const currentDay = now.getDate()
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    
+    // 今月の総日数
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+    
+    // 現在の時刻を含めた進捗計算（1日 = 24時間）
+    const hoursPassedToday = currentHour + (currentMinute / 60)
+    const daysPassedWithHours = (currentDay - 1) + (hoursPassedToday / 24)
+    
+    // 月の進捗率（0-1の範囲）
+    const monthProgress = daysPassedWithHours / daysInMonth
+    
+    return Math.min(monthProgress, 1) // 1を超えないように制限
   }
 
   const calculateTrend = () => {
@@ -151,7 +176,24 @@ export default function SpendingTrendAnalysis() {
       </div>
 
       {/* トレンドサマリー */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-purple-50 dark:bg-purple-900 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">月の進捗</p>
+              <p className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                {(calculateMonthProgress() * 100).toFixed(1)}%
+              </p>
+              <div className="w-full bg-purple-200 dark:bg-purple-700 rounded-full h-2 mt-2">
+                <div
+                  className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${calculateMonthProgress() * 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>

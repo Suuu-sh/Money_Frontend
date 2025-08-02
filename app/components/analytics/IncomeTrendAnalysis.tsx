@@ -40,10 +40,9 @@ export default function IncomeTrendAnalysis() {
         })
       }
 
-      // 収入データを月別に集計（固定費から自動生成された取引は除外）
+      // 収入データを月別に集計（すべての収入取引を含む）
       transactions
         .filter(t => t.type === 'income')
-        .filter(t => !t.description?.startsWith('固定収支:') && !t.description?.startsWith('固定収入:'))
         .forEach(transaction => {
           const date = new Date(transaction.date)
           const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
