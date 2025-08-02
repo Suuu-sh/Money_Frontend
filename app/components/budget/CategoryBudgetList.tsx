@@ -156,18 +156,18 @@ export default function CategoryBudgetList({
             return (
               <div 
                 key={item.categoryId} 
-                className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg transition-all duration-200 hover:shadow-md"
-                style={{ backgroundColor: hexToRgba(item.categoryColor, 0.08) }}
+                className="p-5 border border-gray-200 dark:border-gray-600 rounded-xl transition-all duration-200 hover:shadow-lg"
+                style={{ backgroundColor: hexToRgba(item.categoryColor, 0.05) }}
               >
-                {/* 第一列：カテゴリ名と取引件数 */}
-                <div className="flex items-center justify-between mb-2">
+                {/* ヘッダー：カテゴリ名と操作ボタン */}
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
                     <div 
-                      className="w-3.5 h-3.5 rounded-full flex-shrink-0 shadow-sm"
+                      className="w-4 h-4 rounded-full flex-shrink-0"
                       style={{ backgroundColor: item.categoryColor }}
                     />
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{item.categoryName}</span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                    <span className="text-base font-bold text-gray-900 dark:text-white">{item.categoryName}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2.5 py-1 rounded-full">
                       {item.transactionCount}件の取引
                     </span>
                   </div>
@@ -176,59 +176,59 @@ export default function CategoryBudgetList({
                     <div className="flex items-center space-x-1">
                       <button
                         onClick={() => onEditBudget(budget)}
-                        className="p-2 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                        className="p-1.5 rounded-lg text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                         title="編集"
                       >
-                        <PencilIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        <PencilIcon className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(budget.id)}
-                        className="p-2 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
+                        className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
                         title="削除"
                       >
-                        <TrashIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        <TrashIcon className="w-4 h-4" />
                       </button>
                     </div>
                   )}
                 </div>
 
-                {/* 第二列・第三列：縦配置の予算情報 */}
-                <div className="grid grid-cols-3 gap-2 mb-3">
-                  <div></div>
-                  <div className="space-y-1">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">予算</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">使用済み</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">使用率</div>
+                {/* メイン情報：2列レイアウト */}
+                <div className="grid grid-cols-2 gap-6 mb-4">
+                  {/* ラベル列 */}
+                  <div className="space-y-3">
+                    <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">予算</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">使用済み</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">使用率</div>
                   </div>
-                  <div className="space-y-1">
-                    <div className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</div>
-                    <div className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                  
+                  {/* 値列 */}
+                  <div className="space-y-3 text-right">
+                    <div className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</div>
+                    <div className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
                       {formatCurrency(totalSpent)}
                     </div>
-                    <div className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                    <div className={`text-2xl font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                       {Math.round(utilization)}%
                     </div>
                   </div>
                 </div>
 
-                {/* 第三列：プログレスバー */}
-                <div className="flex items-center space-x-3">
+                {/* プログレスバー */}
+                <div className="space-y-2">
                   <div className="flex-1 relative">
-                    <div className="bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all duration-700 ease-out relative ${getProgressColor(utilization, isOverBudget)}`}
+                        className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColor(utilization, isOverBudget)}`}
                         style={{ width: `${Math.min(utilization, 100)}%` }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                      </div>
+                      />
                     </div>
-                    {/* プログレスバーの上に薄いグラデーション */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-full pointer-events-none"></div>
                   </div>
                   {remaining < 0 && (
-                    <span className="text-sm text-red-600 dark:text-red-400 font-medium whitespace-nowrap">
-                      ⚠️ {formatCurrency(Math.abs(remaining))}超過
-                    </span>
+                    <div className="text-center">
+                      <span className="text-sm text-red-600 dark:text-red-400 font-medium">
+                        ⚠️ 予算を{formatCurrency(Math.abs(remaining))}超過
+                      </span>
+                    </div>
                   )}
                 </div>
               </div>
