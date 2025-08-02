@@ -176,24 +176,7 @@ export default function SpendingTrendAnalysis() {
       </div>
 
       {/* トレンドサマリー */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-purple-50 dark:bg-purple-900 rounded-lg p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">月の進捗</p>
-              <p className="text-xl font-bold text-purple-900 dark:text-purple-100">
-                {(calculateMonthProgress() * 100).toFixed(1)}%
-              </p>
-              <div className="w-full bg-purple-200 dark:bg-purple-700 rounded-full h-2 mt-2">
-                <div
-                  className="bg-purple-600 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${calculateMonthProgress() * 100}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
