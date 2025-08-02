@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
 import SettingsModal from '../components/SettingsModal'
+import ResizablePanel from '../components/ResizablePanel'
 import BudgetOverview from '../components/budget/BudgetOverview'
 import BudgetProgress from '../components/budget/BudgetProgress'
 import BudgetAlerts from '../components/budget/BudgetAlerts'
@@ -195,14 +196,28 @@ export default function BudgetPage() {
         </div>
 
         {/* メインセクション: カテゴリ別予算と予算履歴 */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+        <div className="flex flex-wrap gap-6 mb-8">
           {/* 予算履歴 */}
-          <div>
+          <ResizablePanel
+            defaultWidth="48%"
+            defaultHeight="400px"
+            minWidth={300}
+            minHeight={200}
+            storageKey="budget-history"
+            className="flex-shrink-0"
+          >
             <BudgetHistory />
-          </div>
+          </ResizablePanel>
 
           {/* カテゴリ別予算リスト */}
-          <div>
+          <ResizablePanel
+            defaultWidth="48%"
+            defaultHeight="400px"
+            minWidth={300}
+            minHeight={200}
+            storageKey="category-budget-list"
+            className="flex-shrink-0"
+          >
             <CategoryBudgetList
               key={budgetUpdateTrigger}
               categories={categories}
@@ -213,13 +228,20 @@ export default function BudgetPage() {
               }}
               onBudgetUpdated={handleBudgetUpdated}
             />
-          </div>
+          </ResizablePanel>
         </div>
 
         {/* サブセクション */}
-        <div className="grid grid-cols-1 gap-6 mb-8">
+        <div className="flex flex-wrap gap-6 mb-8">
           {/* 固定収支管理 */}
-          <div>
+          <ResizablePanel
+            defaultWidth="100%"
+            defaultHeight="300px"
+            minWidth={400}
+            minHeight={200}
+            storageKey="fixed-transactions"
+            className="flex-shrink-0"
+          >
             <FixedTransactionsList 
               key={`fixed-transactions-${budgetUpdateTrigger}`}
               onAddTransaction={() => setShowTransactionModal(true)}
@@ -229,7 +251,7 @@ export default function BudgetPage() {
               }}
               onTransactionsUpdated={handleBudgetUpdated}
             />
-          </div>
+          </ResizablePanel>
         </div>
       </main>
 
