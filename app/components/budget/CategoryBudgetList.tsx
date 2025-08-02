@@ -196,35 +196,29 @@ export default function CategoryBudgetList({
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
                     <div className="text-center min-w-0">
                       <p className="text-xs text-gray-500 dark:text-gray-400">予算</p>
-                      <p className="font-semibold text-gray-900 dark:text-white text-sm">{formatCurrency(item.budgetAmount)}</p>
+                      <p className="font-semibold text-gray-900 dark:text-white text-xs">{formatCurrency(item.budgetAmount)}</p>
                     </div>
                     <div className="text-center min-w-0">
                       <p className="text-xs text-gray-500 dark:text-gray-400">使用済み</p>
-                      <p className={`font-semibold text-sm ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                      <p className={`font-semibold text-xs ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
                         {formatCurrency(totalSpent)}
-                      </p>
-                    </div>
-                    <div className="text-center min-w-0">
-                      <p className="text-xs text-gray-500 dark:text-gray-400">残り</p>
-                      <p className={`font-semibold text-sm ${remaining < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                        {formatCurrency(remaining)}
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-4 flex-shrink-0">
+                  <div className="flex items-center space-x-3 flex-shrink-0">
                     <div className="text-center">
                       <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">使用率</p>
-                      <p className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                      <p className={`text-xl font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                         {Math.round(utilization)}%
                       </p>
                     </div>
-                    <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-3">
+                    <div className="w-28 bg-gray-200 dark:bg-gray-600 rounded-full h-4">
                       <div
-                        className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(utilization, isOverBudget)}`}
+                        className={`h-4 rounded-full transition-all duration-300 ${getProgressColor(utilization, isOverBudget)}`}
                         style={{ width: `${Math.min(utilization, 100)}%` }}
                       />
                     </div>
