@@ -192,26 +192,22 @@ export default function CategoryBudgetList({
                   )}
                 </div>
 
-                {/* 第二列：予算・使用済み・使用率 */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1">
-                      <span className="text-xs text-gray-500 dark:text-gray-400">予算</span>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-xs text-gray-500 dark:text-gray-400">使用済み</span>
-                      <span className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
-                        {formatCurrency(totalSpent)}
-                      </span>
-                    </div>
+                {/* 第二列・第三列：縦配置の予算情報 */}
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  <div></div>
+                  <div className="space-y-1">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">予算</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">使用済み</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">使用率</div>
                   </div>
-                  
-                  <div className="flex items-center space-x-1">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">使用率</span>
-                    <span className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                  <div className="space-y-1">
+                    <div className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</div>
+                    <div className={`text-sm font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                      {formatCurrency(totalSpent)}
+                    </div>
+                    <div className={`text-lg font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                       {Math.round(utilization)}%
-                    </span>
+                    </div>
                   </div>
                 </div>
 
