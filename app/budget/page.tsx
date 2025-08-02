@@ -8,22 +8,15 @@ import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
 import SettingsModal from '../components/SettingsModal'
-import ResizablePanel from '../components/ResizablePanel'
-import BudgetOverview from '../components/budget/BudgetOverview'
-import BudgetProgress from '../components/budget/BudgetProgress'
 import BudgetAlerts from '../components/budget/BudgetAlerts'
-import BudgetSettings from '../components/budget/BudgetSettings'
-import FixedExpensesList from '../components/budget/FixedExpensesList'
-import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 import FixedTransactionsList from '../components/budget/FixedTransactionsList'
 import FixedTransactionModal from '../components/budget/FixedTransactionModal'
 import BudgetHistory from '../components/budget/BudgetHistory'
-import CategoryBudgetOverview from '../components/budget/CategoryBudgetOverview'
 import CategoryBudgetList from '../components/budget/CategoryBudgetList'
 import CategoryBudgetModal from '../components/budget/CategoryBudgetModal'
 import MonthlyBudgetReport from '../components/budget/MonthlyBudgetReport'
 import { useMonthlyBudgetReport } from '../hooks/useMonthlyBudgetReport'
-import { CurrencyDollarIcon, Cog6ToothIcon, DocumentChartBarIcon } from '@heroicons/react/24/outline'
+import { DocumentChartBarIcon } from '@heroicons/react/24/outline'
 
 export default function BudgetPage() {
   const router = useRouter()
@@ -196,53 +189,31 @@ export default function BudgetPage() {
         </div>
 
         {/* メインセクション: カテゴリ別予算と予算履歴 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
           {/* 予算履歴 */}
-          <div className="min-w-0">
-            <ResizablePanel
-              defaultWidth="100%"
-              defaultHeight="400px"
-              minWidth={300}
-              minHeight={200}
-              storageKey="budget-history"
-            >
-              <BudgetHistory />
-            </ResizablePanel>
+          <div>
+            <BudgetHistory />
           </div>
 
           {/* カテゴリ別予算リスト */}
-          <div className="min-w-0">
-            <ResizablePanel
-              defaultWidth="100%"
-              defaultHeight="400px"
-              minWidth={300}
-              minHeight={200}
-              storageKey="category-budget-list"
-            >
-              <CategoryBudgetList
-                key={budgetUpdateTrigger}
-                categories={categories}
-                onAddBudget={() => setShowCategoryBudgetModal(true)}
-                onEditBudget={(budget) => {
-                  setEditingCategoryBudget(budget)
-                  setShowCategoryBudgetModal(true)
-                }}
-                onBudgetUpdated={handleBudgetUpdated}
-              />
-            </ResizablePanel>
+          <div>
+            <CategoryBudgetList
+              key={budgetUpdateTrigger}
+              categories={categories}
+              onAddBudget={() => setShowCategoryBudgetModal(true)}
+              onEditBudget={(budget) => {
+                setEditingCategoryBudget(budget)
+                setShowCategoryBudgetModal(true)
+              }}
+              onBudgetUpdated={handleBudgetUpdated}
+            />
           </div>
         </div>
 
         {/* サブセクション */}
-        <div className="mb-8">
+        <div className="grid grid-cols-1 gap-6 mb-8">
           {/* 固定収支管理 */}
-          <ResizablePanel
-            defaultWidth="100%"
-            defaultHeight="350px"
-            minWidth={400}
-            minHeight={200}
-            storageKey="fixed-transactions"
-          >
+          <div>
             <FixedTransactionsList 
               key={`fixed-transactions-${budgetUpdateTrigger}`}
               onAddTransaction={() => setShowTransactionModal(true)}
@@ -252,7 +223,7 @@ export default function BudgetPage() {
               }}
               onTransactionsUpdated={handleBudgetUpdated}
             />
-          </ResizablePanel>
+          </div>
         </div>
       </main>
 
