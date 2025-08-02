@@ -128,7 +128,8 @@ export default function CategoryBudgetList({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="max-w-[70%] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {analysis.sort((a, b) => {
             // CategorySelectorと同じ順序を適用
             const getCategoryOrder = (categoryName: string) => {
@@ -233,6 +234,7 @@ export default function CategoryBudgetList({
               </div>
             )
           })}
+          </div>
         </div>
       )}
     </div>
