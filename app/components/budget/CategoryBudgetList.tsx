@@ -100,7 +100,7 @@ export default function CategoryBudgetList({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 max-w-md mx-auto">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">カテゴリ別予算設定</h2>
         <button
@@ -128,7 +128,7 @@ export default function CategoryBudgetList({
           </button>
         </div>
       ) : (
-        <div className="space-y-3 max-w-sm mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {analysis.sort((a, b) => {
             // CategorySelectorと同じ順序を適用
             const getCategoryOrder = (categoryName: string) => {
@@ -156,66 +156,66 @@ export default function CategoryBudgetList({
             return (
               <div 
                 key={item.categoryId} 
-                className="rounded-md p-2 transition-colors"
-                style={{ 
-                  backgroundColor: hexToRgba(item.categoryColor, 0.1),
-                  borderLeft: `4px solid ${item.categoryColor}`
-                }}
+                className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors"
+                style={{ backgroundColor: hexToRgba(item.categoryColor, 0.1) }}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-1.5">
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium text-gray-900 dark:text-white truncate">{item.categoryName}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {item.transactionCount}件
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div 
+                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: item.categoryColor }}
+                    />
+                    <div>
+                      <h4 className="font-medium text-gray-900 dark:text-white">{item.categoryName}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {item.transactionCount}件の取引
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-1 flex-shrink-0">
+                  <div className="flex items-center space-x-1">
                     {budget && (
                       <>
                         <button
                           onClick={() => onEditBudget(budget)}
-                          className="text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 p-1 rounded hover:bg-white dark:hover:bg-gray-800 transition-colors"
+                          className="p-2 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
                           title="編集"
                         >
-                          <PencilIcon className="w-3 h-3" />
+                          <PencilIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         </button>
                         <button
                           onClick={() => handleDelete(budget.id)}
-                          className="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 p-1 rounded hover:bg-white dark:hover:bg-gray-800 transition-colors"
+                          className="p-2 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
                           title="削除"
                         >
-                          <TrashIcon className="w-3 h-3" />
+                          <TrashIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         </button>
                       </>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1 mb-2">
+                <div className="grid grid-cols-3 gap-4 mb-3">
                   <div className="text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">予算</p>
-                    <p className="font-medium text-gray-900 dark:text-white text-xs">{formatCurrency(item.budgetAmount)}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">予算</p>
+                    <p className="font-semibold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">使用済み</p>
-                    <p className={`font-medium text-xs ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">使用済み</p>
+                    <p className={`font-semibold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
                       {formatCurrency(totalSpent)}
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">残り</p>
-                    <p className={`font-medium text-xs ${remaining < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">残り</p>
+                    <p className={`font-semibold ${remaining < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                       {formatCurrency(remaining)}
                     </p>
                   </div>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                     <span>使用率</span>
                     <span className={`font-medium ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'}`}>
                       {Math.round(utilization)}%
@@ -228,7 +228,7 @@ export default function CategoryBudgetList({
                     />
                   </div>
                   {isOverBudget && (
-                    <p className="text-xs text-red-600 dark:text-red-400 font-medium">
+                    <p className="text-sm text-red-600 dark:text-red-400 font-medium">
                       ⚠️ 予算を{formatCurrency(Math.abs(remaining))}超過
                     </p>
                   )}
