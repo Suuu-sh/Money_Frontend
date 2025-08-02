@@ -190,13 +190,13 @@ export default function BudgetPage() {
         </div>
 
         {/* メインセクション: カテゴリ別予算と予算履歴 */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-8">
           {/* 予算履歴 */}
-          <div className="xl:col-span-1">
+          <div className="xl:col-span-2">
             <BudgetHistory />
           </div>
 
-          {/* カテゴリ別予算リスト */}
+          {/* カテゴリ別予算リスト - 縦長で狭く */}
           <div className="xl:col-span-2">
             <CategoryBudgetList
               key={budgetUpdateTrigger}

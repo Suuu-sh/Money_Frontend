@@ -4,6 +4,7 @@ import { Transaction, Category, Stats } from '../types'
 import StatsCards from './StatsCards'
 import MonthlyChart from './MonthlyChart'
 import DayTransactions from './DayTransactions'
+import DailySpendingChart from './DailySpendingChart'
 import BudgetOverview from './budget/BudgetOverview'
 import BudgetAlerts from './budget/BudgetAlerts'
 import { useState, useEffect } from 'react'
@@ -76,6 +77,11 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
       {/* 予算概要 */}
       <div>
         <BudgetOverview currentMonth={currentMonth} />
+      </div>
+
+      {/* 日毎支出チャート */}
+      <div>
+        <DailySpendingChart />
       </div>
 
       {/* 取引履歴 - 予算ブロックの下に配置 */}
