@@ -193,18 +193,18 @@ export default function CategoryBudgetList({
                 </div>
 
                 {/* メイン情報：横並びレイアウト */}
-                <div className="flex items-center space-x-4 mb-3">
-                  <div className="text-center">
+                <div className="flex items-center justify-between mb-3 px-2">
+                  <div className="text-center flex-1">
                     <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">予算</div>
                     <div className="text-xs font-bold text-gray-900 dark:text-white">{formatCurrency(item.budgetAmount)}</div>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center flex-1">
                     <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">使用済み</div>
                     <div className={`text-xs font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'}`}>
                       {formatCurrency(totalSpent)}
                     </div>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center flex-1">
                     <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">使用率</div>
                     <div className={`text-xs font-bold ${isOverBudget ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                       {Math.round(utilization)}%
