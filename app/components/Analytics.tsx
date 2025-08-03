@@ -156,9 +156,10 @@ export default function Analytics() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="bg-expense-500 h-2 rounded-full transition-all duration-300"
+                      className="h-2 rounded-full transition-all duration-300"
                       style={{ 
-                        width: `${totalExpense > 0 ? (item.totalAmount / totalExpense) * 100 : 0}%` 
+                        width: `${totalExpense > 0 ? (item.totalAmount / totalExpense) * 100 : 0}%`,
+                        backgroundColor: item.categoryColor
                       }}
                     />
                   </div>
@@ -198,9 +199,10 @@ export default function Analytics() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="bg-income-500 h-2 rounded-full transition-all duration-300"
+                      className="h-2 rounded-full transition-all duration-300"
                       style={{ 
-                        width: `${totalIncome > 0 ? (item.totalAmount / totalIncome) * 100 : 0}%` 
+                        width: `${totalIncome > 0 ? (item.totalAmount / totalIncome) * 100 : 0}%`,
+                        backgroundColor: item.categoryColor
                       }}
                     />
                   </div>

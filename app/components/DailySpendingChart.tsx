@@ -32,7 +32,7 @@ export default function DailySpendingChart() {
         const transactionDate = new Date(transaction.date)
         return transactionDate.getFullYear() === year &&
                transactionDate.getMonth() + 1 === month &&
-               transaction.amount < 0 // 支出のみ
+               transaction.type === 'expense' // 支出のみ
       })
 
       // 日毎にグループ化
