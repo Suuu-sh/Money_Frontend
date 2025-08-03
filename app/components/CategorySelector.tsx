@@ -127,8 +127,8 @@ export default function CategorySelector({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* カテゴリグリッド（横長カード） */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-80 overflow-y-auto">
+      {/* カテゴリグリッド（4列コンパクト） */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
           const themeColor = getCategoryThemeColor(category);
@@ -141,11 +141,11 @@ export default function CategorySelector({
               type="button"
               onClick={() => onSelect(category)}
               className={`
-                relative px-4 py-3 rounded-lg border-2 transition-all duration-200 
-                hover:shadow-md hover:scale-105 active:scale-95
-                flex items-center justify-start min-h-[50px]
+                relative px-2 py-2 rounded-md border-2 transition-all duration-200 
+                hover:shadow-sm hover:scale-105 active:scale-95
+                flex items-center justify-start min-h-[40px]
                 ${isSelected 
-                  ? 'border-blue-500 shadow-md ring-2 ring-blue-200' 
+                  ? 'border-blue-500 shadow-md ring-1 ring-blue-200' 
                   : 'border-transparent'
                 }
               `}
@@ -166,18 +166,18 @@ export default function CategorySelector({
             >
               {/* 選択チェックマーク */}
               {isSelected && (
-                <div className="absolute top-1 right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 text-white" />
+                <div className="absolute top-0.5 right-0.5 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
+                  <Check className="w-2 h-2 text-white" />
                 </div>
               )}
               
               {/* アイコン */}
-              <div className="mr-3 flex-shrink-0">
-                {icon}
+              <div className="mr-2 flex-shrink-0">
+                {React.cloneElement(icon, { size: 16 })}
               </div>
               
               {/* カテゴリ名（日本語のみ） */}
-              <span className={`text-sm font-medium ${
+              <span className={`text-xs font-medium truncate ${
                 isSelected ? 'text-blue-700' : 'text-gray-800'
               }`}>
                 {category.name}
