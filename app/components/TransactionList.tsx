@@ -4,6 +4,28 @@ import { useState } from 'react'
 import { Transaction, Category } from '../types'
 import { deleteTransaction } from '../lib/api'
 import { format } from 'date-fns'
+import { 
+  Utensils, 
+  Car, 
+  Home, 
+  Zap, 
+  ShoppingBag, 
+  Heart, 
+  GraduationCap, 
+  Gamepad2, 
+  Shirt, 
+  Sparkles, 
+  Package, 
+  FileText, 
+  Briefcase, 
+  Laptop, 
+  TrendingUp, 
+  Gift, 
+  DollarSign,
+  Smartphone,
+  Users,
+  PiggyBank
+} from 'lucide-react'
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -15,6 +37,35 @@ interface TransactionListProps {
 export default function TransactionList({ transactions, categories, onTransactionUpdated, onEditTransaction }: TransactionListProps) {
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
+
+  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 16) => {
+    const iconProps = { size, color: iconColor, strokeWidth: 2 };
+    
+    const iconMap: { [key: string]: JSX.Element } = {
+      '食費': <Utensils {...iconProps} />,
+      '交通費': <Car {...iconProps} />,
+      '娯楽費': <Gamepad2 {...iconProps} />,
+      '光熱費': <Zap {...iconProps} />,
+      '日用品': <Package {...iconProps} />,
+      '医療費': <Heart {...iconProps} />,
+      '住居費': <Home {...iconProps} />,
+      '教育費': <GraduationCap {...iconProps} />,
+      '美容費': <Sparkles {...iconProps} />,
+      '衣服費': <Shirt {...iconProps} />,
+      '通信費': <Smartphone {...iconProps} />,
+      '交際費': <Users {...iconProps} />,
+      '投資費': <PiggyBank {...iconProps} />,
+      'その他支出': <FileText {...iconProps} />,
+      '給与': <Briefcase {...iconProps} />,
+      '副業': <Laptop {...iconProps} />,
+      '投資': <TrendingUp {...iconProps} />,
+      '賞与': <Gift {...iconProps} />,
+      'その他収入': <DollarSign {...iconProps} />,
+    };
+    
+    return iconMap[name] || <ShoppingBag {...iconProps} />;
+  };
 
   const filteredTransactions = transactions.filter(transaction => {
     if (filter !== 'all' && transaction.type !== filter) return false
@@ -118,11 +169,9 @@ export default function TransactionList({ transactions, categories, onTransactio
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 min-w-0 flex-1">
-                    <div 
-                      className="w-4 h-4 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: transaction.category.color }}
-                      title={transaction.category.name}
-                    />
+                    <div className="flex items-center justify-center w-4 h-4 flex-shrink-0">
+                      {getCategoryIcon(transaction.category.name, transaction.category.color, 16)}
+                    </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center space-x-2">
                         <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
