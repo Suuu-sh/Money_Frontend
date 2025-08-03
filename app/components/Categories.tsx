@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { Category } from '../types'
-import { createCategory, updateCategory, deleteCategory } from '../lib/api'
+import { createCategory, deleteCategory } from '../lib/api'
+import EditCategoryModal from './EditCategoryModal'
 
 interface CategoriesProps {
   categories: Category[]
@@ -11,7 +12,7 @@ interface CategoriesProps {
 
 export default function Categories({ categories, onCategoryUpdated }: CategoriesProps) {
   const [isCreating, setIsCreating] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const [newCategory, setNewCategory] = useState({
     name: '',
@@ -20,13 +21,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
     icon: 'document',
     description: '',
   })
-  const [editCategory, setEditCategory] = useState({
-    name: '',
-    type: 'expense' as 'income' | 'expense',
-    color: '#22c55e',
-    icon: 'document',
-    description: '',
-  })
+
 
   // カテゴリの一般的な順序を定義
   const getCategoryOrder = (categoryName: string, categoryType: string) => {
@@ -85,36 +80,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
 
   const handleEdit = (category: Category) => {
     setEditingCategory(category)
-    setEditCategory({
-      name: category.name,
-      type: category.type,
-      color: category.color,
-      icon: category.icon,
-      description: category.description,
-    })
-    setIsEditing(true)
-  }
-
-  const handleEditSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!editingCategory) return
-
-    try {
-      await updateCategory(editingCategory.id, editCategory)
-      setIsEditing(false)
-      setEditingCategory(null)
-      setEditCategory({
-        name: '',
-        type: 'expense',
-        color: '#22c55e',
-        icon: 'document',
-        description: '',
-      })
-      onCategoryUpdated()
-    } catch (error) {
-      console.error('カテゴリ更新エラー:', error)
-      alert('カテゴリの更新に失敗しました')
-    }
+    setIsEditModalOpen(true)
   }
 
   const handleDelete = async (id: number) => {
@@ -301,119 +267,16 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
         </div>
       )}
 
-      {/* カテゴリ編集フォーム */}
-      {isEditing && (
-        <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">カテゴリを編集</h3>
-          <form onSubmit={handleEditSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  カテゴリ名 *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={editCategory.name}
-                  onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })}
-                  className="input-field"
-                  placeholder="例: 交際費"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  タイプ
-                </label>
-                <select
-                  value={editCategory.type}
-                  onChange={(e) => setEditCategory({ ...editCategory, type: e.target.value as any })}
-                  className="input-field"
-                >
-                  <option value="expense">支出</option>
-                  <option value="income">収入</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                アイコン
-              </label>
-              <div className="grid grid-cols-5 gap-3">
-                {iconOptions.map((option) => (
-                  <button
-                    key={option.key}
-                    type="button"
-                    onClick={() => setEditCategory({ ...editCategory, icon: option.key })}
-                    className={`p-3 rounded-lg border-2 transition-colors flex flex-col items-center space-y-1 ${
-                      editCategory.icon === option.key
-                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-600 dark:text-gray-400'
-                    }`}
-                  >
-                    {renderIcon(option.key)}
-                    <span className="text-xs font-medium">{option.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                カラー
-              </label>
-              <div className="grid grid-cols-10 gap-2">
-                {commonColors.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setEditCategory({ ...editCategory, color })}
-                    className={`w-8 h-8 rounded border-2 transition-all ${
-                      editCategory.color === color
-                        ? 'border-gray-800 dark:border-gray-200 scale-110'
-                        : 'border-gray-300 dark:border-gray-600'
-                    }`}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                説明
-              </label>
-              <input
-                type="text"
-                value={editCategory.description}
-                onChange={(e) => setEditCategory({ ...editCategory, description: e.target.value })}
-                className="input-field"
-                placeholder="カテゴリの説明"
-              />
-            </div>
-
-            <div className="flex space-x-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsEditing(false)
-                  setEditingCategory(null)
-                }}
-                className="btn-secondary"
-              >
-                キャンセル
-              </button>
-              <button
-                type="submit"
-                className="btn-primary"
-              >
-                更新
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* カテゴリ編集モーダル */}
+      <EditCategoryModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setEditingCategory(null)
+        }}
+        category={editingCategory}
+        onCategoryUpdated={onCategoryUpdated}
+      />
 
       {/* カテゴリ一覧 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
