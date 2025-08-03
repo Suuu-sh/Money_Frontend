@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Category } from '../types'
-import { updateCategory } from '../lib/api'
+import { createCategory } from '../lib/api'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { 
   Utensils, 
@@ -26,22 +25,22 @@ import {
   PiggyBank
 } from 'lucide-react'
 
-interface EditCategoryModalProps {
+interface AddCategoryModalProps {
   isOpen: boolean
   onClose: () => void
-  category: Category | null
-  onCategoryUpdated: () => void
+  onCategoryAdded: () => void
+  defaultType?: 'income' | 'expense'
 }
 
-export default function EditCategoryModal({
+export default function AddCategoryModal({
   isOpen,
   onClose,
-  category,
-  onCategoryUpdated
-}: EditCategoryModalProps) {
+  onCategoryAdded,
+  defaultType = 'expense'
+}: AddCategoryModalProps) {
   const [formData, setFormData] = useState({
     name: '',
-    type: 'expense' as 'income' | 'expense',
+    type: defaultType as 'income' | 'expense',
     color: '#22c55e',
     icon: 'document',
     description: '',
@@ -50,37 +49,35 @@ export default function EditCategoryModal({
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (isOpen && category) {
+    if (isOpen) {
       setFormData({
-        name: category.name,
-        type: category.type,
-        color: category.color,
-        icon: category.icon,
-        description: category.description,
+        name: '',
+        type: defaultType,
+        color: '#22c55e',
+        icon: 'document',
+        description: '',
       })
       setError('')
     }
-  }, [isOpen, category])
+  }, [isOpen, defaultType])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!category) return
-
     setError('')
 
     try {
       setLoading(true)
-      await updateCategory(category.id, formData)
-      onCategoryUpdated()
+      await createCategory(formData)
+      onCategoryAdded()
       onClose()
     } catch (error: any) {
-      console.error('カテゴリ更新エラー:', error)
+      console.error('カテゴリ作成エラー:', error)
       if (error.response?.data?.error) {
         setError(error.response.data.error)
       } else if (error.message) {
         setError(error.message)
       } else {
-        setError('カテゴリの更新に失敗しました')
+        setError('カテゴリの作成に失敗しました')
       }
     } finally {
       setLoading(false)
@@ -152,10 +149,10 @@ export default function EditCategoryModal({
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                カテゴリを編集
+                カテゴリを追加
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                カテゴリの情報を変更します
+                新しいカテゴリを作成します
               </p>
             </div>
             <button
@@ -169,7 +166,7 @@ export default function EditCategoryModal({
 
         {/* コンテンツ */}
         <div className="flex-1 px-6 py-6 overflow-hidden">
-          <form onSubmit={handleSubmit} className="h-full flex flex-col space-y-4">
+          <form onSubmit={handleSubmit} className="h-full flex flex-col space-y-3">
             {error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 animate-in slide-in-from-top-2 duration-200">
                 <div className="flex items-center">
@@ -296,10 +293,10 @@ export default function EditCategoryModal({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  更新中...
+                  作成中...
                 </div>
               ) : (
-                '更新'
+                '作成'
               )}
             </button>
           </div>

@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import { Category } from '../types'
-import { createCategory, deleteCategory } from '../lib/api'
+import { deleteCategory } from '../lib/api'
 import EditCategoryModal from './EditCategoryModal'
+import AddCategoryModal from './AddCategoryModal'
 import { 
   Utensils, 
   Car, 
   Home, 
   Zap, 
-  ShoppingBag, 
   Heart, 
   GraduationCap, 
   Gamepad2, 
@@ -33,16 +33,10 @@ interface CategoriesProps {
 }
 
 export default function Categories({ categories, onCategoryUpdated }: CategoriesProps) {
-  const [isCreating, setIsCreating] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
-  const [newCategory, setNewCategory] = useState({
-    name: '',
-    type: 'expense' as 'income' | 'expense',
-    color: '#22c55e',
-    icon: 'document',
-    description: '',
-  })
+  const [defaultType, setDefaultType] = useState<'income' | 'expense'>('expense')
 
 
   // カテゴリの一般的な順序を定義
@@ -81,23 +75,9 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
     return `rgba(${r}, ${g}, ${b}, ${opacity})`
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await createCategory(newCategory)
-      setNewCategory({
-        name: '',
-        type: 'expense',
-        color: '#22c55e',
-        icon: 'document',
-        description: '',
-      })
-      setIsCreating(false)
-      onCategoryUpdated()
-    } catch (error) {
-      console.error('カテゴリ作成エラー:', error)
-      alert('カテゴリの作成に失敗しました')
-    }
+  const handleAddCategory = (type: 'income' | 'expense') => {
+    setDefaultType(type)
+    setIsAddModalOpen(true)
   }
 
   const handleEdit = (category: Category) => {
@@ -174,117 +154,13 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
 
   return (
     <div className="space-y-8">
-
-      {/* カテゴリ作成フォーム */}
-      {isCreating && (
-        <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">新しいカテゴリ</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  カテゴリ名 *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newCategory.name}
-                  onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                  className="input-field"
-                  placeholder="例: 交際費"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  タイプ
-                </label>
-                <select
-                  value={newCategory.type}
-                  onChange={(e) => setNewCategory({ ...newCategory, type: e.target.value as any })}
-                  className="input-field"
-                >
-                  <option value="expense">支出</option>
-                  <option value="income">収入</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                アイコン
-              </label>
-              <div className="grid grid-cols-5 gap-3">
-                {iconOptions.map((option) => (
-                  <button
-                    key={option.key}
-                    type="button"
-                    onClick={() => setNewCategory({ ...newCategory, icon: option.key })}
-                    className={`p-3 rounded-lg border-2 transition-colors flex flex-col items-center space-y-1 ${
-                      newCategory.icon === option.key
-                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-600 dark:text-gray-400'
-                    }`}
-                  >
-                    {renderIcon(option.key)}
-                    <span className="text-xs font-medium">{option.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                カラー
-              </label>
-              <div className="grid grid-cols-10 gap-2">
-                {commonColors.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setNewCategory({ ...newCategory, color })}
-                    className={`w-8 h-8 rounded border-2 transition-all ${
-                      newCategory.color === color
-                        ? 'border-gray-800 dark:border-gray-200 scale-110'
-                        : 'border-gray-300 dark:border-gray-600'
-                    }`}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                説明
-              </label>
-              <input
-                type="text"
-                value={newCategory.description}
-                onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                className="input-field"
-                placeholder="カテゴリの説明"
-              />
-            </div>
-
-            <div className="flex space-x-3">
-              <button
-                type="button"
-                onClick={() => setIsCreating(false)}
-                className="btn-secondary"
-              >
-                キャンセル
-              </button>
-              <button
-                type="submit"
-                className="btn-primary"
-              >
-                作成
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* カテゴリ追加モーダル */}
+      <AddCategoryModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onCategoryAdded={onCategoryUpdated}
+        defaultType={defaultType}
+      />
 
       {/* カテゴリ編集モーダル */}
       <EditCategoryModal
@@ -309,10 +185,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               <span>支出カテゴリ</span>
             </h3>
             <button
-              onClick={() => {
-                setNewCategory({ ...newCategory, type: 'expense' })
-                setIsCreating(true)
-              }}
+              onClick={() => handleAddCategory('expense')}
               className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center space-x-1 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -376,10 +249,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
               <span>収入カテゴリ</span>
             </h3>
             <button
-              onClick={() => {
-                setNewCategory({ ...newCategory, type: 'income' })
-                setIsCreating(true)
-              }}
+              onClick={() => handleAddCategory('income')}
               className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center space-x-1 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
