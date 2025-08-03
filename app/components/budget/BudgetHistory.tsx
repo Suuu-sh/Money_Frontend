@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BudgetHistory as BudgetHistoryType, Budget } from '../../types'
-import { fetchBudgetHistory, fetchBudget } from '../../lib/api'
+import { BudgetHistory as BudgetHistoryType, Budget, CategoryBudget } from '../../types'
+import { fetchBudgetHistory, fetchBudget, fetchCategoryBudgets } from '../../lib/api'
 import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon, PlusIcon } from '@heroicons/react/24/outline'
 import BudgetModal from './BudgetModal'
 
@@ -13,6 +13,7 @@ function BudgetHistory() {
   const [error, setError] = useState<string | null>(null)
   const [showBudgetModal, setShowBudgetModal] = useState(false)
   const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
+  const [categoryBudgets, setCategoryBudgets] = useState<CategoryBudget[]>([])
 
   useEffect(() => {
     loadHistory()
@@ -37,12 +38,26 @@ function BudgetHistory() {
         // 予算が設定されていない場合
         setCurrentBudget(null)
       }
+
+      // カテゴリ別予算を取得
+      try {
+        const categoryBudgetData = await fetchCategoryBudgets(currentYear, currentMonth)
+        setCategoryBudgets(categoryBudgetData)
+      } catch (error) {
+        console.log('カテゴリ別予算が設定されていません')
+        setCategoryBudgets([])
+      }
     } catch (error) {
       console.error('Budget History Error:', error) // デバッグ用
       setError('予算履歴の取得に失敗しました')
     } finally {
       setLoading(false)
     }
+  }
+
+  // カテゴリ別予算の合計を計算
+  const getTotalCategoryBudget = () => {
+    return categoryBudgets.reduce((total, budget) => total + budget.amount, 0)
   }
 
   const handleBudgetSaved = () => {
@@ -210,8 +225,18 @@ function BudgetHistory() {
                     <div>
                       <div className="text-gray-600 dark:text-gray-400">予算</div>
                       <div className="font-semibold text-gray-900 dark:text-white">
-                        {item.budget > 0 ? formatAmount(item.budget) : '未設定'}
+                        {isCurrentMonth && categoryBudgets.length > 0 
+                          ? formatAmount(getTotalCategoryBudget())
+                          : item.budget > 0 
+                            ? formatAmount(item.budget) 
+                            : '未設定'
+                        }
                       </div>
+                      {isCurrentMonth && categoryBudgets.length > 0 && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          カテゴリ別予算合計
+                        </div>
+                      )}
                     </div>
                     <div>
                       <div className="text-gray-600 dark:text-gray-400">実際の支出</div>

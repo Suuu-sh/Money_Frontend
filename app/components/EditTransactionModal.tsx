@@ -28,12 +28,41 @@ export default function EditTransactionModal({ transaction, categories, onClose,
     description: transaction.description || '',
     date: getLocalDateString(transaction.date),
   })
+
+  // 取引タイプが変更された時にカテゴリを適切に処理
+  const handleTypeChange = (newType: 'income' | 'expense') => {
+    const newFilteredCategories = categories.filter(cat => cat.type === newType)
+    const currentCategoryExists = newFilteredCategories.some(cat => cat.id.toString() === formData.categoryId)
+    
+    setFormData({
+      ...formData,
+      type: newType,
+      categoryId: currentCategoryExists ? formData.categoryId : (newFilteredCategories[0]?.id.toString() || '')
+    })
+  }
   const [loading, setLoading] = useState(false)
 
   const filteredCategories = categories.filter(cat => cat.type === formData.type)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // バリデーション
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      alert('金額を正しく入力してください')
+      return
+    }
+    
+    if (!formData.categoryId) {
+      alert('カテゴリを選択してください')
+      return
+    }
+    
+    if (!formData.date) {
+      alert('日付を入力してください')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -48,9 +77,16 @@ export default function EditTransactionModal({ transaction, categories, onClose,
         date: formData.date,
       })
       onTransactionUpdated()
-    } catch (error) {
+      onClose()
+    } catch (error: any) {
       console.error('取引更新エラー:', error)
-      alert('取引の更新に失敗しました')
+      if (error.response?.data?.error) {
+        alert(`エラー: ${error.response.data.error}`)
+      } else if (error.message) {
+        alert(`エラー: ${error.message}`)
+      } else {
+        alert('取引の更新に失敗しました')
+      }
     } finally {
       setLoading(false)
     }
@@ -58,8 +94,8 @@ export default function EditTransactionModal({ transaction, categories, onClose,
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      {/* 横幅を広げたモーダル */}
-      <div className="bg-white dark:bg-gray-800 w-full max-w-3xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[95vh] flex flex-col">
+      {/* コンパクトなモーダル */}
+      <div className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[95vh] flex flex-col">
         <div className="p-6 flex-1 overflow-y-auto">
           <div className="flex justify-between items-center mb-4 sm:mb-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2">
@@ -88,7 +124,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, type: 'income', categoryId: '' })}
+                    onClick={() => handleTypeChange('income')}
                     className={`p-3 rounded-lg border-2 transition-all duration-200 flex items-center justify-center space-x-2 ${
                       formData.type === 'income'
                         ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 shadow-lg'
@@ -102,7 +138,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
                   </button>
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, type: 'expense', categoryId: '' })}
+                    onClick={() => handleTypeChange('expense')}
                     className={`p-3 rounded-lg border-2 transition-all duration-200 flex items-center justify-center space-x-2 ${
                       formData.type === 'expense'
                         ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 shadow-lg'
