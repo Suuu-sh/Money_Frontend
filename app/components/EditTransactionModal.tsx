@@ -37,9 +37,12 @@ export default function EditTransactionModal({ transaction, categories, onClose,
     setLoading(true)
 
     try {
+      // 金額を正確に処理するため、小数点以下を適切に処理
+      const amount = Math.round(parseFloat(formData.amount) * 100) / 100
+      
       await updateTransaction(transaction.id, {
         type: formData.type,
-        amount: parseFloat(formData.amount),
+        amount: amount,
         categoryId: parseInt(formData.categoryId),
         description: formData.description,
         date: formData.date,
