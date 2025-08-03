@@ -1,15 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BudgetHistory as BudgetHistoryType } from '../../types'
-import { fetchBudgetHistory } from '../../lib/api'
-import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
+import { BudgetHistory as BudgetHistoryType, Budget } from '../../types'
+import { fetchBudgetHistory, fetchBudget } from '../../lib/api'
+import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon, PlusIcon } from '@heroicons/react/24/outline'
+import BudgetModal from './BudgetModal'
 
 function BudgetHistory() {
   const [allHistory, setAllHistory] = useState<BudgetHistoryType[]>([])
   const [selectedMonths, setSelectedMonths] = useState(3)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showBudgetModal, setShowBudgetModal] = useState(false)
+  const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
 
   useEffect(() => {
     loadHistory()
@@ -19,12 +22,32 @@ function BudgetHistory() {
     try {
       setLoading(true)
       const data = await fetchBudgetHistory()
+      console.log('Budget History Data:', data) // デバッグ用
       setAllHistory(data)
+      
+      // 現在の月の予算を取得
+      const now = new Date()
+      const currentYear = now.getFullYear()
+      const currentMonth = now.getMonth() + 1
+      
+      try {
+        const budget = await fetchBudget(currentYear, currentMonth)
+        setCurrentBudget(budget)
+      } catch (error) {
+        // 予算が設定されていない場合
+        setCurrentBudget(null)
+      }
     } catch (error) {
+      console.error('Budget History Error:', error) // デバッグ用
       setError('予算履歴の取得に失敗しました')
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleBudgetSaved = () => {
+    setShowBudgetModal(false)
+    loadHistory() // データを再読み込み
   }
 
   // 選択された月数分の履歴を取得（新しい順に並び替え）
@@ -85,16 +108,27 @@ function BudgetHistory() {
           <ChartBarIcon className="w-6 h-6 mr-2 text-blue-500" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">予算履歴</h2>
         </div>
-        <select
-          value={selectedMonths}
-          onChange={(e) => setSelectedMonths(Number(e.target.value))}
-          className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-        >
-          <option value={1}>過去1ヶ月</option>
-          <option value={2}>過去2ヶ月</option>
-          <option value={3}>過去3ヶ月</option>
-          <option value={6}>過去6ヶ月</option>
-        </select>
+        <div className="flex items-center space-x-3">
+          {/* 予算設定ボタン */}
+          <button
+            onClick={() => setShowBudgetModal(true)}
+            className="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1 rounded-md text-sm font-medium flex items-center space-x-1 transition-colors"
+          >
+            <PlusIcon className="w-4 h-4" />
+            <span>{currentBudget ? '予算編集' : '予算設定'}</span>
+          </button>
+          
+          <select
+            value={selectedMonths}
+            onChange={(e) => setSelectedMonths(Number(e.target.value))}
+            className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            <option value={1}>過去1ヶ月</option>
+            <option value={2}>過去2ヶ月</option>
+            <option value={3}>過去3ヶ月</option>
+            <option value={6}>過去6ヶ月</option>
+          </select>
+        </div>
       </div>
 
       {history.length === 0 ? (
@@ -236,6 +270,14 @@ function BudgetHistory() {
           )}
         </div>
       )}
+
+      {/* 予算設定モーダル */}
+      <BudgetModal
+        isOpen={showBudgetModal}
+        onClose={() => setShowBudgetModal(false)}
+        budget={currentBudget}
+        onSaved={handleBudgetSaved}
+      />
     </div>
   )
 }
