@@ -37,6 +37,8 @@ interface TransactionListProps {
 export default function TransactionList({ transactions, categories, onTransactionUpdated, onEditTransaction }: TransactionListProps) {
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [sortBy, setSortBy] = useState<'date' | 'amount' | 'created'>('date')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
   // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 16) => {
@@ -67,11 +69,31 @@ export default function TransactionList({ transactions, categories, onTransactio
     return iconMap[name] || <ShoppingBag {...iconProps} />;
   };
 
-  const filteredTransactions = transactions.filter(transaction => {
-    if (filter !== 'all' && transaction.type !== filter) return false
-    if (categoryFilter !== 'all' && transaction.categoryId.toString() !== categoryFilter) return false
-    return true
-  })
+  const filteredAndSortedTransactions = transactions
+    .filter(transaction => {
+      if (filter !== 'all' && transaction.type !== filter) return false
+      if (categoryFilter !== 'all' && transaction.categoryId.toString() !== categoryFilter) return false
+      return true
+    })
+    .sort((a, b) => {
+      let comparison = 0
+      
+      switch (sortBy) {
+        case 'amount':
+          comparison = Math.abs(a.amount) - Math.abs(b.amount)
+          break
+        case 'date':
+          comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
+          break
+        case 'created':
+          comparison = a.id - b.id
+          break
+        default:
+          comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
+      }
+      
+      return sortOrder === 'desc' ? -comparison : comparison
+    })
 
   const formatAmount = (amount: number, type: string) => {
     const formatted = new Intl.NumberFormat('ja-JP', {
@@ -123,10 +145,29 @@ export default function TransactionList({ transactions, categories, onTransactio
               </option>
             ))}
           </select>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="input-field w-full sm:w-auto"
+          >
+            <option value="date">日付順</option>
+            <option value="amount">金額順</option>
+            <option value="created">登録順</option>
+          </select>
+
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as any)}
+            className="input-field w-full sm:w-auto"
+          >
+            <option value="desc">降順</option>
+            <option value="asc">昇順</option>
+          </select>
         </div>
       </div>
 
-      {filteredTransactions.length === 0 ? (
+      {filteredAndSortedTransactions.length === 0 ? (
         <div className="text-center py-8">
           <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
             <svg className="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +183,7 @@ export default function TransactionList({ transactions, categories, onTransactio
         </div>
       ) : (
         <div className="space-y-1.5 max-h-96 overflow-y-auto">
-          {filteredTransactions.map((transaction) => {
+          {filteredAndSortedTransactions.map((transaction) => {
             // カテゴリカラーを薄くした背景色を生成
             const hexToRgb = (hex: string) => {
               const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
