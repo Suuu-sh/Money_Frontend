@@ -166,9 +166,9 @@ export default function TransactionsPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* レポート部分 - 支出内訳・収入内訳・月別収支推移 */}
-          <div className="xl:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* 支出内訳 */}
               <div className="card">
@@ -393,7 +393,7 @@ export default function TransactionsPage() {
           </div>
 
           {/* 取引履歴部分 - 右側縦長 */}
-          <div className="xl:col-span-1">
+          <div className="lg:col-span-1">
             <TransactionList 
               transactions={transactions}
               categories={categories}
