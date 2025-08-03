@@ -124,15 +124,6 @@ function BudgetHistory() {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">予算履歴</h2>
         </div>
         <div className="flex items-center space-x-3">
-          {/* 予算設定ボタン */}
-          <button
-            onClick={() => setShowBudgetModal(true)}
-            className="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1 rounded-md text-sm font-medium flex items-center space-x-1 transition-colors"
-          >
-            <PlusIcon className="w-4 h-4" />
-            <span>{currentBudget ? '予算編集' : '予算設定'}</span>
-          </button>
-          
           <select
             value={selectedMonths}
             onChange={(e) => setSelectedMonths(Number(e.target.value))}
@@ -180,8 +171,11 @@ function BudgetHistory() {
           {/* 月別履歴 */}
           <div className="space-y-3">
             {history.map((item, index) => {
-              const budgetUtilization = item.budget > 0 ? (item.actualSpending / item.budget) * 100 : 0
               const isCurrentMonth = index === 0
+              const currentBudget = isCurrentMonth && categoryBudgets.length > 0 
+                ? getTotalCategoryBudget() 
+                : item.budget
+              const budgetUtilization = currentBudget > 0 ? (item.actualSpending / currentBudget) * 100 : 0
               
               return (
                 <div
@@ -232,11 +226,6 @@ function BudgetHistory() {
                             : '未設定'
                         }
                       </div>
-                      {isCurrentMonth && categoryBudgets.length > 0 && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          カテゴリ別予算合計
-                        </div>
-                      )}
                     </div>
                     <div>
                       <div className="text-gray-600 dark:text-gray-400">実際の支出</div>
