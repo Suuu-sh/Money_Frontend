@@ -4,6 +4,28 @@ import { useState, useEffect } from 'react'
 import { Category, CategoryBudget, CategoryBudgetAnalysis, FixedExpense } from '../../types'
 import { fetchCategoryBudgets, fetchCategoryBudgetAnalysis, deleteCategoryBudget, fetchFixedExpenses } from '../../lib/api'
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { 
+  Utensils, 
+  Car, 
+  Home, 
+  Zap, 
+  ShoppingBag, 
+  Heart, 
+  GraduationCap, 
+  Gamepad2, 
+  Shirt, 
+  Sparkles, 
+  Package, 
+  FileText, 
+  Briefcase, 
+  Laptop, 
+  TrendingUp, 
+  Gift, 
+  DollarSign,
+  Smartphone,
+  Users,
+  PiggyBank
+} from 'lucide-react'
 
 interface CategoryBudgetListProps {
   categories: Category[]
@@ -76,6 +98,35 @@ export default function CategoryBudgetList({
     if (isOverBudget) return 'bg-red-500'
     return 'bg-green-500'
   }
+
+  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  const getCategoryIcon = (name: string, iconColor: string = '#6B7280') => {
+    const iconProps = { size: 20, color: iconColor, strokeWidth: 2 };
+    
+    const iconMap: { [key: string]: JSX.Element } = {
+      '食費': <Utensils {...iconProps} />,
+      '交通費': <Car {...iconProps} />,
+      '娯楽費': <Gamepad2 {...iconProps} />,
+      '光熱費': <Zap {...iconProps} />,
+      '日用品': <Package {...iconProps} />,
+      '医療費': <Heart {...iconProps} />,
+      '住居費': <Home {...iconProps} />,
+      '教育費': <GraduationCap {...iconProps} />,
+      '美容費': <Sparkles {...iconProps} />,
+      '衣服費': <Shirt {...iconProps} />,
+      '通信費': <Smartphone {...iconProps} />,
+      '交際費': <Users {...iconProps} />,
+      '投資費': <PiggyBank {...iconProps} />,
+      'その他支出': <FileText {...iconProps} />,
+      '給与': <Briefcase {...iconProps} />,
+      '副業': <Laptop {...iconProps} />,
+      '投資': <TrendingUp {...iconProps} />,
+      '賞与': <Gift {...iconProps} />,
+      'その他収入': <DollarSign {...iconProps} />,
+    };
+    
+    return iconMap[name] || <ShoppingBag {...iconProps} />;
+  };
 
   // 16進数カラーコードをRGBAに変換する関数
   const hexToRgba = (hex: string, alpha: number) => {
@@ -162,10 +213,11 @@ export default function CategoryBudgetList({
                 {/* ヘッダー：カテゴリ名と操作ボタン */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2">
-                    <div 
-                      className="w-3.5 h-3.5 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: item.categoryColor }}
-                    />
+                    <div className="flex items-center justify-center">
+                      <div style={{ color: item.categoryColor }}>
+                        {getCategoryIcon(item.categoryName, item.categoryColor)}
+                      </div>
+                    </div>
                     <span className="text-sm font-bold text-gray-900 dark:text-white">{item.categoryName}</span>
                     <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">
                       {item.transactionCount}件の取引

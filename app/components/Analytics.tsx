@@ -4,12 +4,63 @@ import { useState, useEffect } from 'react'
 import { CategorySummary, FixedExpense } from '../types'
 import { fetchCategorySummary, fetchFixedExpenses } from '../lib/api'
 import { ChartBarIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
+import { 
+  Utensils, 
+  Car, 
+  Home, 
+  Zap, 
+  ShoppingBag, 
+  Heart, 
+  GraduationCap, 
+  Gamepad2, 
+  Shirt, 
+  Sparkles, 
+  Package, 
+  FileText, 
+  Briefcase, 
+  Laptop, 
+  TrendingUp, 
+  Gift, 
+  DollarSign,
+  Smartphone,
+  Users,
+  PiggyBank
+} from 'lucide-react'
 
 export default function Analytics() {
   const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
   const [incomeSummary, setIncomeSummary] = useState<CategorySummary[]>([])
   const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>([])
   const [loading, setLoading] = useState(true)
+
+  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 20) => {
+    const iconProps = { size, color: iconColor, strokeWidth: 2 };
+    
+    const iconMap: { [key: string]: JSX.Element } = {
+      '食費': <Utensils {...iconProps} />,
+      '交通費': <Car {...iconProps} />,
+      '娯楽費': <Gamepad2 {...iconProps} />,
+      '光熱費': <Zap {...iconProps} />,
+      '日用品': <Package {...iconProps} />,
+      '医療費': <Heart {...iconProps} />,
+      '住居費': <Home {...iconProps} />,
+      '教育費': <GraduationCap {...iconProps} />,
+      '美容費': <Sparkles {...iconProps} />,
+      '衣服費': <Shirt {...iconProps} />,
+      '通信費': <Smartphone {...iconProps} />,
+      '交際費': <Users {...iconProps} />,
+      '投資費': <PiggyBank {...iconProps} />,
+      'その他支出': <FileText {...iconProps} />,
+      '給与': <Briefcase {...iconProps} />,
+      '副業': <Laptop {...iconProps} />,
+      '投資': <TrendingUp {...iconProps} />,
+      '賞与': <Gift {...iconProps} />,
+      'その他収入': <DollarSign {...iconProps} />,
+    };
+    
+    return iconMap[name] || <ShoppingBag {...iconProps} />;
+  };
 
   useEffect(() => {
     loadData()
@@ -89,11 +140,8 @@ export default function Analytics() {
                 <div key={item.categoryId} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-6 h-6 rounded-full"
-                        style={{ backgroundColor: item.categoryColor }}
-                        title={item.categoryName}
-                      >
+                      <div className="flex items-center justify-center w-6 h-6">
+                        {getCategoryIcon(item.categoryName, item.categoryColor, 20)}
                       </div>
                       <span className="font-medium">{item.categoryName}</span>
                     </div>
@@ -134,11 +182,8 @@ export default function Analytics() {
                 <div key={item.categoryId} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-6 h-6 rounded-full"
-                        style={{ backgroundColor: item.categoryColor }}
-                        title={item.categoryName}
-                      >
+                      <div className="flex items-center justify-center w-6 h-6">
+                        {getCategoryIcon(item.categoryName, item.categoryColor, 20)}
                       </div>
                       <span className="font-medium">{item.categoryName}</span>
                     </div>

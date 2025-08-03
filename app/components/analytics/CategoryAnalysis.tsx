@@ -4,6 +4,28 @@ import { useState, useEffect } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
 import { fetchTransactions, fetchCategories, fetchFixedExpenses } from '../../lib/api'
 import { ChartPieIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline'
+import { 
+  Utensils, 
+  Car, 
+  Home, 
+  Zap, 
+  ShoppingBag, 
+  Heart, 
+  GraduationCap, 
+  Gamepad2, 
+  Shirt, 
+  Sparkles, 
+  Package, 
+  FileText, 
+  Briefcase, 
+  Laptop, 
+  TrendingUp, 
+  Gift, 
+  DollarSign,
+  Smartphone,
+  Users,
+  PiggyBank
+} from 'lucide-react'
 
 interface CategorySpendingData {
   categoryId: number
@@ -23,6 +45,35 @@ export default function CategoryAnalysis() {
   const [fixedExpensesTotal, setFixedExpensesTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [totalSpending, setTotalSpending] = useState(0)
+
+  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 20) => {
+    const iconProps = { size, color: iconColor, strokeWidth: 2 };
+    
+    const iconMap: { [key: string]: JSX.Element } = {
+      '食費': <Utensils {...iconProps} />,
+      '交通費': <Car {...iconProps} />,
+      '娯楽費': <Gamepad2 {...iconProps} />,
+      '光熱費': <Zap {...iconProps} />,
+      '日用品': <Package {...iconProps} />,
+      '医療費': <Heart {...iconProps} />,
+      '住居費': <Home {...iconProps} />,
+      '教育費': <GraduationCap {...iconProps} />,
+      '美容費': <Sparkles {...iconProps} />,
+      '衣服費': <Shirt {...iconProps} />,
+      '通信費': <Smartphone {...iconProps} />,
+      '交際費': <Users {...iconProps} />,
+      '投資費': <PiggyBank {...iconProps} />,
+      'その他支出': <FileText {...iconProps} />,
+      '給与': <Briefcase {...iconProps} />,
+      '副業': <Laptop {...iconProps} />,
+      '投資': <TrendingUp {...iconProps} />,
+      '賞与': <Gift {...iconProps} />,
+      'その他収入': <DollarSign {...iconProps} />,
+    };
+    
+    return iconMap[name] || <ShoppingBag {...iconProps} />;
+  };
 
   useEffect(() => {
     loadCategoryData()
@@ -201,10 +252,9 @@ export default function CategoryAnalysis() {
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-bold text-gray-400 w-6">#{index + 1}</span>
-                  <div
-                    className="w-8 h-8 rounded-full"
-                    style={{ backgroundColor: data.categoryColor }}
-                  />
+                  <div className="flex items-center justify-center w-8 h-8">
+                    {getCategoryIcon(data.categoryName, data.categoryColor, 24)}
+                  </div>
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900 dark:text-white">{data.categoryName}</h4>
@@ -244,10 +294,9 @@ export default function CategoryAnalysis() {
             {getGrowingCategories().map((data) => (
               <div key={data.categoryId} className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <div
-                    className="w-6 h-6 rounded-full"
-                    style={{ backgroundColor: data.categoryColor }}
-                  />
+                  <div className="flex items-center justify-center w-6 h-6">
+                    {getCategoryIcon(data.categoryName, data.categoryColor, 20)}
+                  </div>
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white">{data.categoryName}</h4>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -292,10 +341,9 @@ export default function CategoryAnalysis() {
                 <tr key={data.categoryId} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="py-3 px-4">
                     <div className="flex items-center space-x-2">
-                      <div
-                        className="w-4 h-4 rounded-full"
-                        style={{ backgroundColor: data.categoryColor }}
-                      />
+                      <div className="flex items-center justify-center w-4 h-4">
+                        {getCategoryIcon(data.categoryName, data.categoryColor, 16)}
+                      </div>
                       <span className="text-sm font-medium text-gray-900 dark:text-white">{data.categoryName}</span>
                     </div>
                   </td>
