@@ -59,7 +59,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       {/* 横幅を広げたモーダル */}
-      <div className="bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[95vh] flex flex-col">
+      <div className="bg-white dark:bg-gray-800 w-full max-w-3xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[95vh] flex flex-col">
         <div className="p-6 flex-1 overflow-y-auto">
           <div className="flex justify-between items-center mb-4 sm:mb-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2">
