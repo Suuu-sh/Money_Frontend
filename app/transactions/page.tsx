@@ -101,9 +101,9 @@ export default function TransactionsPage() {
   const getLightColor = (color: string, opacity: number = 0.6) => {
     // HEXカラーをRGBAに変換して透明度を適用
     const hex = color.replace('#', '')
-    const r = parseInt(hex.substr(0, 2), 16)
-    const g = parseInt(hex.substr(2, 2), 16)
-    const b = parseInt(hex.substr(4, 2), 16)
+    const r = parseInt(hex.substring(0, 2), 16)
+    const g = parseInt(hex.substring(2, 4), 16)
+    const b = parseInt(hex.substring(4, 6), 16)
     return `rgba(${r}, ${g}, ${b}, ${opacity})`
   }
 
@@ -166,7 +166,7 @@ export default function TransactionsPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* レポート部分 - 支出内訳・収入内訳・月別収支推移 */}
           <div className="lg:col-span-3 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -393,7 +393,7 @@ export default function TransactionsPage() {
           </div>
 
           {/* 取引履歴部分 - 右側縦長 */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-2">
             <TransactionList 
               transactions={transactions}
               categories={categories}
