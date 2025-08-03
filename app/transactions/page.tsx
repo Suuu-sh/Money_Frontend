@@ -97,30 +97,32 @@ export default function TransactionsPage() {
     }).format(amount)
   }
 
-  // 円グラフ用のカラーパレット
-  const EXPENSE_COLORS = [
-    "#EF4444", "#F97316", "#EAB308", "#22C55E", "#3B82F6",
-    "#8B5CF6", "#EC4899", "#06B6D4", "#84CC16", "#6B7280",
-  ]
+  // カテゴリカラーを薄くする関数
+  const getLightColor = (color: string, opacity: number = 0.6) => {
+    // HEXカラーをRGBAに変換して透明度を適用
+    const hex = color.replace('#', '')
+    const r = parseInt(hex.substr(0, 2), 16)
+    const g = parseInt(hex.substr(2, 2), 16)
+    const b = parseInt(hex.substr(4, 2), 16)
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`
+  }
 
-  const INCOME_COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#6B7280"]
-
-  // 円グラフ用データ変換（価格の大きい順にソート）
+  // 円グラフ用データ変換（価格の大きい順にソート、実際のカテゴリ色を使用）
   const expensePieData = expenseSummary
     .sort((a, b) => b.totalAmount - a.totalAmount)
-    .map((item, index) => ({
+    .map((item) => ({
       name: item.categoryName,
       value: item.totalAmount,
-      color: EXPENSE_COLORS[index % EXPENSE_COLORS.length],
+      color: getLightColor(item.categoryColor),
       icon: item.categoryIcon,
     }))
 
   const incomePieData = incomeSummary
     .sort((a, b) => b.totalAmount - a.totalAmount)
-    .map((item, index) => ({
+    .map((item) => ({
       name: item.categoryName,
       value: item.totalAmount,
-      color: INCOME_COLORS[index % INCOME_COLORS.length],
+      color: getLightColor(item.categoryColor),
       icon: item.categoryIcon,
     }))
 

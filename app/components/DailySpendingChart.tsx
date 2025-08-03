@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { fetchTransactions } from '../lib/api'
-import { Transaction } from '../types'
+import { fetchTransactions, fetchFixedExpenses } from '../lib/api'
+import { Transaction, FixedExpense } from '../types'
 
 interface DailySpending {
   date: string
@@ -25,14 +25,29 @@ export default function DailySpendingChart() {
       const year = now.getFullYear()
       const month = now.getMonth() + 1
       
-      const transactions = await fetchTransactions()
+      const [transactions, fixedExpenses] = await Promise.all([
+        fetchTransactions(),
+        fetchFixedExpenses()
+      ])
       
-      // 今月の支出取引のみをフィルタリング
+      // アクティブな固定支出の名前リストを作成
+      const fixedExpenseNames = fixedExpenses
+        .filter((expense: FixedExpense) => expense.isActive)
+        .map((expense: FixedExpense) => expense.name.toLowerCase())
+      
+      // 今月の支出取引のみをフィルタリング（固定支出を除外）
       const currentMonthExpenses = transactions.filter((transaction: Transaction) => {
         const transactionDate = new Date(transaction.date)
-        return transactionDate.getFullYear() === year &&
-               transactionDate.getMonth() + 1 === month &&
-               transaction.type === 'expense' // 支出のみ
+        const isCurrentMonth = transactionDate.getFullYear() === year &&
+                              transactionDate.getMonth() + 1 === month &&
+                              transaction.type === 'expense'
+        
+        // 固定支出でないかチェック（取引の説明が固定支出の名前と一致しないか）
+        const isNotFixedExpense = !fixedExpenseNames.some(fixedName => 
+          transaction.description.toLowerCase().includes(fixedName)
+        )
+        
+        return isCurrentMonth && isNotFixedExpense
       })
 
       // 日毎にグループ化
