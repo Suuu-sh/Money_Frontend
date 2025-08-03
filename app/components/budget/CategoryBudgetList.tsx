@@ -267,7 +267,7 @@ export default function CategoryBudgetList({
                 {/* プログレスバー */}
                 <div className="space-y-2">
                   <div className="flex-1 relative">
-                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColor(utilization, isOverBudget)}`}
                         style={{ width: `${Math.min(utilization, 100)}%` }}
