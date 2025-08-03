@@ -52,6 +52,10 @@ export function useMonthlyBudgetReport() {
       
       try {
         reportData = await fetchMonthlyBudgetReport(year, month);
+        // APIから取得したデータのcategoriesが存在しない場合のフォールバック
+        if (!reportData.categories || !Array.isArray(reportData.categories)) {
+          reportData.categories = [];
+        }
       } catch (apiError) {
         // APIが利用できない場合は7月分の実際のデータに基づくモックデータを使用
         console.log('Using July 2024 data for monthly report');
@@ -114,10 +118,26 @@ export function useMonthlyBudgetReport() {
         };
       }
 
-      setReportData(reportData);
-      setShouldShowReport(true);
+      // データの整合性を確認
+      if (reportData && typeof reportData === 'object') {
+        setReportData(reportData);
+        setShouldShowReport(true);
+      } else {
+        console.error('Invalid report data received');
+      }
     } catch (error) {
       console.error('Failed to generate monthly report:', error);
+      // エラーが発生した場合でも、空のデータでレポートを表示
+      const fallbackData: BudgetReportData = {
+        month: '7',
+        year: 2024,
+        categories: [],
+        totalBudget: 0,
+        totalSpent: 0,
+        overallStatus: 'exact'
+      };
+      setReportData(fallbackData);
+      setShouldShowReport(true);
     }
   };
 

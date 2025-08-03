@@ -136,7 +136,8 @@ export default function MonthlyBudgetReport({
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">カテゴリ別詳細</h3>
             <div className="space-y-4">
-              {reportData.categories.map((category) => (
+              {reportData.categories && reportData.categories.length > 0 ? (
+                reportData.categories.map((category) => (
                 <div key={category.id} className="border border-gray-200 dark:border-gray-600 rounded-xl p-5 bg-white dark:bg-gray-700/50 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
@@ -180,7 +181,20 @@ export default function MonthlyBudgetReport({
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <AlertCircle className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                  </div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                    カテゴリデータがありません
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    予算設定またはデータの読み込みに問題がある可能性があります
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
