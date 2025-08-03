@@ -38,7 +38,7 @@ export default function TransactionList({ transactions, categories, onTransactio
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'date' | 'amount' | 'created'>('date')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+
 
   // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 16) => {
@@ -92,7 +92,7 @@ export default function TransactionList({ transactions, categories, onTransactio
           comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
       }
       
-      return sortOrder === 'desc' ? -comparison : comparison
+      return -comparison // 常に降順
     })
 
   const formatAmount = (amount: number, type: string) => {
@@ -156,14 +156,7 @@ export default function TransactionList({ transactions, categories, onTransactio
             <option value="created">登録順</option>
           </select>
 
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as any)}
-            className="input-field w-full sm:w-auto"
-          >
-            <option value="desc">降順</option>
-            <option value="asc">昇順</option>
-          </select>
+
         </div>
       </div>
 
