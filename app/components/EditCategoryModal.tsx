@@ -128,7 +128,7 @@ export default function EditCategoryModal({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl mx-4 h-[95vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
         {/* ヘッダー */}
         <div className="relative px-6 py-5 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
@@ -150,8 +150,8 @@ export default function EditCategoryModal({
         </div>
 
         {/* コンテンツ */}
-        <div className="px-6 py-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex-1 px-6 py-6 overflow-hidden">
+          <form onSubmit={handleSubmit} className="h-full flex flex-col space-y-4">
             {error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 animate-in slide-in-from-top-2 duration-200">
                 <div className="flex items-center">
@@ -197,11 +197,11 @@ export default function EditCategoryModal({
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="flex-1 min-h-0">
+              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
                 アイコン
               </label>
-              <div className="grid grid-cols-6 gap-3 max-h-48 overflow-y-auto p-2 border border-gray-200 dark:border-gray-600 rounded-xl">
+              <div className="grid grid-cols-8 gap-2 h-full p-2 border border-gray-200 dark:border-gray-600 rounded-xl overflow-hidden">
                 {iconOptions.map((option) => (
                   <button
                     key={option.key}
