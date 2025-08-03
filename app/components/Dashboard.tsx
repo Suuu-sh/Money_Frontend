@@ -74,14 +74,17 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
       {/* 予算アラート */}
       <BudgetAlerts analysis={budgetAnalysis} />
 
-      {/* 予算概要 */}
-      <div>
-        <BudgetOverview currentMonth={currentMonth} />
-      </div>
+      {/* 予算概要と日毎支出チャートを横並びに配置 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 予算概要 */}
+        <div>
+          <BudgetOverview currentMonth={currentMonth} />
+        </div>
 
-      {/* 日毎支出チャート */}
-      <div>
-        <DailySpendingChart />
+        {/* 日毎支出チャート */}
+        <div>
+          <DailySpendingChart />
+        </div>
       </div>
 
       {/* 取引履歴 - 予算ブロックの下に配置 */}

@@ -191,8 +191,8 @@ export default function BudgetPage() {
 
         {/* メインセクション: カテゴリ別予算設定と予算履歴 */}
         <div className="flex flex-col xl:flex-row gap-6 mb-8">
-          {/* カテゴリ別予算設定 - 6.5割 */}
-          <div className="xl:w-[65%]">
+          {/* カテゴリ別予算設定 - 6割 */}
+          <div className="xl:w-[60%]">
             <CategoryBudgetList
               key={budgetUpdateTrigger}
               categories={categories}
@@ -205,8 +205,8 @@ export default function BudgetPage() {
             />
           </div>
 
-          {/* 予算履歴 - 3.5割 */}
-          <div className="xl:w-[35%]">
+          {/* 予算履歴 - 4割 */}
+          <div className="xl:w-[40%]">
             <BudgetHistory />
           </div>
         </div>
