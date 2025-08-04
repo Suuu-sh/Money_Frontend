@@ -1,18 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BudgetHistory as BudgetHistoryType, Budget, CategoryBudget } from '../../types'
-import { fetchBudgetHistory, fetchBudget, fetchCategoryBudgets } from '../../lib/api'
-import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon, PlusIcon } from '@heroicons/react/24/outline'
-import BudgetModal from './BudgetModal'
+import { BudgetHistory as BudgetHistoryType, CategoryBudget } from '../../types'
+import { fetchBudgetHistory, fetchCategoryBudgets } from '../../lib/api'
+import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
 
 function BudgetHistory() {
   const [allHistory, setAllHistory] = useState<BudgetHistoryType[]>([])
   const [selectedMonths, setSelectedMonths] = useState(3)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showBudgetModal, setShowBudgetModal] = useState(false)
-  const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
+
   const [categoryBudgets, setCategoryBudgets] = useState<CategoryBudget[]>([])
 
   useEffect(() => {
@@ -26,18 +24,10 @@ function BudgetHistory() {
       console.log('Budget History Data:', data) // デバッグ用
       setAllHistory(data)
       
-      // 現在の月の予算を取得
+      // 現在の月のカテゴリ別予算を取得
       const now = new Date()
       const currentYear = now.getFullYear()
       const currentMonth = now.getMonth() + 1
-      
-      try {
-        const budget = await fetchBudget(currentYear, currentMonth)
-        setCurrentBudget(budget)
-      } catch (error) {
-        // 予算が設定されていない場合
-        setCurrentBudget(null)
-      }
 
       // カテゴリ別予算を取得
       try {
@@ -60,10 +50,7 @@ function BudgetHistory() {
     return categoryBudgets.reduce((total, budget) => total + budget.amount, 0)
   }
 
-  const handleBudgetSaved = () => {
-    setShowBudgetModal(false)
-    loadHistory() // データを再読み込み
-  }
+
 
   // 選択された月数分の履歴を取得（新しい順に並び替え）
   const history = allHistory.slice(-selectedMonths).reverse()
@@ -247,7 +234,7 @@ function BudgetHistory() {
                   </div>
 
                   {/* 進捗バー */}
-                  {item.budget > 0 && (
+                  {currentBudget > 0 && (
                     <div className="mt-3">
                       <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                         <div
@@ -285,13 +272,7 @@ function BudgetHistory() {
         </div>
       )}
 
-      {/* 予算設定モーダル */}
-      <BudgetModal
-        isOpen={showBudgetModal}
-        onClose={() => setShowBudgetModal(false)}
-        budget={currentBudget}
-        onSaved={handleBudgetSaved}
-      />
+
     </div>
   )
 }
