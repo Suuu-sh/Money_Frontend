@@ -23,7 +23,7 @@ export default function DashboardPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()) // デフォルトで今日の日付を選択
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date()) // 今日の日付
 
