@@ -89,11 +89,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => theme === 'dark' && toggleTheme()}
+                    onClick={() => {
+                      if (theme === 'dark') {
+                        toggleTheme()
+                      }
+                    }}
                     className={`p-3 rounded-lg border-2 transition-colors flex items-center space-x-2 ${
                       theme === 'light'
-                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900 text-gray-900 dark:text-white'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300'
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,11 +106,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <span className="text-sm font-medium">ライト</span>
                   </button>
                   <button
-                    onClick={() => theme === 'light' && toggleTheme()}
+                    onClick={() => {
+                      if (theme === 'light') {
+                        toggleTheme()
+                      }
+                    }}
                     className={`p-3 rounded-lg border-2 transition-colors flex items-center space-x-2 ${
                       theme === 'dark'
-                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900 text-gray-900 dark:text-white'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300'
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

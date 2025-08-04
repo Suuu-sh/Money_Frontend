@@ -16,27 +16,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     // ローカルストレージからテーマを読み込み
     const savedTheme = localStorage.getItem('theme') as Theme
-    if (savedTheme) {
+    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
       setTheme(savedTheme)
     } else {
       // システムの設定を確認
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
       setTheme(systemTheme)
     }
+    setMounted(true)
   }, [])
 
   useEffect(() => {
+    // HTMLのクラスを更新
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+    // ローカルストレージに保存（マウント後のみ）
     if (mounted) {
-      // HTMLのクラスを更新
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
-      // ローカルストレージに保存
       localStorage.setItem('theme', theme)
     }
   }, [theme, mounted])
@@ -45,13 +45,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme(prev => prev === 'light' ? 'dark' : 'light')
   }
 
-  if (!mounted) {
-    return null
-  }
-
+  // SSRハイドレーション問題を回避しつつ、適切にレンダリング
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
+      {mounted ? children : <div className="min-h-screen bg-white dark:bg-gray-900">{children}</div>}
     </ThemeContext.Provider>
   )
 }
