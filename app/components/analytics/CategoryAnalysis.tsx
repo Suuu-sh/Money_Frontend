@@ -97,21 +97,23 @@ export default function CategoryAnalysis() {
       // カテゴリ別支出を集計
       const categoryMap = new Map<number, CategorySpendingData>()
       
-      // カテゴリを初期化
-      categories.forEach(category => {
-        categoryMap.set(category.id, {
-          categoryId: category.id,
-          categoryName: category.name,
-          categoryColor: category.color,
-          currentMonth: 0,
-          previousMonth: 0,
-          trend: 'stable',
-          trendPercentage: 0,
-          transactionCount: 0,
-          averagePerTransaction: 0,
-          percentage: 0
+      // 支出カテゴリのみを初期化
+      categories
+        .filter(category => category.type === 'expense')
+        .forEach(category => {
+          categoryMap.set(category.id, {
+            categoryId: category.id,
+            categoryName: category.name,
+            categoryColor: category.color,
+            currentMonth: 0,
+            previousMonth: 0,
+            trend: 'stable',
+            trendPercentage: 0,
+            transactionCount: 0,
+            averagePerTransaction: 0,
+            percentage: 0
+          })
         })
-      })
 
       // 取引データを集計
       transactions

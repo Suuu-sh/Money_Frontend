@@ -99,39 +99,71 @@ export default function DailySpendingChart() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">日毎の支出</h3>
+    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white">日毎の支出推移</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">今月の変動支出のみ</p>
+        </div>
+      </div>
       
       {dailySpending.length > 0 ? (
-        <div className="relative h-64">
+        <div className="relative h-72">
           {/* Y軸ラベル */}
-          <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 pr-2">
+          <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 pr-3 font-medium">
             <span>{formatCurrency(maxAmount)}</span>
-            <span>{formatCurrency(maxAmount * 0.75)}</span>
-            <span>{formatCurrency(maxAmount * 0.5)}</span>
-            <span>{formatCurrency(maxAmount * 0.25)}</span>
+            <span>{formatCurrency(Math.round(maxAmount * 0.75))}</span>
+            <span>{formatCurrency(Math.round(maxAmount * 0.5))}</span>
+            <span>{formatCurrency(Math.round(maxAmount * 0.25))}</span>
             <span>¥0</span>
           </div>
           
           {/* グラフエリア */}
-          <div className="ml-16 h-full relative">
+          <div className="ml-20 h-full relative bg-gradient-to-t from-gray-50/50 to-transparent dark:from-gray-800/50 rounded-lg">
             {/* グリッドライン */}
             <div className="absolute inset-0">
               {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
                 <div
                   key={ratio}
-                  className="absolute w-full border-t border-gray-200 dark:border-gray-600"
+                  className="absolute w-full border-t border-dashed border-gray-300 dark:border-gray-600 opacity-50"
                   style={{ bottom: `${ratio * 100}%` }}
                 />
               ))}
             </div>
             
-            {/* 折れ線グラフ */}
+            {/* エリアチャート（グラデーション背景） */}
             <svg className="absolute inset-0 w-full h-full">
+              <defs>
+                <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(139, 92, 246, 0.3)" />
+                  <stop offset="100%" stopColor="rgba(139, 92, 246, 0.05)" />
+                </linearGradient>
+              </defs>
+              
+              {/* エリア */}
+              <polygon
+                fill="url(#areaGradient)"
+                points={`0,100% ${dailySpending
+                  .map((data, index) => {
+                    const x = (index / (dailySpending.length - 1)) * 100
+                    const y = 100 - (maxAmount > 0 ? (data.amount / maxAmount) * 100 : 0)
+                    return `${x}%,${y}%`
+                  })
+                  .join(' ')} 100%,100%`}
+              />
+              
+              {/* メインライン */}
               <polyline
                 fill="none"
-                stroke="#3B82F6"
-                strokeWidth="2"
+                stroke="url(#lineGradient)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 points={dailySpending
                   .map((data, index) => {
                     const x = (index / (dailySpending.length - 1)) * 100
@@ -140,36 +172,60 @@ export default function DailySpendingChart() {
                   })
                   .join(' ')}
               />
+              
+              <defs>
+                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#8B5CF6" />
+                  <stop offset="50%" stopColor="#EC4899" />
+                  <stop offset="100%" stopColor="#F59E0B" />
+                </linearGradient>
+              </defs>
+              
               {/* データポイント */}
               {dailySpending.map((data, index) => {
                 const x = (index / (dailySpending.length - 1)) * 100
                 const y = 100 - (maxAmount > 0 ? (data.amount / maxAmount) * 100 : 0)
                 return (
-                  <circle
-                    key={data.date}
-                    cx={`${x}%`}
-                    cy={`${y}%`}
-                    r="3"
-                    fill="#3B82F6"
-                    className="hover:r-4 transition-all cursor-pointer"
-                  >
+                  <g key={data.date}>
+                    <circle
+                      cx={`${x}%`}
+                      cy={`${y}%`}
+                      r="4"
+                      fill="white"
+                      stroke="#8B5CF6"
+                      strokeWidth="2"
+                      className="hover:r-6 transition-all cursor-pointer drop-shadow-sm"
+                    />
+                    <circle
+                      cx={`${x}%`}
+                      cy={`${y}%`}
+                      r="2"
+                      fill="#8B5CF6"
+                      className="pointer-events-none"
+                    />
                     <title>{`${data.day}日: ${formatCurrency(data.amount)}`}</title>
-                  </circle>
+                  </g>
                 )
               })}
             </svg>
           </div>
           
           {/* X軸ラベル */}
-          <div className="ml-16 mt-2 flex justify-between text-xs text-gray-500 dark:text-gray-400">
-            <span>1日</span>
-            <span>15日</span>
-            <span>月末</span>
+          <div className="ml-20 mt-3 flex justify-between text-sm text-gray-600 dark:text-gray-400 font-medium">
+            <span className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">1日</span>
+            <span className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">15日</span>
+            <span className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">月末</span>
           </div>
         </div>
       ) : (
-        <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400">今月の支出データがありません</p>
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <p className="text-gray-500 dark:text-gray-400 font-medium">今月の支出データがありません</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">取引を追加すると、ここにグラフが表示されます</p>
         </div>
       )}
     </div>
