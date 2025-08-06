@@ -202,27 +202,29 @@ export default function CategoryAnalysis() {
         if (data.previousMonth > 0) {
           const percentage = ((data.currentMonth - data.previousMonth) / data.previousMonth) * 100
           data.trendPercentage = percentage
+        } else if (data.currentMonth > 0) {
+          // 前月は0で今月に支出がある場合
+          data.trendPercentage = 100
+        }
+
+        // 前月同日比の計算（カテゴリ別支出ランキングで使用）
+        if (data.previousMonthSameDate > 0) {
+          data.sameDateTrendPercentage = ((data.currentMonthSameDate - data.previousMonthSameDate) / data.previousMonthSameDate) * 100
           
-          if (percentage > 5) {
+          // トレンドの判定は前月同日比に基づく
+          if (data.sameDateTrendPercentage > 5) {
             data.trend = 'up'
-          } else if (percentage < -5) {
+          } else if (data.sameDateTrendPercentage < -5) {
             data.trend = 'down'
           } else {
             data.trend = 'stable'
           }
-        } else if (data.currentMonth > 0) {
-          // 前月は0で今月に支出がある場合
-          data.trend = 'up'
-          data.trendPercentage = 100
-        }
-
-        // 前月同日比の計算
-        if (data.previousMonthSameDate > 0) {
-          data.sameDateTrendPercentage = ((data.currentMonthSameDate - data.previousMonthSameDate) / data.previousMonthSameDate) * 100
         } else if (data.currentMonthSameDate > 0) {
           data.sameDateTrendPercentage = 100
+          data.trend = 'up'
         } else {
           data.sameDateTrendPercentage = 0
+          data.trend = 'stable'
         }
       })
 
@@ -310,7 +312,7 @@ export default function CategoryAnalysis() {
                     data.trend === 'down' ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
                   }`}>
                     {data.trend === 'stable' ? '変化なし' : 
-                     `${data.trendPercentage > 0 ? '+' : ''}${data.trendPercentage.toFixed(1)}%`}
+                     `${data.sameDateTrendPercentage > 0 ? '+' : ''}${data.sameDateTrendPercentage.toFixed(1)}%`}
                   </span>
                 </div>
               </div>
