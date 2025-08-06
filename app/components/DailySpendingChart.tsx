@@ -84,7 +84,26 @@ export default function DailySpendingChart() {
     }).format(amount)
   }
 
+  // 動的なY軸スケールを計算
+  const calculateYAxisScale = (maxValue: number) => {
+    if (maxValue === 0) return { max: 10000, step: 2500 }
+    
+    if (maxValue <= 10000) {
+      return { max: 10000, step: 2500 }
+    } else if (maxValue <= 50000) {
+      const max = Math.ceil(maxValue / 10000) * 10000
+      return { max, step: max / 4 }
+    } else if (maxValue <= 100000) {
+      const max = Math.ceil(maxValue / 10000) * 10000
+      return { max, step: max / 4 }
+    } else {
+      const max = Math.ceil(maxValue / 100000) * 100000
+      return { max, step: max / 4 }
+    }
+  }
+
   const maxAmount = Math.max(...dailySpending.map(d => d.amount))
+  const { max: yAxisMax, step: yAxisStep } = calculateYAxisScale(maxAmount)
 
   if (loading) {
     return (
@@ -116,10 +135,10 @@ export default function DailySpendingChart() {
         <div className="relative h-72">
           {/* Y軸ラベル */}
           <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 pr-3 font-medium">
-            <span>{formatCurrency(maxAmount)}</span>
-            <span>{formatCurrency(Math.round(maxAmount * 0.75))}</span>
-            <span>{formatCurrency(Math.round(maxAmount * 0.5))}</span>
-            <span>{formatCurrency(Math.round(maxAmount * 0.25))}</span>
+            <span>{formatCurrency(yAxisMax)}</span>
+            <span>{formatCurrency(yAxisMax * 0.75)}</span>
+            <span>{formatCurrency(yAxisMax * 0.5)}</span>
+            <span>{formatCurrency(yAxisMax * 0.25)}</span>
             <span>¥0</span>
           </div>
           
@@ -151,7 +170,7 @@ export default function DailySpendingChart() {
                 points={`0,100% ${dailySpending
                   .map((data, index) => {
                     const x = (index / (dailySpending.length - 1)) * 100
-                    const y = 100 - (maxAmount > 0 ? (data.amount / maxAmount) * 100 : 0)
+                    const y = 100 - (yAxisMax > 0 ? (data.amount / yAxisMax) * 100 : 0)
                     return `${x}%,${y}%`
                   })
                   .join(' ')} 100%,100%`}
@@ -161,13 +180,13 @@ export default function DailySpendingChart() {
               <polyline
                 fill="none"
                 stroke="url(#lineGradient)"
-                strokeWidth="3"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 points={dailySpending
                   .map((data, index) => {
                     const x = (index / (dailySpending.length - 1)) * 100
-                    const y = 100 - (maxAmount > 0 ? (data.amount / maxAmount) * 100 : 0)
+                    const y = 100 - (yAxisMax > 0 ? (data.amount / yAxisMax) * 100 : 0)
                     return `${x}%,${y}%`
                   })
                   .join(' ')}
@@ -184,22 +203,22 @@ export default function DailySpendingChart() {
               {/* データポイント */}
               {dailySpending.map((data, index) => {
                 const x = (index / (dailySpending.length - 1)) * 100
-                const y = 100 - (maxAmount > 0 ? (data.amount / maxAmount) * 100 : 0)
+                const y = 100 - (yAxisMax > 0 ? (data.amount / yAxisMax) * 100 : 0)
                 return (
                   <g key={data.date}>
                     <circle
                       cx={`${x}%`}
                       cy={`${y}%`}
-                      r="4"
+                      r="3"
                       fill="white"
                       stroke="#8B5CF6"
                       strokeWidth="2"
-                      className="hover:r-6 transition-all cursor-pointer drop-shadow-sm"
+                      className="hover:r-4 transition-all cursor-pointer drop-shadow-sm"
                     />
                     <circle
                       cx={`${x}%`}
                       cy={`${y}%`}
-                      r="2"
+                      r="1.5"
                       fill="#8B5CF6"
                       className="pointer-events-none"
                     />
