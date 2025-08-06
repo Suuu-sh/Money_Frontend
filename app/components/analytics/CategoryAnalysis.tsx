@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
 import { fetchTransactions, fetchCategories, fetchFixedExpenses } from '../../lib/api'
-import { ChartPieIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline'
+import { ChartPieIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon, CalendarIcon } from '@heroicons/react/24/outline'
 import { 
   Utensils, 
   Car, 
@@ -33,8 +33,11 @@ interface CategorySpendingData {
   categoryColor: string
   currentMonth: number
   previousMonth: number
+  currentMonthSameDate: number
+  previousMonthSameDate: number
   trend: 'up' | 'down' | 'stable'
   trendPercentage: number
+  sameDateTrendPercentage: number
   transactionCount: number
   averagePerTransaction: number
   percentage: number
@@ -45,6 +48,9 @@ export default function CategoryAnalysis() {
   const [fixedExpensesTotal, setFixedExpensesTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [totalSpending, setTotalSpending] = useState(0)
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
+  const [availableYears, setAvailableYears] = useState<number[]>([])
+  const [viewMode, setViewMode] = useState<'monthly' | 'yearly'>('monthly')
 
   // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 20) => {
@@ -77,7 +83,7 @@ export default function CategoryAnalysis() {
 
   useEffect(() => {
     loadCategoryData()
-  }, [])
+  }, [selectedYear, viewMode])
 
   const loadCategoryData = async () => {
     try {
@@ -88,15 +94,41 @@ export default function CategoryAnalysis() {
         fetchFixedExpenses()
       ])
 
-      const now = new Date()
-      const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-      const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-      const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
-      const previousNextMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      // 利用可能な年を取得
+      const years = [...new Set(transactions.map(t => new Date(t.date).getFullYear()))]
+        .sort((a, b) => b - a)
+      setAvailableYears(years)
+
+      // 期間の設定
+      let currentPeriodStart: Date, currentPeriodEnd: Date, previousPeriodStart: Date, previousPeriodEnd: Date
+
+      if (viewMode === 'yearly') {
+        // 年単位の場合
+        currentPeriodStart = new Date(selectedYear, 0, 1)
+        currentPeriodEnd = new Date(selectedYear + 1, 0, 1)
+        previousPeriodStart = new Date(selectedYear - 1, 0, 1)
+        previousPeriodEnd = new Date(selectedYear, 0, 1)
+      } else {
+        // 月単位の場合（既存のロジック）
+        const now = new Date()
+        currentPeriodStart = new Date(now.getFullYear(), now.getMonth(), 1)
+        currentPeriodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+        previousPeriodStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+        previousPeriodEnd = new Date(now.getFullYear(), now.getMonth(), 1)
+      }
 
       // カテゴリ別支出を集計
       const categoryMap = new Map<number, CategorySpendingData>()
       
+      // 現在の日付を取得
+      const now = new Date()
+      const currentDay = now.getDate()
+      
+      // 前月同日までの期間を設定
+      const currentMonthSameDateEnd = new Date(now.getFullYear(), now.getMonth(), currentDay + 1)
+      const previousMonthSameDateStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+      const previousMonthSameDateEnd = new Date(now.getFullYear(), now.getMonth() - 1, currentDay + 1)
+
       // 支出カテゴリのみを初期化
       categories
         .filter(category => category.type === 'expense')
@@ -107,8 +139,11 @@ export default function CategoryAnalysis() {
             categoryColor: category.color,
             currentMonth: 0,
             previousMonth: 0,
+            currentMonthSameDate: 0,
+            previousMonthSameDate: 0,
             trend: 'stable',
             trendPercentage: 0,
+            sameDateTrendPercentage: 0,
             transactionCount: 0,
             averagePerTransaction: 0,
             percentage: 0
@@ -123,28 +158,46 @@ export default function CategoryAnalysis() {
           const data = categoryMap.get(transaction.categoryId!)
           
           if (data) {
-            // 今月のデータ
-            if (transactionDate >= currentMonth && transactionDate < nextMonth) {
+            // 今月全体のデータ
+            if (transactionDate >= currentPeriodStart && transactionDate < currentPeriodEnd) {
               data.currentMonth += transaction.amount
               data.transactionCount += 1
             }
             
-            // 先月のデータ
-            if (transactionDate >= previousMonth && transactionDate < previousNextMonth) {
+            // 前月全体のデータ
+            if (transactionDate >= previousPeriodStart && transactionDate < previousPeriodEnd) {
               data.previousMonth += transaction.amount
+            }
+            
+            // 今月の同日までのデータ
+            if (transactionDate >= currentPeriodStart && transactionDate < currentMonthSameDateEnd) {
+              data.currentMonthSameDate += transaction.amount
+            }
+            
+            // 前月の同日までのデータ
+            if (transactionDate >= previousMonthSameDateStart && transactionDate < previousMonthSameDateEnd) {
+              data.previousMonthSameDate += transaction.amount
             }
           }
         })
 
-      // 固定費を各カテゴリに追加（固定費のカテゴリIDに基づいて）
+      // 固定費を各カテゴリに追加（月単位のみ）
       const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
+      
       activeFixedExpenses.forEach(fixedExpense => {
         if (fixedExpense.categoryId) {
           const data = categoryMap.get(fixedExpense.categoryId)
           if (data) {
-            // 固定費は毎月発生するものとして今月と先月の両方に追加
-            data.currentMonth += fixedExpense.amount
-            data.previousMonth += fixedExpense.amount
+            const fixedAmount = fixedExpense.amount
+            data.currentMonth += fixedAmount
+            data.previousMonth += fixedAmount
+            
+            // 同日比較にも固定費を按分して追加
+            const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+            const daysInPreviousMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate()
+            
+            data.currentMonthSameDate += (fixedAmount * currentDay) / daysInCurrentMonth
+            data.previousMonthSameDate += (fixedAmount * currentDay) / daysInPreviousMonth
             // 固定費は取引件数にはカウントしない（自動生成のため）
           }
         }
@@ -169,7 +222,7 @@ export default function CategoryAnalysis() {
           ? transactionOnlyAmount / data.transactionCount 
           : 0
 
-        // 固定費を除いた取引データのみでトレンド計算
+        // 前月比の計算（固定費を除いた取引データのみ）
         const currentTransactionAmount = data.currentMonth - fixedExpenseForCategory
         const previousTransactionAmount = data.previousMonth - fixedExpenseForCategory
         
@@ -185,9 +238,21 @@ export default function CategoryAnalysis() {
             data.trend = 'stable'
           }
         } else if (currentTransactionAmount > 0) {
-          // 前月は固定費のみで今月に取引がある場合
+          // 前期間は固定費のみで現在期間に取引がある場合
           data.trend = 'up'
           data.trendPercentage = 100
+        }
+
+        // 前月同日比の計算
+        const currentSameDateTransactionAmount = data.currentMonthSameDate - (fixedExpenseForCategory * currentDay) / new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+        const previousSameDateTransactionAmount = data.previousMonthSameDate - (fixedExpenseForCategory * currentDay) / new Date(now.getFullYear(), now.getMonth(), 0).getDate()
+        
+        if (previousSameDateTransactionAmount > 0) {
+          data.sameDateTrendPercentage = ((currentSameDateTransactionAmount - previousSameDateTransactionAmount) / previousSameDateTransactionAmount) * 100
+        } else if (currentSameDateTransactionAmount > 0) {
+          data.sameDateTrendPercentage = 100
+        } else {
+          data.sameDateTrendPercentage = 0
         }
       })
 
@@ -334,6 +399,7 @@ export default function CategoryAnalysis() {
                 <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">カテゴリ</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">今月支出</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">前月比</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">前月同日比</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">取引数</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">平均単価</th>
               </tr>
@@ -364,6 +430,15 @@ export default function CategoryAnalysis() {
                          `${data.trendPercentage > 0 ? '+' : ''}${data.trendPercentage.toFixed(1)}%`}
                       </span>
                     </div>
+                  </td>
+                  <td className="text-right py-3 px-4">
+                    <span className={`text-xs ${
+                      data.sameDateTrendPercentage > 5 ? 'text-red-600 dark:text-red-400' : 
+                      data.sameDateTrendPercentage < -5 ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
+                    }`}>
+                      {data.sameDateTrendPercentage === 0 ? '±0%' : 
+                       `${data.sameDateTrendPercentage > 0 ? '+' : ''}${data.sameDateTrendPercentage.toFixed(1)}%`}
+                    </span>
                   </td>
                   <td className="text-right py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
                     {data.transactionCount}件
