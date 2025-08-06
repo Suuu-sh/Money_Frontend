@@ -66,14 +66,24 @@ export default function MonthlyChart() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
-        <h4 className="font-medium text-gray-900 dark:text-white text-sm">収支データ</h4>
-        <div className="flex space-x-2">
+    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-3 sm:space-y-0">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <h4 className="font-bold text-gray-900 dark:text-white text-lg">月別収支推移</h4>
+            <p className="text-sm text-gray-500 dark:text-gray-400">({selectedYear}年)</p>
+          </div>
+        </div>
+        <div className="flex space-x-3">
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="text-sm border-0 bg-gray-100 dark:bg-gray-700 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white font-medium shadow-sm hover:shadow-md transition-all duration-200"
           >
             {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
               <option key={year} value={year}>{year}年</option>
@@ -82,9 +92,9 @@ export default function MonthlyChart() {
           <select
             value={selectedMonth || ''}
             onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
-            className="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="text-sm border-0 bg-gray-100 dark:bg-gray-700 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white font-medium shadow-sm hover:shadow-md transition-all duration-200"
           >
-            <option value="">全月</option>
+            <option value="">全月表示</option>
             {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
               <option key={month} value={month}>{month}月</option>
             ))}
@@ -141,33 +151,56 @@ export default function MonthlyChart() {
           </div>
         </div>
       ) : (
-        // 年間表示（コンパクト）
-        <div className="space-y-2">
+        // 年間表示（おしゃれなカード形式）
+        <div className="space-y-4">
           {data.length === 0 ? (
-            <p className="text-center text-gray-500 dark:text-gray-400 text-sm py-4">データがありません</p>
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">まだデータがありません</p>
+            </div>
           ) : (
             <>
-              <div className={`grid gap-2 ${showAll ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3'}`}>
-                {(showAll ? data : data.slice(0, 6)).map((item) => (
+              <div className={`grid gap-3 ${showAll ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'}`}>
+                {(showAll ? data : data.slice(0, 8)).map((item) => (
                   <div 
                     key={item.month} 
-                    className="bg-gray-50 dark:bg-gray-700 p-2 rounded text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    className="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300 hover:border-blue-300 dark:hover:border-blue-500"
                     onClick={() => setSelectedMonth(item.month)}
                   >
-                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{getMonthName(item.month)}</p>
-                    <p className={`text-xs font-bold ${item.balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                      {formatCompactAmount(item.balance)}
-                    </p>
+                    <div className="text-center space-y-2">
+                      <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg mx-auto group-hover:from-blue-500 group-hover:to-purple-600 transition-all duration-300">
+                        <span className="text-white text-xs font-bold">{item.month}</span>
+                      </div>
+                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300">{getMonthName(item.month)}</p>
+                      <div className="space-y-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">収支</p>
+                        <p className={`text-sm font-bold ${item.balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                          {formatCompactAmount(item.balance)}
+                        </p>
+                      </div>
+                      {/* 収入・支出のミニ表示 */}
+                      <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 pt-1 border-t border-gray-200 dark:border-gray-600">
+                        <span className="text-green-500">↑{formatCompactAmount(item.totalIncome)}</span>
+                        <span className="text-red-500">↓{formatCompactAmount(item.totalExpense)}</span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
               
-              {data.length > 6 && !showAll && (
+              {data.length > 8 && !showAll && (
                 <div className="text-center">
                   <button
                     onClick={() => setShowAll(true)}
-                    className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 underline"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all duration-200 hover:scale-105"
                   >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                     すべて表示
                   </button>
                 </div>
@@ -177,8 +210,11 @@ export default function MonthlyChart() {
                 <div className="text-center">
                   <button
                     onClick={() => setShowAll(false)}
-                    className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 underline"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105"
                   >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                    </svg>
                     折りたたむ
                   </button>
                 </div>
