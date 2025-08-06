@@ -36,12 +36,12 @@ export default function MonthlyChart() {
   }
 
   const formatCompactAmount = (amount: number) => {
-    if (amount >= 1000000) {
-      return `¥${(amount / 1000000).toFixed(1)}M`
-    } else if (amount >= 1000) {
-      return `¥${(amount / 1000).toFixed(0)}K`
-    }
-    return `¥${amount.toLocaleString()}`
+    return new Intl.NumberFormat('ja-JP', {
+      style: 'currency',
+      currency: 'JPY',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount)
   }
 
   const getMonthName = (month: number) => {
