@@ -149,14 +149,14 @@ export default function DailySpendingChart() {
               {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
                 <div
                   key={ratio}
-                  className="absolute w-full border-t border-dashed border-gray-300 dark:border-gray-600 opacity-50"
+                  className="absolute w-full border-t border-gray-300 dark:border-gray-600 opacity-30"
                   style={{ bottom: `${ratio * 100}%` }}
                 />
               ))}
             </div>
             
             {/* エリアチャート（グラデーション背景） */}
-            <svg className="absolute inset-0 w-full h-full">
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="rgba(139, 92, 246, 0.3)" />
@@ -167,40 +167,35 @@ export default function DailySpendingChart() {
               {/* エリア */}
               <polygon
                 fill="url(#areaGradient)"
-                points={`0,100% ${dailySpending
+                points={`0,100 ${dailySpending
                   .map((data, index) => {
                     const x = (index / (dailySpending.length - 1)) * 100
                     const y = 100 - (yAxisMax > 0 ? (data.amount / yAxisMax) * 100 : 0)
-                    return `${x}%,${y}%`
+                    return `${x},${y}`
                   })
-                  .join(' ')} 100%,100%`}
+                  .join(' ')} 100,100`}
               />
               
               {/* メインライン */}
               <polyline
                 fill="none"
-                stroke="url(#lineGradient)"
-                strokeWidth="2"
+                stroke="#8B5CF6"
+                strokeWidth="0.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
                 points={dailySpending
                   .map((data, index) => {
                     const x = (index / (dailySpending.length - 1)) * 100
                     const y = 100 - (yAxisMax > 0 ? (data.amount / yAxisMax) * 100 : 0)
-                    return `${x}%,${y}%`
+                    return `${x},${y}`
                   })
                   .join(' ')}
               />
-              
-              <defs>
-                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#8B5CF6" />
-                  <stop offset="50%" stopColor="#EC4899" />
-                  <stop offset="100%" stopColor="#F59E0B" />
-                </linearGradient>
-              </defs>
-              
-              {/* データポイント */}
+            </svg>
+            
+            {/* データポイント（別のSVGで描画） */}
+            <svg className="absolute inset-0 w-full h-full">
               {dailySpending.map((data, index) => {
                 const x = (index / (dailySpending.length - 1)) * 100
                 const y = 100 - (yAxisMax > 0 ? (data.amount / yAxisMax) * 100 : 0)
