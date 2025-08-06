@@ -181,27 +181,8 @@ export default function CategoryAnalysis() {
           }
         })
 
-      // 固定費を各カテゴリに追加（月単位のみ）
+      // 固定費は既に取引データに含まれているため、別途追加する必要はない
       const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
-      
-      activeFixedExpenses.forEach(fixedExpense => {
-        if (fixedExpense.categoryId) {
-          const data = categoryMap.get(fixedExpense.categoryId)
-          if (data) {
-            const fixedAmount = fixedExpense.amount
-            data.currentMonth += fixedAmount
-            data.previousMonth += fixedAmount
-            
-            // 同日比較にも固定費を按分して追加
-            const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-            const daysInPreviousMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate()
-            
-            data.currentMonthSameDate += (fixedAmount * currentDay) / daysInCurrentMonth
-            data.previousMonthSameDate += (fixedAmount * currentDay) / daysInPreviousMonth
-            // 固定費は取引件数にはカウントしない（自動生成のため）
-          }
-        }
-      })
 
       // 固定費の合計を計算（表示用）
       const fixedTotal = activeFixedExpenses.reduce((sum, fe) => sum + fe.amount, 0)
@@ -212,22 +193,14 @@ export default function CategoryAnalysis() {
       categoryMap.forEach(data => {
         totalCurrentSpending += data.currentMonth
         
-        // 固定費を除いた取引データのみで平均取引金額を計算
-        const fixedExpenseForCategory = activeFixedExpenses
-          .filter(fe => fe.categoryId === data.categoryId)
-          .reduce((sum, fe) => sum + fe.amount, 0)
-        
-        const transactionOnlyAmount = data.currentMonth - fixedExpenseForCategory
+        // 平均取引金額を計算（全取引データを使用）
         data.averagePerTransaction = data.transactionCount > 0 
-          ? transactionOnlyAmount / data.transactionCount 
+          ? data.currentMonth / data.transactionCount 
           : 0
 
-        // 前月比の計算（固定費を除いた取引データのみ）
-        const currentTransactionAmount = data.currentMonth - fixedExpenseForCategory
-        const previousTransactionAmount = data.previousMonth - fixedExpenseForCategory
-        
-        if (previousTransactionAmount > 0) {
-          const percentage = ((currentTransactionAmount - previousTransactionAmount) / previousTransactionAmount) * 100
+        // 前月比の計算
+        if (data.previousMonth > 0) {
+          const percentage = ((data.currentMonth - data.previousMonth) / data.previousMonth) * 100
           data.trendPercentage = percentage
           
           if (percentage > 5) {
@@ -237,19 +210,16 @@ export default function CategoryAnalysis() {
           } else {
             data.trend = 'stable'
           }
-        } else if (currentTransactionAmount > 0) {
-          // 前期間は固定費のみで現在期間に取引がある場合
+        } else if (data.currentMonth > 0) {
+          // 前月は0で今月に支出がある場合
           data.trend = 'up'
           data.trendPercentage = 100
         }
 
         // 前月同日比の計算
-        const currentSameDateTransactionAmount = data.currentMonthSameDate - (fixedExpenseForCategory * currentDay) / new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-        const previousSameDateTransactionAmount = data.previousMonthSameDate - (fixedExpenseForCategory * currentDay) / new Date(now.getFullYear(), now.getMonth(), 0).getDate()
-        
-        if (previousSameDateTransactionAmount > 0) {
-          data.sameDateTrendPercentage = ((currentSameDateTransactionAmount - previousSameDateTransactionAmount) / previousSameDateTransactionAmount) * 100
-        } else if (currentSameDateTransactionAmount > 0) {
+        if (data.previousMonthSameDate > 0) {
+          data.sameDateTrendPercentage = ((data.currentMonthSameDate - data.previousMonthSameDate) / data.previousMonthSameDate) * 100
+        } else if (data.currentMonthSameDate > 0) {
           data.sameDateTrendPercentage = 100
         } else {
           data.sameDateTrendPercentage = 0
