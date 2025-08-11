@@ -1,6 +1,7 @@
 {
-  "/fixed-transactions/page": "app/fixed-transactions/page.js",
+  "/not-found": "app/not-found.js",
   "/budget/page": "app/budget/page.js",
+  "/fixed-transactions/page": "app/fixed-transactions/page.js",
   "/analytics/page": "app/analytics/page.js",
   "/categories/page": "app/categories/page.js",
   "/home/page": "app/home/page.js"
