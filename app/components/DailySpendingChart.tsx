@@ -132,7 +132,7 @@ export default function DailySpendingChart() {
       </div>
       
       {dailySpending.length > 0 ? (
-        <div className="relative h-96">
+        <div className="relative h-64">
           {/* Y軸ラベル */}
           <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 pr-3 font-medium">
             <span>{formatCurrency(yAxisMax)}</span>
@@ -225,10 +225,10 @@ export default function DailySpendingChart() {
           </div>
           
           {/* X軸ラベル */}
-          <div className="ml-20 mt-3 flex justify-between text-sm text-gray-600 dark:text-gray-400 font-medium">
-            <span className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">1日</span>
-            <span className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">15日</span>
-            <span className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">月末</span>
+          <div className="ml-20 mt-2 flex justify-between text-xs text-gray-600 dark:text-gray-400 font-medium px-2">
+            <span>1日</span>
+            <span>15日</span>
+            <span>月末</span>
           </div>
         </div>
       ) : (
