@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { fetchTransactions, fetchFixedExpenses } from '../lib/api'
 import { Transaction, FixedExpense } from '../types'
+import { ChartBarIcon } from '@heroicons/react/24/outline'
 
 interface DailySpending {
   date: string
@@ -121,9 +122,7 @@ export default function DailySpendingChart() {
     <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
       <div className="flex items-center space-x-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-          </svg>
+          <ChartBarIcon className="w-5 h-5 text-white" />
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 dark:text-white">日毎の支出推移</h3>
