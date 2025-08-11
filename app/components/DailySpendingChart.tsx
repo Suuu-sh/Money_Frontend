@@ -120,9 +120,12 @@ export default function DailySpendingChart() {
 
   return (
     <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-      <div className="mb-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">日毎の支出推移</h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400">今月の変動支出のみ</p>
+      <div className="flex items-center space-x-3 mb-6">
+        <ChartBarIcon className="w-6 h-6 text-purple-500" />
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white">日毎の支出推移</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">今月の変動支出のみ</p>
+        </div>
       </div>
       
       {dailySpending.length > 0 ? (
