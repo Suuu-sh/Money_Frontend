@@ -132,7 +132,7 @@ export default function DailySpendingChart() {
       </div>
       
       {dailySpending.length > 0 ? (
-        <div className="relative" style={{ height: '240px' }}>
+        <div className="relative" style={{ height: '235px' }}>
           {/* Y軸ラベル */}
           <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 pr-3 font-medium">
             <span>{formatCurrency(yAxisMax)}</span>
