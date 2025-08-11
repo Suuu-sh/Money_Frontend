@@ -156,6 +156,45 @@ export default function FixedTransactionsList({
     }
   })
 
+  // カテゴリごとにグループ化
+  const groupedTransactions = sortedTransactions.reduce((groups, transaction) => {
+    const categoryName = transaction.category?.name || 'その他'
+    const categoryId = transaction.category?.id || 0
+    const categoryColor = transaction.category?.color || (transaction.type === 'income' ? '#22c55e' : '#ef4444')
+    
+    if (!groups[categoryName]) {
+      groups[categoryName] = {
+        categoryId,
+        categoryName,
+        categoryColor,
+        transactions: [],
+        total: 0,
+        count: 0
+      }
+    }
+    
+    groups[categoryName].transactions.push(transaction)
+    groups[categoryName].total += transaction.isActive ? transaction.amount : 0
+    groups[categoryName].count += transaction.isActive ? 1 : 0
+    
+    return groups
+  }, {} as Record<string, {
+    categoryId: number
+    categoryName: string
+    categoryColor: string
+    transactions: FixedTransaction[]
+    total: number
+    count: number
+  }>)
+
+  const groupedEntries = Object.entries(groupedTransactions).sort((a, b) => {
+    if (sortOrder === 'desc') {
+      return b[1].total - a[1].total
+    } else {
+      return a[1].total - b[1].total
+    }
+  })
+
   // 合計計算
   const activeTransactions = transactions.filter(t => t.isActive)
   const totalIncome = activeTransactions
@@ -281,8 +320,8 @@ export default function FixedTransactionsList({
         </div>
       )}
 
-      {/* 固定収支リスト */}
-      <div className="space-y-1.5">
+      {/* カテゴリ別固定収支リスト */}
+      <div>
         {filteredTransactions.length === 0 ? (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <div className="text-4xl mb-2">💰</div>
@@ -302,121 +341,124 @@ export default function FixedTransactionsList({
             </button>
           </div>
         ) : (
-          sortedTransactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className={`rounded-md p-2 transition-colors ${
-                !transaction.isActive ? 'opacity-60' : ''
-              }`}
-              style={{
-                backgroundColor: transaction.category 
-                  ? hexToRgba(transaction.category.color, 0.1)
-                  : transaction.type === 'income' 
-                    ? 'rgba(34, 197, 94, 0.1)' // green-500 with 10% opacity
-                    : 'rgba(239, 68, 68, 0.1)', // red-500 with 10% opacity
-                borderLeft: `4px solid ${
-                  transaction.category 
-                    ? transaction.category.color
-                    : transaction.type === 'income' 
-                      ? '#22c55e' // green-500
-                      : '#ef4444' // red-500
-                }`
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    {/* カテゴリアイコン */}
-                    <div className="flex items-center justify-center w-4 h-4 flex-shrink-0">
-                      {transaction.category ? (
-                        getCategoryIcon(transaction.category.name, transaction.category.color, 16)
-                      ) : (
-                        getCategoryIcon('その他', transaction.type === 'income' ? '#22c55e' : '#ef4444', 16)
-                      )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {groupedEntries.map(([categoryName, group]) => (
+              <div key={categoryName} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 h-fit">
+                {/* カテゴリヘッダー */}
+                <div className="mb-3">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center justify-center w-5 h-5">
+                      {getCategoryIcon(categoryName, group.categoryColor, 20)}
                     </div>
-                    
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center space-x-2">
-                        <h3 className={`text-sm font-medium truncate ${
-                          transaction.isActive ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'
-                        }`}>
-                          {transaction.name}
-                        </h3>
-                        <span className={`text-xs px-1.5 py-0.5 rounded text-white font-medium ${
-                          transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
-                        }`}>
-                          {transaction.type === 'income' ? '収入' : '支出'}
-                        </span>
-                        {transaction.category && (
-                          <span className="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">
-                            {transaction.category.name}
-                          </span>
-                        )}
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                      {categoryName}
+                    </h3>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {group.count}件
+                    </span>
+                    <div className="text-right">
+                      <div className={`text-lg font-bold ${
+                        group.total >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                      }`}>
+                        {formatAmount(Math.abs(group.total), group.total >= 0 ? 'income' : 'expense')}
                       </div>
-                      {transaction.description && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-                          {transaction.description}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3 flex-shrink-0">
-                  <div className="text-right">
-                    <div className={`text-sm font-semibold ${
-                      transaction.isActive 
-                        ? transaction.type === 'income' 
-                          ? 'text-green-600 dark:text-green-400' 
-                          : 'text-red-600 dark:text-red-400'
-                        : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {formatAmount(transaction.amount, transaction.type)}
-                    </div>
-                    {!transaction.isActive && (
-                      <div className="text-xs text-gray-400 dark:text-gray-500">無効</div>
-                    )}
-                  </div>
-
-                  <div className="flex items-center space-x-1">
-                    <button
-                      onClick={() => onEditTransaction?.(transaction)}
-                      className="p-1 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                      title="編集"
+                {/* カテゴリ内の取引リスト */}
+                <div className="space-y-2">
+                  {group.transactions.map((transaction) => (
+                    <div
+                      key={transaction.id}
+                      className={`rounded-md p-2 transition-colors ${
+                        !transaction.isActive ? 'opacity-60' : ''
+                      }`}
+                      style={{
+                        backgroundColor: hexToRgba(group.categoryColor, 0.1),
+                        borderLeft: `3px solid ${group.categoryColor}`
+                      }}
                     >
-                      <PencilIcon className="w-3.5 h-3.5" />
-                    </button>
-                    
-                    {deleteConfirm === transaction.id ? (
-                      <div className="flex items-center space-x-1">
-                        <button
-                          onClick={() => handleDelete(transaction.id)}
-                          disabled={deleting === transaction.id}
-                          className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded hover:bg-red-700 disabled:opacity-50"
-                        >
-                          {deleting === transaction.id ? '削除中' : '削除'}
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirm(null)}
-                          className="text-xs bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded hover:bg-gray-400 dark:hover:bg-gray-500"
-                        >
-                          キャンセル
-                        </button>
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-1 mb-1">
+                            <h4 className={`text-sm font-medium truncate ${
+                              transaction.isActive ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'
+                            }`}>
+                              {transaction.name}
+                            </h4>
+                            <span className={`text-xs px-1.5 py-0.5 rounded text-white font-medium flex-shrink-0 ${
+                              transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
+                            }`}>
+                              {transaction.type === 'income' ? '収入' : '支出'}
+                            </span>
+                          </div>
+                          
+                          <div className={`text-sm font-semibold mb-1 ${
+                            transaction.isActive 
+                              ? transaction.type === 'income' 
+                                ? 'text-green-600 dark:text-green-400' 
+                                : 'text-red-600 dark:text-red-400'
+                              : 'text-gray-500 dark:text-gray-400'
+                          }`}>
+                            {formatAmount(transaction.amount, transaction.type)}
+                          </div>
+                          
+                          {transaction.description && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                              {transaction.description}
+                            </p>
+                          )}
+                          
+                          {!transaction.isActive && (
+                            <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">無効</div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col space-y-1 ml-2 flex-shrink-0">
+                          <button
+                            onClick={() => onEditTransaction?.(transaction)}
+                            className="p-1 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            title="編集"
+                          >
+                            <PencilIcon className="w-3.5 h-3.5" />
+                          </button>
+                          
+                          {deleteConfirm === transaction.id ? (
+                            <div className="flex flex-col space-y-1">
+                              <button
+                                onClick={() => handleDelete(transaction.id)}
+                                disabled={deleting === transaction.id}
+                                className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded hover:bg-red-700 disabled:opacity-50"
+                              >
+                                {deleting === transaction.id ? '削除中' : '削除'}
+                              </button>
+                              <button
+                                onClick={() => setDeleteConfirm(null)}
+                                className="text-xs bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded hover:bg-gray-400 dark:hover:bg-gray-500"
+                              >
+                                キャンセル
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setDeleteConfirm(transaction.id)}
+                              className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                              title="削除"
+                            >
+                              <TrashIcon className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <button
-                        onClick={() => setDeleteConfirm(transaction.id)}
-                        className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                        title="削除"
-                      >
-                        <TrashIcon className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 
