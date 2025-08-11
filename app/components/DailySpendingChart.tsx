@@ -121,7 +121,7 @@ export default function DailySpendingChart() {
   return (
     <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
       <div className="flex items-center space-x-3 mb-6">
-        <ChartBarIcon className="w-6 h-6 text-purple-500" />
+        <ChartBarIcon className="w-6 h-6 text-green-500" />
         <div>
           <h3 className="text-lg font-bold text-gray-900 dark:text-white">日毎の支出推移</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">今月の変動支出のみ</p>
@@ -156,8 +156,8 @@ export default function DailySpendingChart() {
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(139, 92, 246, 0.3)" />
-                  <stop offset="100%" stopColor="rgba(139, 92, 246, 0.05)" />
+                  <stop offset="0%" stopColor="rgba(34, 197, 94, 0.3)" />
+                  <stop offset="100%" stopColor="rgba(34, 197, 94, 0.05)" />
                 </linearGradient>
               </defs>
               
@@ -176,7 +176,7 @@ export default function DailySpendingChart() {
               {/* メインライン */}
               <polyline
                 fill="none"
-                stroke="#8B5CF6"
+                stroke="#22C55E"
                 strokeWidth="0.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -203,7 +203,7 @@ export default function DailySpendingChart() {
                       cy={`${y}%`}
                       r="3"
                       fill="white"
-                      stroke="#8B5CF6"
+                      stroke="#22C55E"
                       strokeWidth="2"
                       className="hover:r-4 transition-all cursor-pointer drop-shadow-sm"
                     />
@@ -211,7 +211,7 @@ export default function DailySpendingChart() {
                       cx={`${x}%`}
                       cy={`${y}%`}
                       r="1.5"
-                      fill="#8B5CF6"
+                      fill="#22C55E"
                       className="pointer-events-none"
                     />
                     <title>{`${data.day}日: ${formatCurrency(data.amount)}`}</title>
