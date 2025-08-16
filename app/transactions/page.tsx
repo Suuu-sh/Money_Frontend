@@ -325,71 +325,7 @@ export default function TransactionsPage() {
               </div>
             </div>
 
-            {/* 月別収支推移 */}
-            <div className="card">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <span>月別収支推移 ({new Date().getFullYear()}年)</span>
-              </h3>
 
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={monthlySummary.map((item) => ({
-                      month: `${item.month}月`,
-                      収入: item.totalIncome,
-                      支出: item.totalExpense,
-                      収支: item.balance,
-                    }))}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis
-                      tickFormatter={(value) => `¥${(value / 1000).toFixed(0)}K`}
-                    />
-                    <Tooltip
-                      formatter={(value: number) => [formatAmount(value), ""]}
-                      labelStyle={{ color: "#374151" }}
-                    />
-                    <Legend />
-                    <Line 
-                      type="monotone" 
-                      dataKey="収入" 
-                      stroke="#10B981" 
-                      strokeWidth={2}
-                      dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="支出" 
-                      stroke="#EF4444" 
-                      strokeWidth={2}
-                      dot={{ fill: "#EF4444", strokeWidth: 2, r: 4 }}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="収支" 
-                      stroke="#3B82F6" 
-                      strokeWidth={2}
-                      dot={{ fill: "#3B82F6", strokeWidth: 2, r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
           </div>
 
           {/* 取引履歴部分 - 右側縦長 */}
