@@ -153,7 +153,7 @@ export default function FixedTransactionsList({
     }
   })
 
-  // カテゴリごとにグループ化
+  // カテゴリごとにグループ化（同じカテゴリは1つのブロックにまとめる）
   const groupedTransactions = sortedTransactions.reduce((groups, transaction) => {
     const categoryName = transaction.category?.name || 'その他'
     const categoryId = transaction.category?.id || 0
@@ -397,93 +397,74 @@ export default function FixedTransactionsList({
                     </div>
                   </div>
 
-                  {/* カテゴリ内の取引リスト */}
-                  <div className="space-y-2">
-                    {group.transactions.map((transaction) => (
-                      <div
-                        key={transaction.id}
-                        className={`rounded-md p-2 transition-colors ${
-                          !transaction.isActive ? 'opacity-60' : ''
-                        }`}
-                        style={{
-                          backgroundColor: hexToRgba(group.categoryColor, 0.1),
-                          borderLeft: `3px solid ${group.categoryColor}`
-                        }}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-1 mb-1">
-                              <h4 className={`text-sm font-medium truncate ${
-                                transaction.isActive ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'
+                  {/* カテゴリ統合表示 */}
+                  <div
+                    className="rounded-md p-3 transition-colors"
+                    style={{
+                      backgroundColor: hexToRgba(group.categoryColor, 0.1),
+                      borderLeft: `3px solid ${group.categoryColor}`
+                    }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+                            {categoryName}
+                          </h4>
+                          <span className={`text-xs px-2 py-0.5 rounded text-white font-medium ${
+                            group.transactions[0]?.type === 'income' ? 'bg-green-500' : 'bg-red-500'
+                          }`}>
+                            {group.transactions[0]?.type === 'income' ? '収入' : '支出'}
+                          </span>
+                        </div>
+                        
+                        <div className={`text-lg font-bold mb-2 ${
+                          group.total >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {formatAmount(Math.abs(group.total), group.total >= 0 ? 'income' : 'expense')}
+                        </div>
+                        
+                        {/* 詳細項目のリスト */}
+                        <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                          {group.transactions.map((transaction, index) => (
+                            <div key={transaction.id} className="flex items-center justify-between">
+                              <span className={!transaction.isActive ? 'opacity-60' : ''}>
+                                • {transaction.name}
+                                {transaction.description && ` (${transaction.description})`}
+                              </span>
+                              <span className={`font-medium ${
+                                transaction.isActive 
+                                  ? transaction.type === 'income' 
+                                    ? 'text-green-600 dark:text-green-400' 
+                                    : 'text-red-600 dark:text-red-400'
+                                  : 'text-gray-500 dark:text-gray-400'
                               }`}>
-                                {transaction.name}
-                              </h4>
-                              <span className={`text-xs px-1.5 py-0.5 rounded text-white font-medium flex-shrink-0 ${
-                                transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
-                              }`}>
-                                {transaction.type === 'income' ? '収入' : '支出'}
+                                {formatAmount(transaction.amount, transaction.type)}
                               </span>
                             </div>
-                            
-                            <div className={`text-sm font-semibold mb-1 ${
-                              transaction.isActive 
-                                ? transaction.type === 'income' 
-                                  ? 'text-green-600 dark:text-green-400' 
-                                  : 'text-red-600 dark:text-red-400'
-                                : 'text-gray-500 dark:text-gray-400'
-                            }`}>
-                              {formatAmount(transaction.amount, transaction.type)}
-                            </div>
-                            
-                            {transaction.description && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                {transaction.description}
-                              </p>
-                            )}
-                            
-                            {!transaction.isActive && (
-                              <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">無効</div>
-                            )}
-                          </div>
-
-                          <div className="flex flex-col space-y-1 ml-2 flex-shrink-0">
-                            <button
-                              onClick={() => onEditTransaction?.(transaction)}
-                              className="p-1 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                              title="編集"
-                            >
-                              <PencilIcon className="w-3.5 h-3.5" />
-                            </button>
-                            
-                            {deleteConfirm === transaction.id ? (
-                              <div className="flex flex-col space-y-1">
-                                <button
-                                  onClick={() => handleDelete(transaction.id)}
-                                  disabled={deleting === transaction.id}
-                                  className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded hover:bg-red-700 disabled:opacity-50"
-                                >
-                                  {deleting === transaction.id ? '削除中' : '削除'}
-                                </button>
-                                <button
-                                  onClick={() => setDeleteConfirm(null)}
-                                  className="text-xs bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded hover:bg-gray-400 dark:hover:bg-gray-500"
-                                >
-                                  キャンセル
-                                </button>
-                              </div>
-                            ) : (
-                              <button
-                                onClick={() => setDeleteConfirm(transaction.id)}
-                                className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                                title="削除"
-                              >
-                                <TrashIcon className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                          </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
+
+                      <div className="flex flex-col space-y-1 ml-3 flex-shrink-0">
+                        <button
+                          onClick={onAddTransaction}
+                          className="p-1 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                          title="項目を追加"
+                        >
+                          <PlusIcon className="w-3.5 h-3.5" />
+                        </button>
+                        
+                        {/* 編集ボタン（最初の項目を編集） */}
+                        <button
+                          onClick={() => onEditTransaction?.(group.transactions[0])}
+                          className="p-1 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                          title="編集"
+                        >
+                          <PencilIcon className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
