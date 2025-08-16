@@ -370,9 +370,9 @@ export default function FixedTransactionsList({
               </button>
             </div>
           ) : (
-            <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {groupedEntries.map(([categoryName, group]) => (
-                <div key={categoryName} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 break-inside-avoid mb-4">
+                <div key={categoryName} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 h-fit min-h-[200px] flex flex-col">
                   {/* カテゴリヘッダー */}
                   <div className="mb-3">
                     <div className="flex items-center space-x-2 mb-2">
