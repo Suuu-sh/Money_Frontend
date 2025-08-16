@@ -1,7 +1,9 @@
 {
-  "/fixed-transactions/page": "app/fixed-transactions/page.js",
   "/budget/page": "app/budget/page.js",
-  "/analytics/page": "app/analytics/page.js",
+  "/fixed-transactions/page": "app/fixed-transactions/page.js",
   "/categories/page": "app/categories/page.js",
-  "/home/page": "app/home/page.js"
+  "/home/page": "app/home/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
+  "/transactions/page": "app/transactions/page.js"
 }
