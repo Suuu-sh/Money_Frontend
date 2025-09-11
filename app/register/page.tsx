@@ -109,7 +109,7 @@ export default function RegisterPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm"
+                  className="input-dark"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm"
+                  className="input-dark"
                   placeholder="Enter your email"
                 />
               </div>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 pr-10 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm"
+                  className="input-dark-with-padding"
                   placeholder="Create a password"
                 />
                 <button
@@ -177,7 +177,7 @@ export default function RegisterPage() {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 pr-10 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm"
+                  className="input-dark-with-padding"
                   placeholder="Confirm your password"
                 />
                 <button

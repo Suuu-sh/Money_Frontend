@@ -46,6 +46,35 @@
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
+  
+  /* オートフィル時のスタイル修正 */
+  .input-dark {
+    @apply appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm;
+  }
+  
+  .input-dark:-webkit-autofill,
+  .input-dark:-webkit-autofill:hover,
+  .input-dark:-webkit-autofill:focus,
+  .input-dark:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(55 65 81) inset !important;
+    -webkit-text-fill-color: white !important;
+    background-color: rgb(55 65 81) !important;
+    border-color: rgb(75 85 99) !important;
+  }
+  
+  .input-dark-with-padding {
+    @apply appearance-none block w-full px-3 py-2 pr-10 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm;
+  }
+  
+  .input-dark-with-padding:-webkit-autofill,
+  .input-dark-with-padding:-webkit-autofill:hover,
+  .input-dark-with-padding:-webkit-autofill:focus,
+  .input-dark-with-padding:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(55 65 81) inset !important;
+    -webkit-text-fill-color: white !important;
+    background-color: rgb(55 65 81) !important;
+    border-color: rgb(75 85 99) !important;
+  }
 }
 
 /* モバイル専用スタイル */
