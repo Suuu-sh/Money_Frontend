@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Category } from '../types';
 import { 
   Check, 
@@ -98,6 +98,40 @@ export default function CategorySelector({
   type,
   className = ''
 }: CategorySelectorProps) {
+  const [query, setQuery] = useState('');
+  const [recentIds, setRecentIds] = useState<number[]>([]);
+
+  // 最近使用したカテゴリのキー（タイプ別に管理）
+  const recentKey = useMemo(() => `recent_categories_${type ?? 'all'}`, [type]);
+
+  // 初期ロード：最近使用したカテゴリをlocalStorageから取得
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(recentKey);
+      if (stored) {
+        const parsed = JSON.parse(stored) as number[];
+        if (Array.isArray(parsed)) setRecentIds(parsed);
+      } else {
+        setRecentIds([]);
+      }
+    } catch {
+      setRecentIds([]);
+    }
+  }, [recentKey]);
+
+  // 選択時に最近使用したカテゴリへ記録（最大8件）
+  const handleSelect = (category: Category) => {
+    onSelect(category);
+    try {
+      setRecentIds(prev => {
+        const next = [category.id, ...prev.filter(id => id !== category.id)].slice(0, 8);
+        localStorage.setItem(recentKey, JSON.stringify(next));
+        return next;
+      });
+    } catch {
+      // localStorageが使えない場合は無視
+    }
+  };
   // カテゴリの一般的な順序を定義
   const getCategoryOrder = (categoryName: string, categoryType: string) => {
     if (categoryType === 'income') {
@@ -115,18 +149,95 @@ export default function CategorySelector({
     }
   };
 
-  // タイプでフィルタリングして、一般的な順序でソート
-  const filteredCategories = (type 
-    ? categories.filter(cat => cat.type === type)
-    : categories
-  ).sort((a, b) => {
-    const orderA = getCategoryOrder(a.name, a.type);
-    const orderB = getCategoryOrder(b.name, b.type);
-    return orderA - orderB;
-  });
+  // タイプでフィルタリング
+  const typeFiltered = useMemo(() => (
+    type ? categories.filter(cat => cat.type === type) : categories
+  ), [categories, type]);
+
+  // 検索フィルタ（前方一致＋部分一致）
+  const nameMatches = (name: string, q: string) => {
+    const n = name.toLowerCase();
+    const s = q.trim().toLowerCase();
+    if (!s) return true;
+    return n.startsWith(s) || n.includes(s);
+  };
+
+  // 検索適用 + 一般的順序でソート
+  const filteredCategories = useMemo(() => (
+    typeFiltered
+      .filter(cat => nameMatches(cat.name, query))
+      .sort((a, b) => {
+        const orderA = getCategoryOrder(a.name, a.type);
+        const orderB = getCategoryOrder(b.name, b.type);
+        return orderA - orderB;
+      })
+  ), [typeFiltered, query]);
+
+  // 最近使ったカテゴリ（存在するIDのみ、重複排除）
+  const recentCategories = useMemo(() => (
+    recentIds
+      .map(id => typeFiltered.find(c => c.id === id))
+      .filter((c): c is Category => Boolean(c))
+  ), [recentIds, typeFiltered]);
 
   return (
     <div className={`w-full ${className}`}>
+      {/* 検索バー */}
+      <div className="mb-3">
+        <div className="relative">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="カテゴリを検索"
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+            aria-label="カテゴリを検索"
+          />
+          {query && (
+            <button
+              type="button"
+              aria-label="検索をクリア"
+              onClick={() => setQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xs"
+            >
+              クリア
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 最近使ったカテゴリ（検索中は非表示） */}
+      {recentCategories.length > 0 && !query && (
+        <div className="mb-3">
+          <div className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">最近使った</div>
+          <div className="flex flex-wrap gap-2">
+            {recentCategories.map((category) => {
+              const isSelected = selectedCategoryId === category.id;
+              const themeColor = getCategoryThemeColor(category);
+              const iconColor = isSelected ? '#3B82F6' : themeColor.border;
+              const icon = getCategoryIcon(category.name, iconColor);
+
+              return (
+                <button
+                  key={`recent-${category.id}`}
+                  type="button"
+                  onClick={() => handleSelect(category)}
+                  className={`inline-flex items-center px-2 py-1 rounded-full border text-xs transition-colors ${
+                    isSelected ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+                  }`}
+                  style={{ backgroundColor: isSelected ? '#EBF8FF' : themeColor.background, borderColor: isSelected ? '#3B82F6' : themeColor.border }}
+                >
+                  <span className="mr-1.5">
+                    {React.cloneElement(icon, { size: 14 })}
+                  </span>
+                  {category.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* カテゴリグリッド（4列コンパクト） */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         {filteredCategories.map((category) => {
@@ -139,7 +250,7 @@ export default function CategorySelector({
             <button
               key={category.id}
               type="button"
-              onClick={() => onSelect(category)}
+              onClick={() => handleSelect(category)}
               className={`
                 relative px-2 py-2 rounded-md border-2 transition-all duration-200 
                 hover:shadow-sm hover:scale-105 active:scale-95
@@ -163,6 +274,8 @@ export default function CategorySelector({
                   e.currentTarget.style.backgroundColor = themeColor.background;
                 }
               }}
+              aria-pressed={isSelected}
+              aria-label={`カテゴリ: ${category.name}`}
             >
               {/* 選択チェックマーク */}
               {isSelected && (

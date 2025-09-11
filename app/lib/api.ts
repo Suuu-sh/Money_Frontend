@@ -18,9 +18,11 @@ import {
   CategoryBudgetAnalysis
 } from '../types'
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-api-domain.com/api' 
-  : 'http://localhost:8080/api'
+// Allow overriding API base via env for local/dev flexibility
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+  || (process.env.NODE_ENV === 'production'
+    ? 'https://your-api-domain.com/api'
+    : 'http://localhost:8080/api')
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -250,4 +252,3 @@ export const fetchMonthlyBudgetReport = async (year: number, month: number): Pro
 export const continueBudgetSettings = async (year: number, month: number): Promise<void> => {
   await api.post(`/budget/continue/${year}/${month}`)
 }
-

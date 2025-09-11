@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CurrencyDollarIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { API_BASE_URL } from '../lib/api'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -36,7 +37,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/register', {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
