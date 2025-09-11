@@ -192,6 +192,27 @@ export default function FixedTransactionsList({
     }
   })
 
+  // アイテム数に応じた列数を決定する関数
+  const getGridColumns = (itemCount: number) => {
+    if (itemCount === 1) return 'grid-cols-1'
+    if (itemCount === 2) return 'grid-cols-2'
+    if (itemCount === 3) return 'grid-cols-3'
+    if (itemCount === 4) return 'grid-cols-2'
+    if (itemCount === 5) return 'grid-cols-3'
+    if (itemCount === 6) return 'grid-cols-3'
+    if (itemCount === 7) return 'grid-cols-2'
+    if (itemCount === 8) return 'grid-cols-3'
+    if (itemCount === 9) return 'grid-cols-3'
+    if (itemCount === 10) return 'grid-cols-2'
+    if (itemCount === 11) return 'grid-cols-3'
+    if (itemCount === 12) return 'grid-cols-3'
+    
+    // 13以降は2列、3列、3列の順で繰り返し
+    const remainder = (itemCount - 13) % 3
+    if (remainder === 0) return 'grid-cols-2'  // 13, 16, 19, ...
+    return 'grid-cols-3'  // 14, 15, 17, 18, 20, 21, ...
+  }
+
   // 合計計算
   const activeTransactions = transactions.filter(t => t.isActive)
   const totalIncome = activeTransactions
@@ -370,7 +391,7 @@ export default function FixedTransactionsList({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+            <div className={`grid ${getGridColumns(groupedEntries.length)} gap-4`}>
               {groupedEntries.map(([categoryName, group]) => (
                 <div key={categoryName} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 h-fit min-h-[200px] flex flex-col">
                   {/* カテゴリヘッダー */}
