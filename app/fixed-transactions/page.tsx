@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FixedExpense, FixedTransaction, Category } from '../types'
-import { fetchCategories, processMonthlyFixedTransactions } from '../lib/api'
+import { fetchCategories } from '../lib/api'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
@@ -12,7 +12,7 @@ import FixedTransactionsList from '../components/budget/FixedTransactionsList'
 import FixedTransactionModal from '../components/budget/FixedTransactionModal'
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline'
 import FixedExpenseModal from '../components/budget/FixedExpenseModal'
-import SchedulerStatus from '../components/scheduler/SchedulerStatus'
+
 
 export default function FixedTransactionsPage() {
   const router = useRouter()
@@ -63,28 +63,7 @@ export default function FixedTransactionsPage() {
     setBudgetUpdateTrigger(prev => prev + 1)
   }
 
-  const handleProcessMonthlyTransactions = async () => {
-    try {
-      console.log('月次処理を開始します...')
-      await processMonthlyFixedTransactions()
-      console.log('月次処理が正常に完了しました')
-      alert('固定収支の月次処理が完了しました。毎月1日の取引として記録されました。')
-      // データを再読み込みして更新を反映
-      handleBudgetUpdated()
-    } catch (error: any) {
-      console.error('月次処理エラー:', error)
-      console.error('エラー詳細:', error.response?.data || error.message)
-      
-      let errorMessage = '月次処理に失敗しました。'
-      if (error.response?.data?.error) {
-        errorMessage += `\nエラー: ${error.response.data.error}`
-      } else if (error.message) {
-        errorMessage += `\nエラー: ${error.message}`
-      }
-      
-      alert(errorMessage)
-    }
-  }
+
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -109,10 +88,7 @@ export default function FixedTransactionsPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* 自動スケジューラーステータス */}
-        <div className="mb-6">
-          <SchedulerStatus />
-        </div>
+
 
         {/* 固定収支管理 */}
         <div className="grid grid-cols-1 gap-6">

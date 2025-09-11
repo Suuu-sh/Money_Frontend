@@ -251,7 +251,3 @@ export const continueBudgetSettings = async (year: number, month: number): Promi
   await api.post(`/budget/continue/${year}/${month}`)
 }
 
-// 固定収支の月次処理API
-export const processMonthlyFixedTransactions = async (): Promise<void> => {
-  await api.post('/fixed-expenses/process-monthly')
-}
