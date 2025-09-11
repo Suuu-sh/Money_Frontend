@@ -12,6 +12,7 @@ import FixedTransactionsList from '../components/budget/FixedTransactionsList'
 import FixedTransactionModal from '../components/budget/FixedTransactionModal'
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline'
 import FixedExpenseModal from '../components/budget/FixedExpenseModal'
+import SchedulerStatus from '../components/scheduler/SchedulerStatus'
 
 export default function FixedTransactionsPage() {
   const router = useRouter()
@@ -108,27 +109,9 @@ export default function FixedTransactionsPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* テスト用：月次処理実行ボタン */}
+        {/* 自動スケジューラーステータス */}
         <div className="mb-6">
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">固定収支の月次処理</h3>
-                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                  固定収支を毎月1日の取引として生成します
-                </p>
-              </div>
-              <button
-                onClick={handleProcessMonthlyTransactions}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                月次処理を実行
-              </button>
-            </div>
-          </div>
+          <SchedulerStatus />
         </div>
 
         {/* 固定収支管理 */}
