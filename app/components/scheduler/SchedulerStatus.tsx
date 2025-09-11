@@ -17,6 +17,7 @@ export default function SchedulerStatus() {
   const [status, setStatus] = useState<SchedulerStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [executing, setExecuting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStatus();
@@ -27,8 +28,12 @@ export default function SchedulerStatus() {
 
   const fetchStatus = async () => {
     try {
+      setError(null);
       const token = localStorage.getItem('token');
-      if (!token) return;
+      if (!token) {
+        setError('認証トークンが見つかりません');
+        return;
+      }
 
       const response = await fetch('http://localhost:8080/api/scheduler/status', {
         headers: {
@@ -40,9 +45,23 @@ export default function SchedulerStatus() {
       if (response.ok) {
         const data = await response.json();
         setStatus(data);
+        setError(null);
+      } else {
+        if (response.status === 404) {
+          setError('スケジューラーAPIが見つかりません。バックエンドサーバーを確認してください。');
+        } else if (response.status === 401) {
+          setError('認証に失敗しました。再ログインしてください。');
+        } else {
+          setError(`サーバーエラー: ${response.status} ${response.statusText}`);
+        }
       }
     } catch (error) {
       console.error('スケジューラー状態の取得エラー:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setError('バックエンドサーバーに接続できません。サーバーが起動しているか確認してください。');
+      } else {
+        setError('予期しないエラーが発生しました');
+      }
     } finally {
       setLoading(false);
     }
@@ -115,12 +134,30 @@ export default function SchedulerStatus() {
     );
   }
 
-  if (!status) {
+  if (error || !status) {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6">
-        <div className="flex items-center">
-          <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
-          <span className="text-red-700 dark:text-red-300">スケジューラーの状態を取得できませんでした</span>
+        <div className="flex items-start">
+          <AlertCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h3 className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+              スケジューラーの状態を取得できませんでした
+            </h3>
+            <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+              {error || 'バックエンドサーバーとの通信に問題があります'}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={fetchStatus}
+                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors"
+              >
+                再試行
+              </button>
+              <div className="text-xs text-red-600 dark:text-red-400 flex items-center">
+                <span>• バックエンドサーバーが起動しているか確認してください</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -53,6 +53,7 @@ export default function FixedTransactionsList({
   const [deleting, setDeleting] = useState<number | null>(null)
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc')
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all')
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
 
   // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 16) => {
@@ -137,6 +138,16 @@ export default function FixedTransactionsList({
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
+  }
+
+  const toggleCategoryExpansion = (categoryName: string) => {
+    const newExpanded = new Set(expandedCategories)
+    if (newExpanded.has(categoryName)) {
+      newExpanded.delete(categoryName)
+    } else {
+      newExpanded.add(categoryName)
+    }
+    setExpandedCategories(newExpanded)
   }
 
   // フィルタリングとソート
@@ -392,91 +403,146 @@ export default function FixedTransactionsList({
             </div>
           ) : (
             <div className={`grid ${getGridColumns(groupedEntries.length)} gap-3`}>
-              {groupedEntries.map(([categoryName, group]) => (
-                <div 
-                  key={categoryName} 
-                  className="relative rounded-xl p-4 transition-all duration-200 hover:shadow-lg border border-gray-200/50 dark:border-gray-700/50"
-                  style={{
-                    background: `linear-gradient(135deg, ${hexToRgba(group.categoryColor, 0.1)} 0%, ${hexToRgba(group.categoryColor, 0.05)} 100%)`,
-                    borderLeftColor: group.categoryColor,
-                    borderLeftWidth: '4px'
-                  }}
-                >
-                  {/* メインコンテンツ */}
-                  <div className="flex items-center justify-between">
-                    {/* 左側：アイコンとカテゴリ情報 */}
-                    <div className="flex items-center space-x-3 flex-1 min-w-0">
-                      {/* アイコン */}
-                      <div 
-                        className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: hexToRgba(group.categoryColor, 0.2) }}
-                      >
-                        {getCategoryIcon(categoryName, group.categoryColor, 20)}
-                      </div>
-                      
-                      {/* カテゴリ名と件数 */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                            {categoryName}
-                          </h3>
-                          <span className={`text-xs px-2 py-0.5 rounded-full text-white font-medium flex-shrink-0 ${
-                            group.transactions[0]?.type === 'income' ? 'bg-green-500' : 'bg-red-500'
-                          }`}>
-                            {group.count}件
-                          </span>
+              {groupedEntries.map(([categoryName, group]) => {
+                const isExpanded = expandedCategories.has(categoryName)
+                const hasMultipleItems = group.transactions.length > 1
+                
+                return (
+                  <div 
+                    key={categoryName} 
+                    className={`relative rounded-xl p-4 transition-all duration-300 hover:shadow-lg border border-gray-200/50 dark:border-gray-700/50 ${
+                      isExpanded ? 'row-span-2' : ''
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, ${hexToRgba(group.categoryColor, 0.1)} 0%, ${hexToRgba(group.categoryColor, 0.05)} 100%)`,
+                      borderLeftColor: group.categoryColor,
+                      borderLeftWidth: '4px',
+                      minHeight: '120px'
+                    }}
+                  >
+                    {/* メインコンテンツ */}
+                    <div className="flex items-start justify-between h-full">
+                      {/* 左側：アイコンとカテゴリ情報 */}
+                      <div className="flex items-start space-x-3 flex-1 min-w-0">
+                        {/* アイコン */}
+                        <div 
+                          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: hexToRgba(group.categoryColor, 0.2) }}
+                        >
+                          {getCategoryIcon(categoryName, group.categoryColor, 20)}
                         </div>
                         
-                        {/* 詳細項目（最大2つまで表示） */}
-                        <div className="text-xs text-gray-600 dark:text-gray-400">
-                          {group.transactions.slice(0, 2).map((transaction, index) => (
-                            <div key={transaction.id} className="truncate">
-                              • {transaction.name}
-                              {transaction.description && ` (${transaction.description})`}
-                            </div>
-                          ))}
-                          {group.transactions.length > 2 && (
-                            <div className="text-gray-500 dark:text-gray-500">
-                              他{group.transactions.length - 2}件...
-                            </div>
-                          )}
+                        {/* カテゴリ名と詳細 */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                              {categoryName}
+                            </h3>
+                            <span className={`text-xs px-2 py-0.5 rounded-full text-white font-medium flex-shrink-0 ${
+                              group.transactions[0]?.type === 'income' ? 'bg-green-500' : 'bg-red-500'
+                            }`}>
+                              {group.count}件
+                            </span>
+                          </div>
+                          
+                          {/* 詳細項目 */}
+                          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                            {isExpanded ? (
+                              // 展開時：全ての項目を表示
+                              group.transactions.map((transaction, index) => (
+                                <div key={transaction.id} className="flex items-center justify-between py-1 px-2 bg-white/50 dark:bg-gray-700/30 rounded">
+                                  <span className={!transaction.isActive ? 'opacity-60' : ''}>
+                                    • {transaction.name}
+                                    {transaction.description && ` (${transaction.description})`}
+                                  </span>
+                                  <span className={`font-medium ml-2 ${
+                                    transaction.isActive 
+                                      ? transaction.type === 'income' 
+                                        ? 'text-green-600 dark:text-green-400' 
+                                        : 'text-red-600 dark:text-red-400'
+                                      : 'text-gray-500 dark:text-gray-400'
+                                  }`}>
+                                    {formatAmount(transaction.amount, transaction.type)}
+                                  </span>
+                                </div>
+                              ))
+                            ) : (
+                              // 通常時：最大2つまで表示
+                              <>
+                                {group.transactions.slice(0, 2).map((transaction, index) => (
+                                  <div key={transaction.id} className="truncate">
+                                    • {transaction.name}
+                                    {transaction.description && ` (${transaction.description})`}
+                                  </div>
+                                ))}
+                                {group.transactions.length > 2 && (
+                                  <button
+                                    onClick={() => toggleCategoryExpansion(categoryName)}
+                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors text-xs"
+                                  >
+                                    他{group.transactions.length - 2}件を表示...
+                                  </button>
+                                )}
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* 右側：金額 */}
-                    <div className="text-right flex-shrink-0 ml-4">
-                      <div className={`text-xl font-bold ${
-                        group.total >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                      }`}>
-                        {formatAmount(Math.abs(group.total), group.total >= 0 ? 'income' : 'expense')}
+                      {/* 右側：金額と展開ボタン */}
+                      <div className="text-right flex-shrink-0 ml-4 flex flex-col items-end">
+                        <div className={`text-lg font-bold mb-2 ${
+                          group.total >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {formatAmount(Math.abs(group.total), group.total >= 0 ? 'income' : 'expense')}
+                        </div>
+                        
+                        {/* 展開/折りたたみボタン */}
+                        {hasMultipleItems && (
+                          <button
+                            onClick={() => toggleCategoryExpansion(categoryName)}
+                            className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors flex items-center"
+                          >
+                            {isExpanded ? (
+                              <>
+                                <ArrowUpIcon className="w-3 h-3 mr-1" />
+                                折りたたむ
+                              </>
+                            ) : (
+                              <>
+                                <ArrowDownIcon className="w-3 h-3 mr-1" />
+                                展開
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </div>
-                  </div>
 
-                  {/* アクションボタン（ホバー時に表示） */}
-                  <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={onAddTransaction}
-                      className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-colors bg-white dark:bg-gray-800 rounded-md shadow-sm"
-                      title="項目を追加"
-                    >
-                      <PlusIcon className="w-3.5 h-3.5" />
-                    </button>
-                    
-                    <button
-                      onClick={() => onEditTransaction?.(group.transactions[0])}
-                      className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-gray-800 rounded-md shadow-sm"
-                      title="編集"
-                    >
-                      <PencilIcon className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                    {/* アクションボタン（ホバー時に表示） */}
+                    <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={onAddTransaction}
+                        className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-colors bg-white dark:bg-gray-800 rounded-md shadow-sm"
+                        title="項目を追加"
+                      >
+                        <PlusIcon className="w-3.5 h-3.5" />
+                      </button>
+                      
+                      <button
+                        onClick={() => onEditTransaction?.(group.transactions[0])}
+                        className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-gray-800 rounded-md shadow-sm"
+                        title="編集"
+                      >
+                        <PencilIcon className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
 
-                  {/* ホバー効果用のクラス */}
-                  <div className="absolute inset-0 rounded-xl group"></div>
-                </div>
-              ))}
+                    {/* ホバー効果用のクラス */}
+                    <div className="absolute inset-0 rounded-xl group"></div>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
