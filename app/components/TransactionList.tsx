@@ -175,7 +175,7 @@ export default function TransactionList({ transactions, categories, onTransactio
           </p>
         </div>
       ) : (
-        <div className="space-y-1.5 max-h-96 overflow-y-auto">
+        <div className="space-y-2 max-h-96 overflow-y-auto">
           {filteredAndSortedTransactions.map((transaction) => {
             // カテゴリカラーを薄くした背景色を生成
             const hexToRgb = (hex: string) => {
@@ -187,72 +187,71 @@ export default function TransactionList({ transactions, categories, onTransactio
               } : null;
             };
             
-            const rgb = hexToRgb(transaction.category.color);
-            const lightBackgroundColor = rgb 
-              ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` 
-              : 'rgba(156, 163, 175, 0.1)';
+            const rgb = hexToRgb(transaction.category.color) || { r: 156, g: 163, b: 175 };
+            const iconBg = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`
             
             return (
               <div
                 key={transaction.id}
-                className="border rounded-md p-2 hover:shadow-sm transition-all duration-200"
-                style={{ 
-                  backgroundColor: lightBackgroundColor,
-                  borderColor: transaction.category.color + '20'
+                className="border rounded-lg px-3 py-2 hover:shadow-sm transition-all duration-200 bg-white dark:bg-gray-800 min-h-[56px] flex items-center"
+                style={{
+                  borderLeftColor: transaction.category.color,
+                  borderLeftWidth: '4px',
                 }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 min-w-0 flex-1">
-                    <div className="flex items-center justify-center w-4 h-4 flex-shrink-0">
-                      {getCategoryIcon(transaction.category.name, transaction.category.color, 16)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
-                          {format(new Date(transaction.date), 'MM/dd')}
-                        </span>
-                        <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
-                          {transaction.description || transaction.category.name}
-                        </span>
-                        <span className="text-xs text-gray-400 flex-shrink-0">
-                          {transaction.category.name}
-                        </span>
-                      </div>
-                    </div>
+                {/* 左：アイコン + テキスト */}
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div
+                    className="flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
+                    style={{ backgroundColor: iconBg }}
+                  >
+                    {getCategoryIcon(transaction.category.name, transaction.category.color, 18)}
                   </div>
-                  
-                  <div className="flex items-center space-x-3 flex-shrink-0">
-                    <span className={`text-sm font-semibold ${
-                      transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                    }`}>
-                      {formatAmount(transaction.amount, transaction.type)}
-                    </span>
-                    
-                    <div className="flex items-center space-x-1">
-                      {/* 編集ボタン */}
-                      {onEditTransaction && (
-                        <button
-                          onClick={() => onEditTransaction(transaction)}
-                          className="p-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                          title="編集"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </button>
-                      )}
-                      
-                      {/* 削除ボタン */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+                        {format(new Date(transaction.date), 'MM/dd')}
+                      </span>
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                        {transaction.category.name}
+                      </span>
+                    </div>
+                    {transaction.description && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        • {transaction.description}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 右：金額 + 操作 */}
+                <div className="flex items-center space-x-3 flex-shrink-0 ml-3">
+                  <span className={`text-sm font-semibold ${
+                    transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                  }`}>
+                    {formatAmount(transaction.amount, transaction.type)}
+                  </span>
+                  <div className="flex items-center space-x-1">
+                    {onEditTransaction && (
                       <button
-                        onClick={() => handleDelete(transaction.id)}
-                        className="p-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
-                        title="削除"
+                        onClick={() => onEditTransaction(transaction)}
+                        className="p-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                        title="編集"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                       </button>
-                    </div>
+                    )}
+                    <button
+                      onClick={() => handleDelete(transaction.id)}
+                      className="p-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+                      title="削除"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
