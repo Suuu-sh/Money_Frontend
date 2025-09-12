@@ -29,29 +29,43 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
       
       let data = await fetchBudgetAnalysis(year, month)
 
-      // 予算が0の場合、カテゴリ別予算の合計でフォールバック（表示ズレ対策）
-      if (!data || data.monthlyBudget <= 0) {
-        try {
-          const catBudgets: CategoryBudget[] = await fetchCategoryBudgets(year, month)
-          const catTotal = (catBudgets || []).reduce((sum, b) => sum + (b.amount || 0), 0)
+      // カテゴリ別予算の合計を常に確認し、APIのmonthlyBudgetより大きければ優先採用
+      try {
+        const catBudgets: CategoryBudget[] = await fetchCategoryBudgets(year, month)
+        const catTotal = (catBudgets || []).reduce((sum, b) => sum + (b.amount || 0), 0)
+
+        // フルフォールバック（API 0 or 未定義）
+        if (!data || (data.monthlyBudget ?? 0) <= 0) {
           if (catTotal > 0) {
-            const remaining = catTotal - (data?.currentSpending || 0)
-            const utilization = catTotal > 0 ? ((data?.currentSpending || 0) / catTotal) * 100 : 0
+            const spend = data?.currentSpending || 0
+            const remaining = catTotal - spend
+            const utilization = catTotal > 0 ? (spend / catTotal) * 100 : 0
             data = {
               year,
               month,
               monthlyBudget: catTotal,
               totalFixedExpenses: data?.totalFixedExpenses || 0,
-              currentSpending: data?.currentSpending || 0,
+              currentSpending: spend,
               remainingBudget: remaining,
               budgetUtilization: utilization,
               daysRemaining: data?.daysRemaining || 0,
               dailyAverage: data?.dailyAverage || 0,
             }
           }
-        } catch (e) {
-          // フォールバック取得失敗時はそのまま
+        } else if (catTotal > (data.monthlyBudget || 0)) {
+          // 上書き（APIの値が小さすぎる場合）
+          const spend = data.currentSpending || 0
+          const remaining = catTotal - spend
+          const utilization = catTotal > 0 ? (spend / catTotal) * 100 : 0
+          data = {
+            ...data,
+            monthlyBudget: catTotal,
+            remainingBudget: remaining,
+            budgetUtilization: utilization,
+          }
         }
+      } catch (e) {
+        // カテゴリ別予算取得エラー時は何もしない
       }
 
       setAnalysis(data)
