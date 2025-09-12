@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { BudgetHistory as BudgetHistoryType, CategoryBudget } from '../../types'
 import { fetchBudgetHistory, fetchCategoryBudgets } from '../../lib/api'
-import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
+import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
 import SectionHeader from '../common/SectionHeader'
 
 function BudgetHistory() {
@@ -108,7 +108,6 @@ function BudgetHistory() {
     <div className="card p-0 overflow-hidden">
       <SectionHeader
         title="予算履歴"
-        icon={<ChartBarIcon className="w-5 h-5" />}
         rightSlot={(
           <select
             value={selectedMonths}

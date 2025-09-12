@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { fetchTransactions, fetchFixedExpenses } from '../lib/api'
 import { Transaction, FixedExpense } from '../types'
-import { ChartBarIcon } from '@heroicons/react/24/outline'
 import SectionHeader from './common/SectionHeader'
 
 interface DailySpending {
@@ -110,7 +109,7 @@ export default function DailySpendingChart() {
   if (loading) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-0 overflow-hidden">
-        <SectionHeader title="日毎の支出推移" subtitle="今月の変動支出のみ" icon={<ChartBarIcon className='w-5 h-5' />} />
+        <SectionHeader title="日毎の支出推移" subtitle="今月の変動支出のみ" />
         <div className="p-6 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
           <p className="text-gray-500 dark:text-gray-400 mt-2">読み込み中...</p>
@@ -121,7 +120,7 @@ export default function DailySpendingChart() {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-0 overflow-hidden">
-      <SectionHeader title="日毎の支出推移" subtitle="今月の変動支出のみ" icon={<ChartBarIcon className='w-5 h-5' />} />
+      <SectionHeader title="日毎の支出推移" subtitle="今月の変動支出のみ" />
       <div className="p-6">
       
       {dailySpending.length > 0 ? (
