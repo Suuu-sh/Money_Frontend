@@ -109,16 +109,7 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
         </div>
       )}
 
-      {/* 予算超過警告 */}
-      {analysis.remainingBudget < 0 && (
-        <div className="bg-red-50 rounded-lg p-3">
-          <div className="text-center">
-            <div className="text-sm font-semibold text-red-600">
-              予算を{formatAmount(Math.abs(analysis.remainingBudget))}超過しています
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 予算超過の警告は非表示（仕様変更） */}
     </div>
   )
 }
