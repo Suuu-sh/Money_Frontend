@@ -244,14 +244,9 @@ export default function FixedTransactionsList({
       {/* ヘッダー（他ページと統一したカードヘッダー） */}
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">固定収支管理</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">毎月の定期収支を管理</p>
-            </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">固定収支管理</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400">毎月の定期収支を管理</p>
           </div>
           <button
             onClick={onAddTransaction}
