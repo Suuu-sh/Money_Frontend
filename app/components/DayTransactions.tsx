@@ -149,52 +149,46 @@ export default function DayTransactions({
             </p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {dayTransactions.map((transaction) => {
-              // カテゴリカラーで左枠とアイコン背景色を統一
+              // カテゴリカラーを薄くした背景色を生成
               const hexToRgb = (hex: string) => {
-                const res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-                return res ? {
-                  r: parseInt(res[1], 16),
-                  g: parseInt(res[2], 16),
-                  b: parseInt(res[3], 16)
-                } : { r: 156, g: 163, b: 175 }
-              }
-              const { r, g, b } = hexToRgb(transaction.category.color)
-              const iconBg = `rgba(${r}, ${g}, ${b}, 0.2)`
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                  r: parseInt(result[1], 16),
+                  g: parseInt(result[2], 16),
+                  b: parseInt(result[3], 16)
+                } : null;
+              };
+              
+              const rgb = hexToRgb(transaction.category.color);
+              const lightBackgroundColor = rgb 
+                ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` 
+                : 'rgba(156, 163, 175, 0.1)';
               
               return (
                 <div
                   key={transaction.id}
-                  className="border rounded-lg p-3 hover:shadow-sm transition-all duration-200 bg-white dark:bg-gray-800"
+                  className="border rounded-md p-2 hover:shadow-sm transition-all duration-200"
                   style={{ 
-                    borderLeftColor: transaction.category.color,
-                    borderLeftWidth: '4px',
-                    borderColor: 'var(--tw-border-opacity,1)'
+                    backgroundColor: lightBackgroundColor,
+                    borderColor: transaction.category.color + '20'
                   }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <div 
-                        className="flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
-                        style={{ backgroundColor: iconBg }}
-                      >
-                        {getCategoryIcon(transaction.category.name, transaction.category.color, 18)}
+                      <div className="flex items-center justify-center w-4 h-4 flex-shrink-0">
+                        {getCategoryIcon(transaction.category.name, transaction.category.color, 16)}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                          <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
+                            {transaction.description || transaction.category.name}
+                          </span>
+                          <span className="text-xs text-gray-400 flex-shrink-0">
                             {transaction.category.name}
                           </span>
-                          <span className="text-[11px] text-gray-500 dark:text-gray-400 flex-shrink-0">
-                            1件
-                          </span>
                         </div>
-                        {transaction.description && (
-                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                            • {transaction.description}
-                          </div>
-                        )}
                       </div>
                     </div>
                     
@@ -210,10 +204,12 @@ export default function DayTransactions({
                         {onEditTransaction && (
                           <button
                             onClick={() => onEditTransaction(transaction)}
-                            className="px-2 py-1 text-[11px] text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-600 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                            className="p-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                             title="編集"
                           >
-                            修正
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
                           </button>
                         )}
                         
