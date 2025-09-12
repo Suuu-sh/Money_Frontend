@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Category } from '../types';
 import { 
   Check, 
@@ -99,38 +99,10 @@ export default function CategorySelector({
   className = ''
 }: CategorySelectorProps) {
   const [query, setQuery] = useState('');
-  const [recentIds, setRecentIds] = useState<number[]>([]);
 
-  // 最近使用したカテゴリのキー（タイプ別に管理）
-  const recentKey = useMemo(() => `recent_categories_${type ?? 'all'}`, [type]);
-
-  // 初期ロード：最近使用したカテゴリをlocalStorageから取得
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(recentKey);
-      if (stored) {
-        const parsed = JSON.parse(stored) as number[];
-        if (Array.isArray(parsed)) setRecentIds(parsed);
-      } else {
-        setRecentIds([]);
-      }
-    } catch {
-      setRecentIds([]);
-    }
-  }, [recentKey]);
-
-  // 選択時に最近使用したカテゴリへ記録（最大8件）
+  // シンプルな選択処理（最近使った履歴は保持しない）
   const handleSelect = (category: Category) => {
     onSelect(category);
-    try {
-      setRecentIds(prev => {
-        const next = [category.id, ...prev.filter(id => id !== category.id)].slice(0, 8);
-        localStorage.setItem(recentKey, JSON.stringify(next));
-        return next;
-      });
-    } catch {
-      // localStorageが使えない場合は無視
-    }
   };
   // カテゴリの一般的な順序を定義
   const getCategoryOrder = (categoryName: string, categoryType: string) => {
@@ -173,13 +145,6 @@ export default function CategorySelector({
       })
   ), [typeFiltered, query]);
 
-  // 最近使ったカテゴリ（存在するIDのみ、重複排除）
-  const recentCategories = useMemo(() => (
-    recentIds
-      .map(id => typeFiltered.find(c => c.id === id))
-      .filter((c): c is Category => Boolean(c))
-  ), [recentIds, typeFiltered]);
-
   return (
     <div className={`w-full ${className}`}>
       {/* 検索バー */}
@@ -206,44 +171,14 @@ export default function CategorySelector({
         </div>
       </div>
 
-      {/* 最近使ったカテゴリ（検索中は非表示） */}
-      {recentCategories.length > 0 && !query && (
-        <div className="mb-3">
-          <div className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">最近使った</div>
-          <div className="flex flex-wrap gap-2">
-            {recentCategories.map((category) => {
-              const isSelected = selectedCategoryId === category.id;
-              const themeColor = getCategoryThemeColor(category);
-              const iconColor = isSelected ? '#3B82F6' : themeColor.border;
-              const icon = getCategoryIcon(category.name, iconColor);
-
-              return (
-                <button
-                  key={`recent-${category.id}`}
-                  type="button"
-                  onClick={() => handleSelect(category)}
-                  className={`inline-flex items-center px-2 py-1 rounded-full border text-xs transition-colors ${
-                    isSelected ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                  }`}
-                  style={{ backgroundColor: isSelected ? '#EBF8FF' : themeColor.background, borderColor: isSelected ? '#3B82F6' : themeColor.border }}
-                >
-                  <span className="mr-1.5">
-                    {React.cloneElement(icon, { size: 14 })}
-                  </span>
-                  {category.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {/* 最近使った表示はなし（要望により非表示） */}
 
       {/* カテゴリグリッド（4列コンパクト） */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
           const themeColor = getCategoryThemeColor(category);
-          const iconColor = isSelected ? '#3B82F6' : themeColor.border;
+          const iconColor = themeColor.border;
           const icon = getCategoryIcon(category.name, iconColor);
           
           return (
@@ -253,26 +188,13 @@ export default function CategorySelector({
               onClick={() => handleSelect(category)}
               className={`
                 relative px-2 py-2 rounded-md border-2 transition-all duration-200 
-                hover:shadow-sm hover:scale-105 active:scale-95
+                hover:shadow-sm hover:scale-105 active:scale-95 bg-white dark:bg-gray-800
                 flex items-center justify-start min-h-[40px]
-                ${isSelected 
-                  ? 'border-blue-500 shadow-md ring-1 ring-blue-200' 
-                  : 'border-transparent'
-                }
+                ${isSelected ? 'shadow-md' : ''}
               `}
               style={{
-                backgroundColor: isSelected ? '#EBF8FF' : themeColor.background,
-                borderColor: isSelected ? '#3B82F6' : themeColor.border,
-              }}
-              onMouseEnter={(e) => {
-                if (!isSelected) {
-                  e.currentTarget.style.backgroundColor = themeColor.hover;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isSelected) {
-                  e.currentTarget.style.backgroundColor = themeColor.background;
-                }
+                backgroundColor: undefined,
+                borderColor: themeColor.border,
               }}
               aria-pressed={isSelected}
               aria-label={`カテゴリ: ${category.name}`}
@@ -290,9 +212,7 @@ export default function CategorySelector({
               </div>
               
               {/* カテゴリ名（日本語のみ） */}
-              <span className={`text-xs font-medium truncate ${
-                isSelected ? 'text-blue-700' : 'text-gray-800'
-              }`}>
+              <span className={`text-xs font-medium truncate text-gray-800 dark:text-gray-100`}>
                 {category.name}
               </span>
             </button>
