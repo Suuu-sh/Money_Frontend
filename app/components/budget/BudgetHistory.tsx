@@ -163,16 +163,13 @@ function BudgetHistory() {
                 ? getTotalCategoryBudget()
                 : item.budget
               const budgetUtilization = currentBudget > 0 ? (item.actualSpending / currentBudget) * 100 : 0
-              // 現在月に限り、バックエンド値の代わりに前面で算出した予算で超過/貯蓄率を再計算
-              const localExceeded = currentBudget > 0 ? item.actualSpending > currentBudget : item.budgetExceeded
+              // 現在月に限り、バックエンド値の代わりに前面で算出した予算で貯蓄率を再計算
               const localSavingsRate = currentBudget > 0 ? ((currentBudget - item.actualSpending) / currentBudget) * 100 : item.savingsRate
               
               return (
                 <div
                   key={`${item.year}-${item.month}`}
-                  className={`border rounded-lg p-4 ${
-                    localExceeded ? 'border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900' : 'border-gray-200 dark:border-gray-700'
-                  } ${isCurrentMonth ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}`}
+                  className={`border rounded-lg p-4 border-gray-200 dark:border-gray-700 ${isCurrentMonth ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-2">
@@ -184,11 +181,7 @@ function BudgetHistory() {
                           今月
                         </span>
                       )}
-                      {localExceeded && (
-                        <span className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded">
-                          予算超過
-                        </span>
-                      )}
+                      {/* 予算超過バッジは非表示（仕様変更） */}
                     </div>
                     <div className="flex items-center space-x-2">
                       {localSavingsRate >= 0 ? (
@@ -255,23 +248,7 @@ function BudgetHistory() {
             })}
           </div>
 
-          {/* 改善提案 */}
-          {exceededMonths > 0 && (
-            <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-                予算管理の改善提案
-              </h3>
-              <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                {exceededMonths >= 3 && (
-                  <li>• 過去3ヶ月以上予算を超過しています。予算額の見直しを検討してください</li>
-                )}
-                {averageSpending > 0 && (
-                  <li>• 平均月間支出は{formatAmount(averageSpending)}です。これを基準に予算を調整してください</li>
-                )}
-                <li>• 固定費の見直しで月間支出を削減できる可能性があります</li>
-              </ul>
-            </div>
-          )}
+          {/* 改善提案セクションは非表示（仕様変更） */}
         </div>
       )}
 
