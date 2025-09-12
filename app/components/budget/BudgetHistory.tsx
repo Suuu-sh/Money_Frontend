@@ -159,16 +159,19 @@ function BudgetHistory() {
           <div className="space-y-3">
             {history.map((item, index) => {
               const isCurrentMonth = index === 0
-              const currentBudget = isCurrentMonth && categoryBudgets.length > 0 
-                ? getTotalCategoryBudget() 
+              const currentBudget = (isCurrentMonth && categoryBudgets.length > 0)
+                ? getTotalCategoryBudget()
                 : item.budget
               const budgetUtilization = currentBudget > 0 ? (item.actualSpending / currentBudget) * 100 : 0
+              // 現在月に限り、バックエンド値の代わりに前面で算出した予算で超過/貯蓄率を再計算
+              const localExceeded = currentBudget > 0 ? item.actualSpending > currentBudget : item.budgetExceeded
+              const localSavingsRate = currentBudget > 0 ? ((currentBudget - item.actualSpending) / currentBudget) * 100 : item.savingsRate
               
               return (
                 <div
                   key={`${item.year}-${item.month}`}
                   className={`border rounded-lg p-4 ${
-                    item.budgetExceeded ? 'border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900' : 'border-gray-200 dark:border-gray-700'
+                    localExceeded ? 'border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900' : 'border-gray-200 dark:border-gray-700'
                   } ${isCurrentMonth ? 'ring-2 ring-blue-200 dark:ring-blue-700' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -181,22 +184,22 @@ function BudgetHistory() {
                           今月
                         </span>
                       )}
-                      {item.budgetExceeded && (
+                      {localExceeded && (
                         <span className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded">
                           予算超過
                         </span>
                       )}
                     </div>
                     <div className="flex items-center space-x-2">
-                      {item.savingsRate >= 0 ? (
+                      {localSavingsRate >= 0 ? (
                         <ArrowUpIcon className="w-4 h-4 text-green-500" />
                       ) : (
                         <ArrowDownIcon className="w-4 h-4 text-red-500" />
                       )}
                       <span className={`text-sm font-medium ${
-                        item.savingsRate >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                        localSavingsRate >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
-                        {item.savingsRate.toFixed(1)}%
+                        {localSavingsRate.toFixed(1)}%
                       </span>
                     </div>
                   </div>
