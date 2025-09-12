@@ -148,14 +148,14 @@ export default function CategorySelector({
   return (
     <div className={`w-full ${className}`}>
       {/* 検索バー */}
-      <div className="mb-3">
+      <div className="mb-2">
         <div className="relative">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="カテゴリを検索"
-            className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+            className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             aria-label="カテゴリを検索"
           />
           {query && (
@@ -163,7 +163,7 @@ export default function CategorySelector({
               type="button"
               aria-label="検索をクリア"
               onClick={() => setQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xs"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-[11px]"
             >
               クリア
             </button>
@@ -174,7 +174,7 @@ export default function CategorySelector({
       {/* 最近使った表示はなし（要望により非表示） */}
 
       {/* カテゴリグリッド（4列コンパクト） */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
           const themeColor = getCategoryThemeColor(category);
@@ -187,10 +187,10 @@ export default function CategorySelector({
               type="button"
               onClick={() => handleSelect(category)}
               className={`
-                relative px-2 py-2 rounded-md border-2 transition-all duration-200 
-                hover:shadow-sm hover:scale-105 active:scale-95 bg-white dark:bg-gray-800
-                flex items-center justify-start min-h-[40px]
-                ${isSelected ? 'shadow-md' : ''}
+                relative px-2 py-1.5 rounded-md border-2 transition-all duration-150 
+                hover:shadow-sm hover:scale-[1.02] active:scale-95 bg-white dark:bg-gray-800
+                flex items-center justify-start min-h-[32px]
+                ${isSelected ? 'shadow-sm' : ''}
               `}
               style={{
                 backgroundColor: undefined,
@@ -207,12 +207,12 @@ export default function CategorySelector({
               )}
               
               {/* アイコン */}
-              <div className="mr-2 flex-shrink-0">
-                {React.cloneElement(icon, { size: 16 })}
+              <div className="mr-1.5 flex-shrink-0">
+                {React.cloneElement(icon, { size: 14 })}
               </div>
               
               {/* カテゴリ名（日本語のみ） */}
-              <span className={`text-xs font-medium truncate text-gray-800 dark:text-gray-100`}>
+              <span className={`text-[11px] font-medium truncate text-gray-800 dark:text-gray-100`}>
                 {category.name}
               </span>
             </button>
