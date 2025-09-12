@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BudgetAnalysis } from '../../types'
-import { fetchBudgetAnalysis } from '../../lib/api'
+import { BudgetAnalysis, CategoryBudget } from '../../types'
+import { fetchBudgetAnalysis, fetchCategoryBudgets } from '../../lib/api'
 import { CurrencyDollarIcon, CalendarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 interface BudgetOverviewProps {
@@ -27,11 +27,36 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
       const year = targetDate.getFullYear()
       const month = targetDate.getMonth() + 1
       
-      const data = await fetchBudgetAnalysis(year, month)
+      let data = await fetchBudgetAnalysis(year, month)
+
+      // 予算が0の場合、カテゴリ別予算の合計でフォールバック（表示ズレ対策）
+      if (!data || data.monthlyBudget <= 0) {
+        try {
+          const catBudgets: CategoryBudget[] = await fetchCategoryBudgets(year, month)
+          const catTotal = (catBudgets || []).reduce((sum, b) => sum + (b.amount || 0), 0)
+          if (catTotal > 0) {
+            const remaining = catTotal - (data?.currentSpending || 0)
+            const utilization = catTotal > 0 ? ((data?.currentSpending || 0) / catTotal) * 100 : 0
+            data = {
+              year,
+              month,
+              monthlyBudget: catTotal,
+              totalFixedExpenses: data?.totalFixedExpenses || 0,
+              currentSpending: data?.currentSpending || 0,
+              remainingBudget: remaining,
+              budgetUtilization: utilization,
+              daysRemaining: data?.daysRemaining || 0,
+              dailyAverage: data?.dailyAverage || 0,
+            }
+          }
+        } catch (e) {
+          // フォールバック取得失敗時はそのまま
+        }
+      }
+
       setAnalysis(data)
       
-      // 月次予算もカテゴリ別予算も設定されていない場合のみエラーメッセージを表示
-      if (data.monthlyBudget === 0) {
+      if (!data || data.monthlyBudget <= 0) {
         setError('予算が設定されていません')
       }
     } catch (error: any) {
