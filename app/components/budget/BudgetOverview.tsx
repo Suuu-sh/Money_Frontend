@@ -52,19 +52,18 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
     }).format(roundedAmount)
   }
 
-  const getBudgetColor = (remainingBudget: number, monthlyBudget: number) => {
-    if (remainingBudget < 0) return 'text-red-600'
-    const percentage = (remainingBudget / monthlyBudget) * 100
-    if (percentage < 10) return 'text-red-600'
-    if (percentage < 20) return 'text-yellow-600'
+  // 表示色は「使用率」を基準に統一（残額比ではなく）
+  const getBudgetColor = (utilization: number) => {
+    if (utilization >= 100) return 'text-red-600'
+    if (utilization >= 90) return 'text-red-600'
+    if (utilization >= 80) return 'text-yellow-600'
     return 'text-green-600'
   }
 
-  const getBudgetBgColor = (remainingBudget: number, monthlyBudget: number) => {
-    if (remainingBudget < 0) return 'bg-red-50 dark:bg-red-900'
-    const percentage = (remainingBudget / monthlyBudget) * 100
-    if (percentage < 10) return 'bg-red-50 dark:bg-red-900'
-    if (percentage < 20) return 'bg-yellow-50 dark:bg-yellow-900'
+  const getBudgetBgColor = (utilization: number) => {
+    if (utilization >= 100) return 'bg-red-50 dark:bg-red-900'
+    if (utilization >= 90) return 'bg-red-50 dark:bg-red-900'
+    if (utilization >= 80) return 'bg-yellow-50 dark:bg-yellow-900'
     return 'bg-green-50 dark:bg-green-900'
   }
 
@@ -101,11 +100,12 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
 
   if (!analysis) return null
 
-  const progressPercentage = Math.min((analysis.budgetUtilization || 0), 100)
-  const remainingPercentage = Math.max(100 - progressPercentage, 0)
+  const utilization = Math.max(0, analysis.budgetUtilization || 0)
+  const progressPercentage = Math.min(utilization, 100)
+  const remainingPercentage = Math.max(100 - utilization, 0)
 
   return (
-    <div className={`card ${getBudgetBgColor(analysis.remainingBudget, analysis.monthlyBudget)}`}>
+    <div className={`card ${getBudgetBgColor(utilization)}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
           <CurrencyDollarIcon className="w-5 h-5 mr-2" />
@@ -120,7 +120,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
       <div className="space-y-4">
         {/* 残り予算 */}
         <div className="text-center">
-          <div className={`text-3xl font-bold ${getBudgetColor(analysis.remainingBudget, analysis.monthlyBudget)} dark:${getBudgetColor(analysis.remainingBudget, analysis.monthlyBudget).replace('600', '400')}`}>
+          <div className={`text-3xl font-bold ${getBudgetColor(utilization)} dark:${getBudgetColor(utilization).replace('600', '400')}`}>
             {formatAmount(analysis.remainingBudget)}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400">残り使用可能金額</div>
