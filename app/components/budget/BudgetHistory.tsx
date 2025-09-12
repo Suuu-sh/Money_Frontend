@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { BudgetHistory as BudgetHistoryType, CategoryBudget } from '../../types'
 import { fetchBudgetHistory, fetchCategoryBudgets } from '../../lib/api'
 import { ChartBarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
+import SectionHeader from '../common/SectionHeader'
 
 function BudgetHistory() {
   const [allHistory, setAllHistory] = useState<BudgetHistoryType[]>([])
@@ -104,25 +105,24 @@ function BudgetHistory() {
   const exceededMonths = getExceededMonths()
 
   return (
-    <div className="card">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center">
-          <ChartBarIcon className="w-6 h-6 mr-2 text-blue-500" />
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">予算履歴</h2>
-        </div>
-        <div className="flex items-center space-x-3">
+    <div className="card p-0 overflow-hidden">
+      <SectionHeader
+        title="予算履歴"
+        icon={<ChartBarIcon className="w-5 h-5" />}
+        rightSlot={(
           <select
             value={selectedMonths}
             onChange={(e) => setSelectedMonths(Number(e.target.value))}
-            className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value={1}>過去1ヶ月</option>
             <option value={2}>過去2ヶ月</option>
             <option value={3}>過去3ヶ月</option>
             <option value={6}>過去6ヶ月</option>
           </select>
-        </div>
-      </div>
+        )}
+      />
+      <div className="p-6">
 
       {history.length === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-8">
@@ -276,6 +276,7 @@ function BudgetHistory() {
       )}
 
 
+      </div>
     </div>
   )
 }

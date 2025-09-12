@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Category, CategoryBudget, CategoryBudgetAnalysis, FixedExpense } from '../../types'
 import { fetchCategoryBudgets, fetchCategoryBudgetAnalysis, deleteCategoryBudget, fetchFixedExpenses } from '../../lib/api'
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import SectionHeader from '../common/SectionHeader'
 import { 
   Utensils, 
   Car, 
@@ -151,17 +152,20 @@ export default function CategoryBudgetList({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">カテゴリ別予算設定</h2>
-        <button
-          onClick={onAddBudget}
-          className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors"
-        >
-          <PlusIcon className="w-4 h-4" />
-          <span>予算を追加</span>
-        </button>
-      </div>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-0 overflow-hidden">
+      <SectionHeader
+        title="カテゴリ別予算設定"
+        rightSlot={(
+          <button
+            onClick={onAddBudget}
+            className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center space-x-2 transition-colors"
+          >
+            <PlusIcon className="w-4 h-4" />
+            <span>予算を追加</span>
+          </button>
+        )}
+      />
+      <div className="p-6">
 
       {analysis.length === 0 ? (
         <div className="text-center py-12">
@@ -287,6 +291,7 @@ export default function CategoryBudgetList({
           })}
         </div>
       )}
+      </div>
     </div>
   )
 }
