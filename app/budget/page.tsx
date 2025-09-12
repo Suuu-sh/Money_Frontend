@@ -143,11 +143,8 @@ export default function BudgetPage() {
       />
       <TabNavigation />
       
-      <main className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* アラート表示 */}
-        <div className="mb-6">
-          <BudgetAlerts analysis={analysis} />
-        </div>
+      <main className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+        {/* アラートは非表示／余白なし */}
 
 
 

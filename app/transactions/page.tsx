@@ -165,7 +165,7 @@ export default function TransactionsPage() {
       />
       <TabNavigation />
       
-      <main className="px-4 sm:px-6 lg:px-8 py-4">
+      <main className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* レポート部分 - 支出内訳・収入内訳・月別収支推移 */}
           <div className="lg:col-span-3 space-y-6">

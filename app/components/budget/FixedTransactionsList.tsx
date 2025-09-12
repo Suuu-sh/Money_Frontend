@@ -522,27 +522,7 @@ export default function FixedTransactionsList({
           )}
         </div>
 
-        {/* 固定収支管理のヒント */}
-        {transactions.length > 0 && (
-          <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
-            <div className="flex items-start">
-              <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                <ExclamationTriangleIcon className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">
-                  💡 固定収支管理のポイント
-                </h3>
-                <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                  <li>• 給与や家賃などの定期的な収入・支出を管理できます</li>
-                  <li>• 純収支がプラスになるよう固定費を見直しましょう</li>
-                  <li>• 不要になった固定収支は削除できます</li>
-                  <li>• カテゴリを設定すると収支分析で詳細を確認できます</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* ヒントセクションは非表示（仕様変更） */}
       </div>
     </div>
     {/* カテゴリ一括修正モーダル */}
