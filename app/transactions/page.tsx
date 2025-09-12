@@ -166,12 +166,12 @@ export default function TransactionsPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch">
           {/* レポート部分 - 支出内訳・収入内訳・月別収支推移 */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="lg:col-span-3 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
               {/* 支出内訳 */}
-              <div className="card">
+              <div className="card h-full flex flex-col">
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                   <span>支出内訳</span>
@@ -195,8 +195,8 @@ export default function TransactionsPage() {
                     <p className="text-gray-500 dark:text-gray-400 text-sm">支出データがありません</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    <div className="h-48">
+                  <div className="flex flex-col gap-3 min-h-0 flex-1">
+                    <div className="flex-1 min-h-[200px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -248,7 +248,7 @@ export default function TransactionsPage() {
               </div>
 
               {/* 収入内訳 */}
-              <div className="card">
+              <div className="card h-full flex flex-col">
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <span>収入内訳</span>
@@ -272,8 +272,8 @@ export default function TransactionsPage() {
                     <p className="text-gray-500 dark:text-gray-400 text-sm">収入データがありません</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    <div className="h-48">
+                  <div className="flex flex-col gap-3 min-h-0 flex-1">
+                    <div className="flex-1 min-h-[200px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -329,7 +329,7 @@ export default function TransactionsPage() {
           </div>
 
           {/* 取引履歴部分 - 右側縦長 */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 h-full">
             <TransactionList 
               transactions={transactions}
               categories={categories}
