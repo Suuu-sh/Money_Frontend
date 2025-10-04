@@ -15,7 +15,8 @@ import {
   FixedTransactionRequest,
   CategoryBudget,
   CategoryBudgetRequest,
-  CategoryBudgetAnalysis
+  CategoryBudgetAnalysis,
+  SpendingPrediction
 } from '../types'
 
 // Allow overriding API base via env for local/dev flexibility
@@ -199,6 +200,16 @@ export const fetchRemainingBudget = async (year: number, month: number): Promise
   return response.data
 }
 
+export const fetchSpendingPrediction = async (
+  year: number,
+  month: number
+): Promise<SpendingPrediction> => {
+  const response = await api.get('/analytics/spending-prediction', {
+    params: { year, month }
+  })
+  return response.data
+}
+
 export const fetchBudgetHistory = async (): Promise<BudgetHistory[]> => {
   const response = await api.get('/budget/history')
   return response.data
@@ -230,25 +241,3 @@ export const fetchCategoryBudgetAnalysis = async (year: number, month: number): 
 }
 
 // Monthly Budget Report API
-export const fetchMonthlyBudgetReport = async (year: number, month: number): Promise<{
-  month: string
-  year: number
-  categories: {
-    id: string
-    name: string
-    budgetAmount: number
-    actualAmount: number
-    percentage: number
-    status: 'over' | 'under' | 'exact'
-  }[]
-  totalBudget: number
-  totalSpent: number
-  overallStatus: 'over' | 'under' | 'exact'
-}> => {
-  const response = await api.get(`/budget/monthly-report/${year}/${month}`)
-  return response.data
-}
-
-export const continueBudgetSettings = async (year: number, month: number): Promise<void> => {
-  await api.post(`/budget/continue/${year}/${month}`)
-}

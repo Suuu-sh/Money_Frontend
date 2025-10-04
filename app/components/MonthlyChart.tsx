@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { MonthlySummary } from '../types'
 import { fetchMonthlySummary } from '../lib/api'
 
@@ -11,11 +11,7 @@ export default function MonthlyChart() {
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
 
-  useEffect(() => {
-    loadData()
-  }, [selectedYear])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const summaryData = await fetchMonthlySummary(selectedYear)
@@ -25,7 +21,11 @@ export default function MonthlyChart() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedYear])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {

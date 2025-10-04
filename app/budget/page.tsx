@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { BudgetAnalysis, FixedExpense, FixedTransaction, Category, CategoryBudget } from '../types'
 import { fetchBudgetAnalysis, fetchCategories, processMonthlyFixedTransactions } from '../lib/api'
@@ -14,8 +14,6 @@ import FixedTransactionModal from '../components/budget/FixedTransactionModal'
 import BudgetHistory from '../components/budget/BudgetHistory'
 import CategoryBudgetList from '../components/budget/CategoryBudgetList'
 import CategoryBudgetModal from '../components/budget/CategoryBudgetModal'
-import MonthlyBudgetReport from '../components/budget/MonthlyBudgetReport'
-import { useMonthlyBudgetReport } from '../hooks/useMonthlyBudgetReport'
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline'
 import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 
@@ -34,28 +32,20 @@ export default function BudgetPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
   const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
-  
-  // 月次レポート機能
-  const {
-    shouldShowReport,
-    reportData,
-    showTestReport,
-    closeReport,
-    continueBudget,
-    modifyBudget
-  } = useMonthlyBudgetReport()
+  const loadBudgetAnalysis = useCallback(async () => {
+    try {
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = now.getMonth() + 1
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/login')
-      return
+      const data = await fetchBudgetAnalysis(year, month)
+      setAnalysis(data)
+    } catch (error) {
+      console.error('予算分析データの取得に失敗しました:', error)
     }
-    loadData()
-  }, [router])
+  }, [])
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [categoriesData] = await Promise.all([
@@ -72,20 +62,17 @@ export default function BudgetPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [loadBudgetAnalysis, router])
 
-  const loadBudgetAnalysis = async () => {
-    try {
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth() + 1
-      
-      const data = await fetchBudgetAnalysis(year, month)
-      setAnalysis(data)
-    } catch (error) {
-      console.error('予算分析データの取得に失敗しました:', error)
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
     }
-  }
+    loadData()
+  }, [loadData, router])
 
   const handleTransactionAdded = () => {
     setIsAddModalOpen(false)
@@ -230,16 +217,6 @@ export default function BudgetPage() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* 月次予算レポートモーダル */}
-      {shouldShowReport && reportData && (
-        <MonthlyBudgetReport
-          isOpen={shouldShowReport}
-          onClose={closeReport}
-          reportData={reportData}
-          onContinueBudget={continueBudget}
-          onModifyBudget={modifyBudget}
-        />
-      )}
     </div>
   )
 }

@@ -100,6 +100,19 @@ export interface BudgetAnalysis {
   dailyAverage: number
 }
 
+export interface SpendingPrediction {
+  year: number
+  month: number
+  currentSpending: number
+  predictedTotal: number
+  dailyAverage: number
+  remainingDays: number
+  confidence: 'high' | 'medium' | 'low'
+  trend: 'increasing' | 'decreasing' | 'stable'
+  weeklyPattern: number[]
+  monthlyProgress: number
+}
+
 export interface BudgetHistory {
   year: number
   month: number

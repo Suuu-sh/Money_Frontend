@@ -6,7 +6,7 @@ import MonthlyChart from './MonthlyChart'
 import DayTransactions from './DayTransactions'
 import DailySpendingChart from './DailySpendingChart'
 import BudgetOverview from './budget/BudgetOverview'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { BudgetAnalysis } from '../types'
 import { fetchBudgetAnalysis } from '../lib/api'
 
@@ -24,11 +24,7 @@ interface DashboardProps {
 export default function Dashboard({ transactions, categories, stats, selectedDate, currentMonth, onTransactionUpdated, onAddTransaction, onEditTransaction }: DashboardProps) {
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
 
-  useEffect(() => {
-    loadBudgetAnalysis()
-  }, [currentMonth])
-
-  const loadBudgetAnalysis = async () => {
+  const loadBudgetAnalysis = useCallback(async () => {
     try {
       // currentMonthが指定されている場合はその月のデータを取得、なければ現在の月
       const targetDate = currentMonth || new Date()
@@ -43,7 +39,11 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
       // 予算が設定されていない場合やエラーの場合はnullのまま
       setBudgetAnalysis(null)
     }
-  }
+  }, [currentMonth])
+
+  useEffect(() => {
+    loadBudgetAnalysis()
+  }, [loadBudgetAnalysis])
 
   // 現在表示されている取引から月別統計を計算
   const calculateMonthlyStats = (): Stats => {

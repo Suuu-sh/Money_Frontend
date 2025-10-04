@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
 import { fetchTransactions, fetchCategories, fetchFixedExpenses } from '../../lib/api'
 import { 
@@ -78,11 +78,7 @@ export default function SavingsRecommendations() {
     return iconMap[name] || <ShoppingBag {...iconProps} />;
   };
 
-  useEffect(() => {
-    generateRecommendations()
-  }, [])
-
-  const generateRecommendations = async () => {
+  const generateRecommendations = useCallback(async () => {
     try {
       setLoading(true)
       const [transactions, categories, fixedExpenses] = await Promise.all([
@@ -270,7 +266,11 @@ export default function SavingsRecommendations() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    generateRecommendations()
+  }, [generateRecommendations])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
