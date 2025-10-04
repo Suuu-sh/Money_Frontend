@@ -2,6 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { FixedTransaction } from '../../types'
+
+const mapFixedExpenseToTransaction = (expense: any): FixedTransaction => ({
+  id: expense.id,
+  name: expense.name,
+  amount: expense.amount,
+  type: expense.type,
+  categoryId: expense.categoryId,
+  category: expense.category,
+  description: expense.description,
+  isActive: expense.isActive,
+  createdAt: expense.createdAt,
+  updatedAt: expense.updatedAt,
+})
 import { fetchFixedExpenses, deleteFixedExpense } from '../../lib/api'
 import { 
   PlusIcon, 
@@ -95,7 +108,7 @@ export default function FixedTransactionsList({
     try {
       setLoading(true)
       const data = await fetchFixedExpenses()
-      setTransactions(data)
+      setTransactions(data.map(mapFixedExpenseToTransaction))
     } catch (error) {
       console.error('固定収支データの取得に失敗しました:', error)
     } finally {
