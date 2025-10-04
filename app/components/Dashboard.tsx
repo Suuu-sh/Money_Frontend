@@ -6,7 +6,6 @@ import MonthlyChart from './MonthlyChart'
 import DayTransactions from './DayTransactions'
 import DailySpendingChart from './DailySpendingChart'
 import BudgetOverview from './budget/BudgetOverview'
-import BudgetAlerts from './budget/BudgetAlerts'
 import { useState, useEffect } from 'react'
 import { BudgetAnalysis } from '../types'
 import { fetchBudgetAnalysis } from '../lib/api'
@@ -71,8 +70,7 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
 
   return (
     <div className="space-y-8">
-      {/* 予算アラート */}
-      <BudgetAlerts analysis={budgetAnalysis} />
+      {/* 予算アラートは表示しない（仕様変更） */}
 
       {/* 予算概要と日毎支出チャートを横並びに配置 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

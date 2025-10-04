@@ -102,15 +102,15 @@ export default function CategoryBudgetModal({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl mx-4 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
         {/* ヘッダー */}
-        <div className="relative px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+        <div className="relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {budget ? 'カテゴリ予算を編集' : 'カテゴリ予算を追加'}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {budget ? '既存の予算設定を変更します' : '新しいカテゴリの予算を設定します'}
               </p>
             </div>
@@ -124,8 +124,8 @@ export default function CategoryBudgetModal({
         </div>
 
         {/* コンテンツ */}
-        <div className="px-6 py-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="px-5 py-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 animate-in slide-in-from-top-2 duration-200">
                 <div className="flex items-center">
@@ -142,39 +142,33 @@ export default function CategoryBudgetModal({
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                カテゴリを選択
-              </label>
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
-                <CategorySelector
-                  categories={categories}
-                  selectedCategoryId={formData.categoryId || undefined}
-                  onSelect={(category) => setFormData({ ...formData, categoryId: category.id })}
-                  type="expense"
-                  className={budget ? 'pointer-events-none opacity-50' : ''}
-                />
-              </div>
+              <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">カテゴリを選択</label>
+              <CategorySelector
+                categories={categories}
+                selectedCategoryId={formData.categoryId || undefined}
+                onSelect={(category) => setFormData({ ...formData, categoryId: category.id })}
+                type="expense"
+                className={budget ? 'pointer-events-none opacity-60' : ''}
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+              <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                 予算金額
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span className="text-gray-500 dark:text-gray-400 text-lg font-medium">¥</span>
-                </div>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">¥</span>
                 <input
                   type="number"
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  className="w-full pl-10 pr-4 py-4 text-lg font-medium bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-200"
+                  className="w-full pl-7 pr-3 py-2 border rounded-md bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="金額を入力"
                   min="0"
                   step="1"
                 />
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 月間の予算金額を設定してください
               </p>
             </div>
@@ -182,12 +176,12 @@ export default function CategoryBudgetModal({
         </div>
 
         {/* フッター */}
-        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl border-t border-gray-200 dark:border-gray-700">
-          <div className="flex space-x-3">
+        <div className="px-5 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl border-t border-gray-200 dark:border-gray-700">
+          <div className="flex space-x-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-500 transition-all duration-200 font-medium"
+              className="flex-1 px-3 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md hover:bg-gray-50 dark:hover:bg-gray-500 transition-all duration-200 font-medium"
             >
               キャンセル
             </button>
@@ -195,7 +189,7 @@ export default function CategoryBudgetModal({
               type="submit"
               disabled={loading}
               onClick={handleSubmit}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-3 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center justify-center">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { fetchTransactions, fetchFixedExpenses } from '../lib/api'
 import { Transaction, FixedExpense } from '../types'
-import { ChartBarIcon } from '@heroicons/react/24/outline'
+import SectionHeader from './common/SectionHeader'
 
 interface DailySpending {
   date: string
@@ -108,9 +108,9 @@ export default function DailySpendingChart() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">日毎の支出</h3>
-        <div className="text-center py-8">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-0 overflow-hidden">
+        <SectionHeader title="日毎の支出推移" subtitle="今月の変動支出のみ" />
+        <div className="p-6 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
           <p className="text-gray-500 dark:text-gray-400 mt-2">読み込み中...</p>
         </div>
@@ -119,14 +119,9 @@ export default function DailySpendingChart() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-      <div className="flex items-center space-x-3 mb-6">
-        <ChartBarIcon className="w-6 h-6 text-green-500" />
-        <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white">日毎の支出推移</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">今月の変動支出のみ</p>
-        </div>
-      </div>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-0 overflow-hidden">
+      <SectionHeader title="日毎の支出推移" subtitle="今月の変動支出のみ" />
+      <div className="p-6">
       
       {dailySpending.length > 0 ? (
         <div className="relative" style={{ height: '233px' }}>
@@ -239,6 +234,7 @@ export default function DailySpendingChart() {
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">取引を追加すると、ここにグラフが表示されます</p>
         </div>
       )}
+      </div>
     </div>
   )
 }

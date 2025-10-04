@@ -76,9 +76,7 @@ export default function AnalyticsPage() {
       />
       <TabNavigation />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
-        <div className="mb-8">
-        </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
 
         {/* タブナビゲーション */}
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6">

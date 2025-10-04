@@ -123,7 +123,7 @@ export default function HomePage() {
       <TabNavigation />
       
       {/* Desktop Layout */}
-      <main className="hidden md:block px-4 sm:px-6 lg:px-8 py-4">
+      <main className="hidden md:block px-4 sm:px-6 lg:px-8 pt-4 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Calendar */}
           <div className="flex flex-col">
@@ -157,7 +157,7 @@ export default function HomePage() {
       </main>
 
       {/* Mobile Layout */}
-      <main className="md:hidden px-4 py-4 pb-20">
+      <main className="md:hidden px-4 pt-4 pb-20">
         <div className="space-y-6">
           {/* Dashboard Stats */}
           <Dashboard 

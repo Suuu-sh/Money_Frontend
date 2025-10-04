@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Transaction, Category } from '../types'
 import { format, isSameDay } from 'date-fns'
+import SectionHeader from './common/SectionHeader'
 import { deleteTransaction } from '../lib/api'
 import { 
   Utensils, 
@@ -126,18 +127,20 @@ export default function DayTransactions({
   return (
     <div>
       {/* 取引一覧 */}
-      <div className="card">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-            取引履歴 ({dayTransactions.length}件)
-          </h3>
-          <button
-            onClick={() => onAddTransaction(selectedDate)}
-            className="btn-primary text-xs px-2 py-1"
-          >
-            取引を追加
-          </button>
-        </div>
+      <div className="card p-0 overflow-hidden">
+        <SectionHeader
+          title="取引履歴"
+          subtitle={`${dayTransactions.length}件`}
+          rightSlot={(
+            <button
+              onClick={() => onAddTransaction(selectedDate!)}
+              className="bg-primary-500 hover:bg-primary-600 text-white px-3 py-2 rounded-md text-sm font-medium"
+            >
+              取引を追加
+            </button>
+          )}
+        />
+        <div className="p-4">
         
         {dayTransactions.length === 0 ? (
           <div className="text-center py-4">
@@ -228,6 +231,7 @@ export default function DayTransactions({
             })}
           </div>
         )}
+        </div>
       </div>
     </div>
   )
