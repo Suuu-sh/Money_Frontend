@@ -1,25 +1,8 @@
 version: '3.9'
 
 services:
-  frontend-app:
+  frontend:
     build: .
-    container_name: money-frontend-app
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-    expose:
-      - "3000"
-
-  nginx:
-    image: nginx:1.25-alpine
-    container_name: money-frontend-nginx
+    container_name: money-frontend
     ports:
       - "3000:80"
-    depends_on:
-      - frontend-app
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-
-networks:
-  default:
-    name: money-frontend-network

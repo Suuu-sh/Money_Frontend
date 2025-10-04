@@ -7,20 +7,12 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build
+RUN npm run build && npm run export
 
-FROM node:20-bullseye AS runner
-WORKDIR /app
+FROM nginx:1.25-alpine AS runner
+WORKDIR /usr/share/nginx/html
 
-ENV NODE_ENV=production
+COPY --from=builder /app/out ./
 
-COPY package.json package-lock.json ./
-RUN npm install --omit=dev
-
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
-
-EXPOSE 3000
-ENV PORT=3000
-CMD ["npm", "run", "start"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
