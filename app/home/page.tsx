@@ -32,7 +32,7 @@ export default function HomePage() {
       setLoading(true)
       
       // 月が指定されている場合は、その月のデータを取得
-      let params = { limit: 100 }
+      let params: Parameters<typeof fetchTransactions>[0] = { limit: 100 }
       if (month) {
         const startDate = new Date(month.getFullYear(), month.getMonth(), 1).toISOString().split('T')[0]
         const endDate = new Date(month.getFullYear(), month.getMonth() + 1, 0).toISOString().split('T')[0]
