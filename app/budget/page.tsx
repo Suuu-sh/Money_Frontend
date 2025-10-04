@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { BudgetAnalysis, FixedExpense, FixedTransaction, Category, CategoryBudget } from '../types'
-import { fetchBudgetAnalysis, fetchCategories, processMonthlyFixedTransactions } from '../lib/api'
+import { fetchBudgetAnalysis, fetchCategories } from '../lib/api'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
 import AddTransactionModal from '../components/AddTransactionModal'
@@ -83,29 +83,6 @@ export default function BudgetPage() {
     // カテゴリ予算が更新されたときに両方のコンポーネントを更新
     setBudgetUpdateTrigger(prev => prev + 1)
     loadBudgetAnalysis()
-  }
-
-  const handleProcessMonthlyTransactions = async () => {
-    try {
-      console.log('月次処理を開始します...')
-      await processMonthlyFixedTransactions()
-      console.log('月次処理が正常に完了しました')
-      alert('固定収支の月次処理が完了しました。毎月1日の取引として記録されました。')
-      // データを再読み込みして更新を反映
-      handleBudgetUpdated()
-    } catch (error: any) {
-      console.error('月次処理エラー:', error)
-      console.error('エラー詳細:', error.response?.data || error.message)
-      
-      let errorMessage = '月次処理に失敗しました。'
-      if (error.response?.data?.error) {
-        errorMessage += `\nエラー: ${error.response.data.error}`
-      } else if (error.message) {
-        errorMessage += `\nエラー: ${error.message}`
-      }
-      
-      alert(errorMessage)
-    }
   }
 
   const handleLogout = () => {
