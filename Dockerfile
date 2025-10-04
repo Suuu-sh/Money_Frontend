@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build && npm run export
+RUN npm run build
 
 FROM nginx:1.25-alpine AS runner
 WORKDIR /usr/share/nginx/html
