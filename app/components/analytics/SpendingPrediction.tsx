@@ -1,4 +1,12 @@
-'use client'
+"use client"
+
+/**
+ * SpendingPrediction コンポーネントはサーバーから取得した支出予測を表示します。
+ *  - 月次で取得可能な予測値を `selectedMonth` に基づいてロード。
+ *  - API から取得済みの統計を UI カードで分かりやすく可視化。
+ *  - 予測の信頼度やトレンドに応じて色やアイコンを切り替えることで、
+ *    初見ユーザーにも状況が伝わるよう設計されています。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { SpendingPrediction as SpendingPredictionResult } from '../../types'
@@ -12,8 +20,11 @@ import {
 } from '@heroicons/react/24/outline'
 
 export default function SpendingPrediction() {
+  // 表示する予測データとローディング状態
   const [prediction, setPrediction] = useState<SpendingPredictionResult | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // ユーザーが切り替え可能な表示月。初期値は当月。
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`

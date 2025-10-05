@@ -1,4 +1,10 @@
-'use client'
+"use client"
+
+/**
+ * IncomeTrendAnalysis は直近の収入推移をカード形式で示します。
+ *  - 過去3ヶ月分の収入取引のみ集計し、平均・合計・前月比を算出。
+ *  - 収入は支出と異なり変動が大きい可能性があるため、トレンドを簡単なバー表示で示しています。
+ */
 
 import { useState, useEffect } from 'react'
 import { Transaction } from '../../types'

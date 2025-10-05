@@ -1,4 +1,13 @@
-'use client'
+"use client"
+
+/**
+ * CategoryAnalysis は支出カテゴリのトレンドを分析して表示するコンポーネント。
+ *  - 直近月と前月、同日比較を行い「増加」や「減少」を判定。
+ *  - 年単位 / 月単位を切り替える UI があるため、期間計算ロジックを内部で保持。
+ *  - 取得データ: 取引一覧・カテゴリ一覧・固定費（固定費は表示用合計のため）。
+ *  - 集計結果は `categoryData` ステートにまとめ、カードUIと詳細リストで利用。
+ * 初めて読む場合は `loadCategoryData` から処理の流れを確認すると全体像を掴みやすいです。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
@@ -44,10 +53,13 @@ interface CategorySpendingData {
 }
 
 export default function CategoryAnalysis() {
+  // 集計済みのカテゴリデータと派生情報
   const [categoryData, setCategoryData] = useState<CategorySpendingData[]>([])
   const [fixedExpensesTotal, setFixedExpensesTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [totalSpending, setTotalSpending] = useState(0)
+
+  // フィルタリング・画面操作用のステート
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
   const [availableYears, setAvailableYears] = useState<number[]>([])
   const [viewMode, setViewMode] = useState<'monthly' | 'yearly'>('monthly')
@@ -91,6 +103,7 @@ export default function CategoryAnalysis() {
       ])
 
       // 利用可能な年を取得
+      // 取引が存在する年のみドロップダウンに並べる
       const years = [...new Set(transactions.map(t => new Date(t.date).getFullYear()))]
         .sort((a, b) => b - a)
       setAvailableYears(years)
@@ -177,9 +190,8 @@ export default function CategoryAnalysis() {
           }
         })
 
-      // 固定費は既に取引データに含まれているため、別途追加する必要はない
+      // 固定費は毎月の取引として登録済みだが、ビュー上で参考値として表示したい
       const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
-
       // 固定費の合計を計算（表示用）
       const fixedTotal = activeFixedExpenses.reduce((sum, fe) => sum + fe.amount, 0)
       setFixedExpensesTotal(fixedTotal)
