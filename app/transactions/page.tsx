@@ -1,4 +1,12 @@
-'use client'
+"use client"
+
+/**
+ * TransactionsPage は履歴一覧とグラフ分析を同じ画面で提供します。
+ *  - 最初にカテゴリ・取引・統計をまとめて取得し、複数のチャートに使い回します。
+ *  - 円グラフ／折れ線グラフを扱うため、グラフ用のデータ整形関数をローカルで持ち
+ *    グラフライブラリ（Recharts）とUIを繋ぐ役割を持っています。
+ *  - 取引の追加や編集を行ったら `loadData` を呼び直して UI を即反映させます。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -59,7 +67,7 @@ export default function TransactionsPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // API 呼び出し前に認証チェック。未ログイン時はログイン画面へ。
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -97,7 +105,7 @@ export default function TransactionsPage() {
     }).format(amount)
   }
 
-  // カテゴリカラーを薄くする関数
+  // グラフの配色が濃くなりすぎないようカテゴリカラーを少し薄める
   const getLightColor = (color: string, opacity: number = 0.6) => {
     // HEXカラーをRGBAに変換して透明度を適用
     const hex = color.replace('#', '')

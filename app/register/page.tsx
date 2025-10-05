@@ -1,4 +1,11 @@
-'use client'
+"use client"
+
+/**
+ * RegisterPage では新規ユーザー登録を行います。
+ *  - 入力内容を `formData` で管理し、`handleSubmit` で API `/register` へ送信。
+ *  - 成功時はすぐにログイン画面へ遷移させ、続きの認証フローを行います。
+ *  - バリデーションエラーなどは API から返されるメッセージをそのまま表示。
+ */
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'

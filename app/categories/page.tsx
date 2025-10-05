@@ -1,4 +1,13 @@
-'use client'
+"use client"
+
+/**
+ * CategoriesPage ではユーザー独自のカテゴリ一覧を管理します。
+ *  - 初回レンダリングで認証を確認し、未ログインならログイン画面へ遷移。
+ *  - `fetchCategories` の結果をローカルステートに保持し、カテゴリの追加・
+ *    編集後は `loadData` を再実行して最新のリストを表示します。
+ *  - 上部ヘッダーから取引追加モーダルを開けるため、カテゴリ取得結果を
+ *    そのままモーダルにも流用しています。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -34,7 +43,7 @@ export default function CategoriesPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // 認証されていないブラウザにはページを見せずにログインへ誘導
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
