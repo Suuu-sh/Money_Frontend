@@ -12,6 +12,7 @@ interface BudgetModalProps {
   onSaved: () => void
 }
 
+// 予算額を手動入力する軽量モーダル（削除予定の旧UI）
 export default function BudgetModal({
   isOpen,
   onClose,

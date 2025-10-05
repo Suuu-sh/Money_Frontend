@@ -7,6 +7,7 @@ interface StatsCardsProps {
 }
 
 export default function StatsCards({ stats }: StatsCardsProps) {
+  // 日本円の表示形式へ統一
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -14,6 +15,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
     }).format(amount)
   }
 
+  // 4種類のカード定義をまとめて生成
   const cards = [
     {
       title: '収入',

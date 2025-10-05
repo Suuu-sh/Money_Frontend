@@ -38,6 +38,7 @@ export default function DashboardPage() {
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
+  // 指定月の取引・カテゴリ・統計をまとめて取得
   const loadData = useCallback(async (month?: Date) => {
     try {
       setLoading(true)

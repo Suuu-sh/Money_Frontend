@@ -40,11 +40,13 @@ interface MonthlyReport {
 }
 
 export default function ReportsView() {
+  // 表示対象の年月と取得したレポートデータを保持
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [reportData, setReportData] = useState<MonthlyReport | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // APIから月次レポートを取得し、UIで扱いやすい形へ整形
   const loadReportData = useCallback(async () => {
     try {
       setLoading(true);
@@ -108,9 +110,11 @@ export default function ReportsView() {
   }, [selectedMonth, selectedYear]);
 
   useEffect(() => {
+    // 年月の変更に合わせてレポートを再取得
     loadReportData();
   }, [loadReportData]);
 
+  // ステータスに応じたアイコンを返却
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'over':

@@ -19,11 +19,13 @@ import { fetchCategories } from '../lib/api'
 
 export default function ReportsPage() {
   const router = useRouter()
+  // レポート表示で利用するカテゴリやモーダル状態を保持
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
+  // カテゴリ一覧を取得し、モーダルやフィルタに利用
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -41,7 +43,7 @@ export default function ReportsPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // トークンが無ければログイン画面へ遷移し、あればデータを読み込む
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -79,6 +81,7 @@ export default function ReportsPage() {
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto">
+          {/* ページヘッダー */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">レポート</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -86,10 +89,12 @@ export default function ReportsPage() {
             </p>
           </div>
 
+          {/* 月次レポート本体 */}
           <ReportsView />
         </div>
       </main>
 
+      {/* 取引追加モーダル */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -98,6 +103,7 @@ export default function ReportsPage() {
         />
       )}
 
+      {/* 設定モーダル */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

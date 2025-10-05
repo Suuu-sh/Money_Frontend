@@ -13,6 +13,7 @@ interface FixedTransactionModalProps {
   transaction?: FixedTransaction
 }
 
+// 固定収支の新規作成・編集モーダルを扱うフォームコンポーネント
 export default function FixedTransactionModal({
   isOpen,
   onClose,

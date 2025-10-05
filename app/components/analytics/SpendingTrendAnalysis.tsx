@@ -1,4 +1,11 @@
-'use client'
+"use client"
+
+/**
+ * SpendingTrendAnalysis では月次の支出を時系列で可視化します。
+ *  - 過去Nヶ月分の支出を `selectedPeriod` に応じて集計し、固定費と変動費を分離。
+ *  - 固定費は「固定支出:」という説明が付いた取引で判定しています。
+ *  - グラフのサマリーカードでは平均支出や前月比などの指標を算出して表示。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { Transaction, FixedExpense } from '../../types'

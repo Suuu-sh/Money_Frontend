@@ -1,4 +1,11 @@
-'use client'
+"use client"
+
+/**
+ * SavingsRecommendations は支出データから節約候補を自動生成するコンポーネント。
+ *  - 固定費の高額項目や、前月比で急増したカテゴリ、少額支出の頻発などを検出し
+ *    推奨事項(Recommendations)としてカード表示します。
+ *  - 推奨内容に応じて `priority` を設定し、利用者が着手すべき順序を把握しやすくしています。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
@@ -94,6 +101,7 @@ export default function SavingsRecommendations() {
       const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
 
       // 1. 固定費の見直し提案
+      // 固定費: アクティブなものだけを抽出し、金額が大きい順で見直し候補に
       const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
       const highFixedExpenses = activeFixedExpenses
         .filter(fe => fe.amount > 10000)

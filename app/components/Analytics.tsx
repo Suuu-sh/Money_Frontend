@@ -1,4 +1,10 @@
-'use client'
+"use client"
+
+/**
+ * Analytics コンポーネントはダッシュボード内の簡易分析ブロックです。
+ *  - 支出カテゴリ・収入カテゴリの集計に加え、固定費を合算して割合を表示。
+ *  - 大まかな支出構成を確認するためのカードとして利用されます。
+ */
 
 import { useState, useEffect } from 'react'
 import { CategorySummary, FixedExpense } from '../types'
@@ -99,7 +105,7 @@ export default function Analytics() {
     )
   }
 
-  // 固定費をカテゴリ別に集計
+      // 固定費をカテゴリ別に集計し、表示用に合算する
   const fixedExpensesByCategory = fixedExpenses
     .filter(expense => expense.isActive)
     .reduce((acc, expense) => {

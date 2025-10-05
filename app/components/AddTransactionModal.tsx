@@ -1,4 +1,10 @@
-'use client'
+"use client"
+
+/**
+ * AddTransactionModal は新しい取引を登録するフォームを提供します。
+ *  - 金額・日付・カテゴリは必須。カテゴリの候補は props で受け取りタイプ別にフィルタ。
+ *  - 成功時は親コンポーネントの `onTransactionAdded` を呼び出して再読み込みを任せます。
+ */
 
 import { useState } from 'react'
 import { Category } from '../types'
@@ -31,11 +37,12 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // 取引タイプが切り替わったときに収入カテゴリ／支出カテゴリのみ表示
   const filteredCategories = categories.filter(cat => cat.type === formData.type)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // validation
+    // 入力チェック：金額・カテゴリ・日付の基本バリデーション
     const nextErrors: Record<string, string> = {}
     const amountNum = parseFloat(formData.amount)
     if (!formData.amount || isNaN(amountNum) || amountNum <= 0) {
@@ -52,7 +59,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
     setLoading(true)
 
     try {
-      // 金額を正確に処理するため、小数点以下を適切に処理
+      // 金額は小数が入力されても円単位に丸めて保存
       const amount = Math.round(parseFloat(formData.amount) * 100) / 100
       
       await createTransaction({

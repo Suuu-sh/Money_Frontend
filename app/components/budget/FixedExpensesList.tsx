@@ -18,6 +18,7 @@ interface FixedExpensesListProps {
   onExpensesUpdated?: () => void
 }
 
+// 固定費の一覧を金額ソートや編集操作付きで表示
 export default function FixedExpensesList({ 
   onAddExpense, 
   onEditExpense, 

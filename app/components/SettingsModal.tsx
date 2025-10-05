@@ -15,6 +15,7 @@ interface Settings {
   autoBackup: boolean
 }
 
+// ローカル設定やテーマ切替をまとめたアプリ全体の設定モーダル
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { theme, toggleTheme } = useTheme()
   const [settings, setSettings] = useState<Settings>({

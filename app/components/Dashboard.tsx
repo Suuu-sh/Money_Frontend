@@ -22,8 +22,10 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ transactions, categories, stats, selectedDate, currentMonth, onTransactionUpdated, onAddTransaction, onEditTransaction }: DashboardProps) {
+  // 予算分析のサマリーを子コンポーネントへ渡せるよう保持
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
 
+  // 表示中の月に対応した予算分析を取得
   const loadBudgetAnalysis = useCallback(async () => {
     try {
       // currentMonthが指定されている場合はその月のデータを取得、なければ現在の月
@@ -42,6 +44,7 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
   }, [currentMonth])
 
   useEffect(() => {
+    // currentMonth の変化に追従して予算情報を更新
     loadBudgetAnalysis()
   }, [loadBudgetAnalysis])
 

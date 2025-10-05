@@ -6,6 +6,7 @@ interface BudgetProgressProps {
   analysis: BudgetAnalysis
 }
 
+// 予算消化率を視覚的に表す進捗バーと残額のサマリー
 export default function BudgetProgress({ analysis }: BudgetProgressProps) {
   const formatAmount = (amount: number) => {
     // 数値の精度問題を回避するため、整数に丸める

@@ -1,4 +1,10 @@
-'use client'
+"use client"
+
+/**
+ * AddCategoryModal はユーザーが独自カテゴリを追加するためのモーダルです。
+ *  - カテゴリ名・種別(収入/支出)・カラー・アイコンを入力して API へ登録。
+ *  - 成功時は親コンポーネントの `onCategoryAdded` コールバックで再取得を促します。
+ */
 
 import { useState, useEffect } from 'react'
 import { createCategory } from '../lib/api'
@@ -41,7 +47,7 @@ export default function AddCategoryModal({
   const [formData, setFormData] = useState({
     name: '',
     type: defaultType as 'income' | 'expense',
-    color: '#22c55e',
+    color: '#22c55e', // デフォルトカラーはMoneyTrackerのブランドカラー
     icon: 'document',
     description: '',
   })

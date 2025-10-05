@@ -6,6 +6,7 @@ import { fetchBudgetHistory, fetchCategoryBudgets } from '../../lib/api'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
 import SectionHeader from '../common/SectionHeader'
 
+// 過去数ヶ月の予算履歴とカテゴリ別予算を合わせて可視化
 function BudgetHistory() {
   const [allHistory, setAllHistory] = useState<BudgetHistoryType[]>([])
   const [selectedMonths, setSelectedMonths] = useState(3)

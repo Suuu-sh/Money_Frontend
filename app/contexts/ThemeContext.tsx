@@ -9,6 +9,7 @@ interface ThemeContextType {
   toggleTheme: () => void
 }
 
+// テーマ状態をグローバルに共有するコンテキスト
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

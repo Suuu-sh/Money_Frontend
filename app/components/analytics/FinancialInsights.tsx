@@ -1,4 +1,13 @@
-'use client'
+"use client"
+
+/**
+ * FinancialInsights は取引データをもとに財務アドバイスを生成します。
+ *  - 貯蓄率、支出トレンド、固定費比率などを算出し、ポジティブ/警告/情報の
+ *    カードとして表示。
+ *  - 財務健全性スコアも大まかに算出して全体像を伝えます。
+ *  - 現状の仕様では完全にフロント側で分析しているため、将来サーバーサイドで
+ *    スコア計算を行う際の参考としても読みやすいようコメントを加えています。
+ */
 
 import { useState, useEffect } from 'react'
 import { Transaction, FixedExpense } from '../../types'
@@ -46,7 +55,7 @@ export default function FinancialInsights() {
       const insights: FinancialInsight[] = []
       const now = new Date()
       
-      // 過去6ヶ月のデータを分析
+      // 過去6ヶ月分を対象に収支を算出
       const monthlyData = []
       for (let i = 5; i >= 0; i--) {
         const date = new Date(now.getFullYear(), now.getMonth() - i, 1)

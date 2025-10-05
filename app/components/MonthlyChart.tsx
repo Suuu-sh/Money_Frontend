@@ -4,13 +4,16 @@ import { useState, useEffect, useCallback } from 'react'
 import { MonthlySummary } from '../types'
 import { fetchMonthlySummary } from '../lib/api'
 
+// 月別・年別の収支サマリーをカードUIで切り替え表示
 export default function MonthlyChart() {
+  // 年別サマリーデータとフィルタ状態
   const [data, setData] = useState<MonthlySummary[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
 
+  // 選択年の月別サマリーを取得
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -24,6 +27,7 @@ export default function MonthlyChart() {
   }, [selectedYear])
 
   useEffect(() => {
+    // 年が切り替わるたびに再取得
     loadData()
   }, [loadData])
 
@@ -35,6 +39,7 @@ export default function MonthlyChart() {
     }).format(amount)
   }
 
+  // カード内で省スペース表示するためのフォーマット
   const formatCompactAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',

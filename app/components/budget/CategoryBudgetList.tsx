@@ -35,6 +35,7 @@ interface CategoryBudgetListProps {
   onBudgetUpdated: () => void
 }
 
+// カテゴリ別予算を集計結果とあわせて一覧表示し、編集操作を仲介
 export default function CategoryBudgetList({ 
   categories, 
   onAddBudget, 

@@ -35,6 +35,7 @@ interface TransactionListProps {
 }
 
 export default function TransactionList({ transactions, categories, onTransactionUpdated, onEditTransaction }: TransactionListProps) {
+  // フィルターとソートの状態を画面側で保持
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'date' | 'amount' | 'created'>('date')
@@ -69,6 +70,7 @@ export default function TransactionList({ transactions, categories, onTransactio
     return iconMap[name] || <ShoppingBag {...iconProps} />;
   };
 
+  // 選択された条件に従って取引をフィルタリング・ソート
   const filteredAndSortedTransactions = transactions
     .filter(transaction => {
       if (filter !== 'all' && transaction.type !== filter) return false
@@ -95,6 +97,7 @@ export default function TransactionList({ transactions, categories, onTransactio
       return -comparison // 常に降順
     })
 
+  // 金額に通貨形式と符号を付与
   const formatAmount = (amount: number, type: string) => {
     const formatted = new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -104,6 +107,7 @@ export default function TransactionList({ transactions, categories, onTransactio
     return type === 'income' ? `+${formatted}` : `-${formatted}`
   }
 
+  // 削除確認後にAPIを呼び出し、一覧を更新
   const handleDelete = async (id: number) => {
     if (window.confirm('この取引を削除しますか？')) {
       try {

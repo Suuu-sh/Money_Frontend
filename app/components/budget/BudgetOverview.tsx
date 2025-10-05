@@ -9,6 +9,7 @@ interface BudgetOverviewProps {
   currentMonth?: Date
 }
 
+// 月次予算のサマリーを取得し、進捗や残額を表示
 export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [loading, setLoading] = useState(true)

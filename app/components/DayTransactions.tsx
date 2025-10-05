@@ -37,6 +37,7 @@ interface DayTransactionsProps {
   onEditTransaction?: (transaction: Transaction) => void
 }
 
+// カレンダーで選択した日の取引を一覧し、編集・削除操作を提供
 export default function DayTransactions({ 
   selectedDate, 
   transactions, 
@@ -95,6 +96,7 @@ export default function DayTransactions({
     isSameDay(new Date(transaction.date), selectedDate)
   )
 
+  // 選択日の収入・支出合計を算出
   const dayIncome = dayTransactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0)
@@ -103,6 +105,7 @@ export default function DayTransactions({
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0)
 
+  // 表示用に金額へ+/-記号を付ける
   const formatAmount = (amount: number, type: string) => {
     const formatted = new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -112,6 +115,7 @@ export default function DayTransactions({
     return type === 'income' ? `+${formatted}` : `-${formatted}`
   }
 
+  // 取引削除を確認してからAPIへリクエスト
   const handleDelete = async (id: number) => {
     if (window.confirm('この取引を削除しますか？')) {
       try {

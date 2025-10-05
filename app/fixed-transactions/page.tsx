@@ -22,6 +22,7 @@ import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 
 export default function FixedTransactionsPage() {
   const router = useRouter()
+  // 固定収支管理に必要なカテゴリ・モーダル・再読み込みトリガー
   const [categories, setCategories] = useState<Category[]>([])
   const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -32,6 +33,7 @@ export default function FixedTransactionsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
+  // 固定収支の編集に必要なカテゴリ情報を取得
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -51,7 +53,7 @@ export default function FixedTransactionsPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // 認証状態を確認し、未ログインならログイン画面へ遷移
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -66,6 +68,7 @@ export default function FixedTransactionsPage() {
   }
 
   const handleBudgetUpdated = () => {
+    // モーダルからの更新後に子コンポーネントを再読み込みさせる
     setBudgetUpdateTrigger(prev => prev + 1)
   }
 
@@ -149,6 +152,7 @@ export default function FixedTransactionsPage() {
         />
       )}
 
+      {/* 設定モーダル */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

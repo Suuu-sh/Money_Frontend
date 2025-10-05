@@ -20,6 +20,7 @@ type EditRow = {
   toDelete?: boolean
 }
 
+// 同一カテゴリ内の固定収支をまとめて編集・削除できるバッチエディタ
 export default function CategoryFixedTransactionsEditor({
   isOpen,
   onClose,
