@@ -1,4 +1,12 @@
-'use client'
+"use client"
+
+/**
+ * HomePage は DashboardPage と同じ構成ですが、ルート `/home` 用に分けています。
+ *  - 認証／データ取得ロジックは共通化しており、初学者でも分かりやすいように
+ *    `loadData` で必要な API をひとまとめにしています。
+ *  - カレンダーと統計パネルを同じ画面で扱うため、レイアウトはダッシュボードと
+ *    同様に PC 用とモバイル用で構造を分けています。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'

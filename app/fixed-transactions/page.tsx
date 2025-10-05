@@ -1,4 +1,10 @@
-'use client'
+"use client"
+
+/**
+ * FixedTransactionsPage は定期的な収支（固定費／固定収入）の管理画面です。
+ *  - カテゴリ一覧を取得し、固定費および固定収支モーダルに渡します。
+ *  - モーダル操作後は `handleBudgetUpdated` でリストを再取得して最新状態を反映。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
