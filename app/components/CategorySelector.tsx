@@ -98,6 +98,7 @@ export default function CategorySelector({
   type,
   className = ''
 }: CategorySelectorProps) {
+  // 入力された検索キーワード
   const [query, setQuery] = useState('');
 
   // シンプルな選択処理（最近使った履歴は保持しない）

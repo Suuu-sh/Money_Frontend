@@ -14,6 +14,7 @@ interface FixedExpenseModalProps {
   onSaved: () => void
 }
 
+// 固定費の新規登録・編集をまとめたモーダルフォーム
 export default function FixedExpenseModal({ 
   isOpen, 
   onClose, 

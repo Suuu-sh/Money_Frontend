@@ -11,6 +11,7 @@ interface DailySpending {
   day: number
 }
 
+// 日次の変動支出をラインチャートで表示し、ピークを把握しやすくする
 export default function DailySpendingChart() {
   const [dailySpending, setDailySpending] = useState<DailySpending[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,6 +20,7 @@ export default function DailySpendingChart() {
     loadDailySpending()
   }, [])
 
+  // 今月の変動支出を日別集計し、チャート用配列を構築
   const loadDailySpending = async () => {
     try {
       setLoading(true)

@@ -1,4 +1,10 @@
-'use client'
+"use client"
+
+/**
+ * Calendar は取引を日次で確認するための月表示カレンダー。
+ *  - 親コンポーネントから渡された取引データを日毎に集計し、収支バッジを表示。
+ *  - 月移動や「今日へ」ボタンの操作を外部ハンドラに通知できるよう props 経由でコールバック。
+ */
 
 import { useState, useEffect } from 'react'
 import { Transaction } from '../types'
@@ -14,6 +20,7 @@ interface CalendarProps {
 }
 
 export default function Calendar({ transactions, onDateClick, selectedDate, onAddTransaction, onMonthChange, currentMonth: propCurrentMonth }: CalendarProps) {
+  // 内部で表示する対象月。親から受け取った値を優先的に使う
   const [currentMonth, setCurrentMonth] = useState(propCurrentMonth || new Date())
 
   // 親から渡されるcurrentMonthプロパティが変更された時に内部状態を更新
@@ -24,22 +31,20 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
     }
   }, [propCurrentMonth])
 
-  // currentMonthの変更を監視
-  useEffect(() => {
-    console.log('currentMonth state changed to:', currentMonth)
-  }, [currentMonth])
+  // currentMonthの変更を監視（デバッグ用ログは不要なので削除）
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd })
 
-  // 各日の収支を計算
+  // 指定日の取引一覧を取得
   const getDayTransactions = (date: Date) => {
     return transactions.filter(transaction => 
       isSameDay(new Date(transaction.date), date)
     )
   }
 
+  // 指定日の収入 / 支出 / 残高を集計
   const getDayBalance = (date: Date) => {
     const dayTransactions = getDayTransactions(date)
     const income = dayTransactions
@@ -61,17 +66,13 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
   }
 
   const goToPreviousMonth = () => {
-    console.log('Current month before change:', currentMonth)
     const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
-    console.log('Going to previous month:', newMonth)
     setCurrentMonth(newMonth)
     onMonthChange?.(newMonth)
   }
 
   const goToNextMonth = () => {
-    console.log('Current month before change:', currentMonth)
     const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
-    console.log('Going to next month:', newMonth)
     setCurrentMonth(newMonth)
     onMonthChange?.(newMonth)
   }

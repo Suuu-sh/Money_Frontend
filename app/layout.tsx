@@ -17,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors`}>
+        {/* ダークモード切り替えやテーマ状態を提供 */}
         <ThemeProvider>
           <div className="min-h-screen">
             {children}

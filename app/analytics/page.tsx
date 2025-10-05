@@ -17,12 +17,14 @@ import { fetchCategories } from '../lib/api'
 
 export default function AnalyticsPage() {
   const router = useRouter()
+  // 画面全体で扱うタブとモーダルの状態をまとめて管理
   const [activeTab, setActiveTab] = useState<'trends' | 'categories' | 'recommendations' | 'insights'>('trends')
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
+  // カテゴリ候補を取得して分析コンポーネントに渡す
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -40,7 +42,7 @@ export default function AnalyticsPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // ローカルストレージのトークンを確認し、未ログインならログイン画面へ遷移
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -77,7 +79,6 @@ export default function AnalyticsPage() {
       <TabNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-
         {/* タブナビゲーション */}
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6">
           <div className="border-b border-gray-200 dark:border-gray-700">
@@ -127,6 +128,7 @@ export default function AnalyticsPage() {
 
           <div className="p-6">
             {activeTab === 'trends' && (
+              // トレンド分析タブでは時系列・予測系コンポーネントをまとめて表示
               <div className="space-y-6">
                 <SpendingPrediction />
                 <SpendingTrendAnalysis />
@@ -135,20 +137,24 @@ export default function AnalyticsPage() {
             )}
             
             {activeTab === 'categories' && (
+              // カテゴリ別詳細分析
               <CategoryAnalysis />
             )}
             
             {activeTab === 'recommendations' && (
+              // 支出削減のための提案群
               <SavingsRecommendations />
             )}
             
             {activeTab === 'insights' && (
+              // AIインサイトのまとめ
               <FinancialInsights />
             )}
           </div>
         </div>
       </main>
 
+      {/* 取引追加モーダル */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -157,6 +163,7 @@ export default function AnalyticsPage() {
         />
       )}
 
+      {/* 設定モーダル */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

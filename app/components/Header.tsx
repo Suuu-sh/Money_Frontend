@@ -6,6 +6,7 @@ interface HeaderProps {
   onOpenSettings?: () => void
 }
 
+// グローバルヘッダー: ロゴ・ショートカット・モーダルトリガーをまとめる
 export default function Header({ onAddTransaction, onLogout, onOpenSettings }: HeaderProps) {
   return (
     <>

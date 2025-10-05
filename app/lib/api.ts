@@ -32,7 +32,7 @@ const api = axios.create({
   },
 })
 
-// Add JWT token to requests
+// Inject JWT token into every request if present
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
@@ -41,7 +41,7 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Handle 401 responses
+// Centralize 401 handling to force re-login when token expires
 api.interceptors.response.use(
   (response) => response,
   (error) => {

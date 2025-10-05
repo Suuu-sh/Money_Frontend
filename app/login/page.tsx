@@ -8,6 +8,7 @@ import { API_BASE_URL } from '../lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
+  // 入力フォームとUI状態
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // 認証APIへログインリクエストを送信
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -45,6 +47,7 @@ export default function LoginPage() {
     }
   }
 
+  // 入力フィールドの変更をフォーム状態へ反映
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -54,6 +57,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      {/* ロゴと導線 */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <CurrencyDollarIcon className="h-12 w-12 text-green-500" />
@@ -70,6 +74,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        {/* ログインフォーム */}
         <div className="bg-gray-800 py-8 px-4 shadow-2xl border border-gray-700 sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (

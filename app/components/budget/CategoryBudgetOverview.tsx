@@ -5,6 +5,7 @@ import { CategoryBudgetAnalysis, FixedExpense } from '../../types'
 import { fetchCategoryBudgetAnalysis, fetchFixedExpenses } from '../../lib/api'
 import { ChartBarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
+// カテゴリ別予算のサマリーを集計し、支出状況をダッシュボード表示
 export default function CategoryBudgetOverview() {
   const [analysis, setAnalysis] = useState<CategoryBudgetAnalysis[]>([])
   const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>([])

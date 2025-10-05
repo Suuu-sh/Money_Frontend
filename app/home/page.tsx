@@ -15,6 +15,7 @@ import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
 
 export default function HomePage() {
   const router = useRouter()
+  // ホーム画面の表示に必要な取引・統計・モーダル状態
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
@@ -27,6 +28,7 @@ export default function HomePage() {
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date()) // 今日の日付
 
+  // 指定月のデータを取得し、カレンダーとダッシュボードへ渡す
   const loadData = useCallback(async (month?: Date) => {
     try {
       setLoading(true)
@@ -59,7 +61,7 @@ export default function HomePage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // ログイン状態を確認し、今月分のデータを初期表示
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')

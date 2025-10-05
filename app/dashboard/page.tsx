@@ -15,6 +15,7 @@ import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
 
 export default function DashboardPage() {
   const router = useRouter()
+  // ダッシュボード表示に必要なデータとモーダルの開閉状態
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date()) // 今日の日付
 
+  // 指定月の取引・カテゴリ・統計をまとめて取得
   const loadData = useCallback(async (month?: Date) => {
     try {
       setLoading(true)
@@ -59,7 +61,7 @@ export default function DashboardPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // 未ログインの場合はログイン画面へ、認証済みなら今月分を取得
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')

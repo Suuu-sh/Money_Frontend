@@ -14,6 +14,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, LineChart, Line, XAx
 
 export default function TransactionsPage() {
   const router = useRouter()
+  // 取引リストや円グラフ集計に使用する状態群
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
@@ -25,6 +26,7 @@ export default function TransactionsPage() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
+  // 今月の取引データとカテゴリ別集計をまとめて取得
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -59,7 +61,7 @@ export default function TransactionsPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // 認証済みか確認し、未ログインならログイン画面へ遷移
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -89,6 +91,7 @@ export default function TransactionsPage() {
     router.push('/')
   }
 
+  // 通貨表示を日本円フォーマットに変換
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -126,6 +129,7 @@ export default function TransactionsPage() {
       icon: item.categoryIcon,
     }))
 
+  // Tooltipから利用する円グラフの拡張データ
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload

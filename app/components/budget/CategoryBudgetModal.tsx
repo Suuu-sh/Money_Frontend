@@ -14,6 +14,7 @@ interface CategoryBudgetModalProps {
   onSaved: () => void
 }
 
+// カテゴリ別予算の追加・更新を行うモーダルフォーム
 export default function CategoryBudgetModal({
   isOpen,
   onClose,

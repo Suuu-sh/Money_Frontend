@@ -13,6 +13,7 @@ interface EditTransactionModalProps {
 }
 
 export default function EditTransactionModal({ transaction, categories, onClose, onTransactionUpdated }: EditTransactionModalProps) {
+  // Date/ISO文字列をフォーム入力用のYYYY-MM-DDに変換
   const getLocalDateString = (date: Date | string) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date
     const year = dateObj.getFullYear()
@@ -21,6 +22,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
     return `${year}-${month}-${day}`
   }
 
+  // 編集フォームの現在値を保持
   const [formData, setFormData] = useState({
     type: transaction.type as 'income' | 'expense',
     amount: transaction.amount.toString(),

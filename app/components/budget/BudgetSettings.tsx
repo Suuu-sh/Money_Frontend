@@ -11,6 +11,7 @@ interface BudgetSettingsProps {
   onBudgetUpdated?: () => void
 }
 
+// 月次予算の金額を登録・更新する設定フォーム
 export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps) {
   const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
   const [amount, setAmount] = useState('')

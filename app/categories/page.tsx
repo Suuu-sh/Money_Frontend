@@ -12,11 +12,13 @@ import { fetchCategories } from '../lib/api'
 
 export default function CategoriesPage() {
   const router = useRouter()
+  // カテゴリ管理に必要な一覧とモーダル状態
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
+  // カテゴリ一覧を取得して画面に反映
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -34,7 +36,7 @@ export default function CategoriesPage() {
   }, [router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // 未ログインの場合はログイン画面へ誘導し、ログイン済みなら一覧を取得
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -75,12 +77,14 @@ export default function CategoriesPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
+        {/* カテゴリ一覧と編集機能 */}
         <Categories 
           categories={categories}
           onCategoryUpdated={handleCategoryUpdated}
         />
       </main>
 
+      {/* 取引追加モーダル */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -89,6 +93,7 @@ export default function CategoriesPage() {
         />
       )}
 
+      {/* 設定モーダル */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

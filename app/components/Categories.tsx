@@ -1,4 +1,11 @@
-'use client'
+"use client"
+
+/**
+ * Categories コンポーネントは収入・支出カテゴリの一覧管理を担います。
+ *  - 親から受け取ったカテゴリを種別ごとにソートし、カード形式で表示。
+ *  - 「追加」「編集」「削除」の操作はモーダルを通じて行い、終了後に
+ *    `onCategoryUpdated` を呼び出すことでリストを再取得させます。
+ */
 
 import { useState } from 'react'
 import { Category } from '../types'
@@ -33,6 +40,7 @@ interface CategoriesProps {
 }
 
 export default function Categories({ categories, onCategoryUpdated }: CategoriesProps) {
+  // モーダルの開閉状態と編集中カテゴリ
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)

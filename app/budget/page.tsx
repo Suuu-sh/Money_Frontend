@@ -32,6 +32,7 @@ export default function BudgetPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
   const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
+  // 今月の予算分析サマリーを取得してハイライト表示に反映
   const loadBudgetAnalysis = useCallback(async () => {
     try {
       const now = new Date()
@@ -45,6 +46,7 @@ export default function BudgetPage() {
     }
   }, [])
 
+  // カテゴリ一覧と予算分析を並列で読み込み、画面初期化に利用
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -65,7 +67,7 @@ export default function BudgetPage() {
   }, [loadBudgetAnalysis, router])
 
   useEffect(() => {
-    // Check if user is authenticated
+    // 認証済みか確認し、未ログインならログインページへ誘導
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -189,6 +191,7 @@ export default function BudgetPage() {
         />
       )}
 
+      {/* 設定モーダル */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

@@ -56,6 +56,7 @@ interface FixedTransactionsListProps {
   onTransactionsUpdated?: () => void
 }
 
+// 固定収支の一覧をフィルタ・ソート付きで管理し、編集モーダルへ繋げる
 export default function FixedTransactionsList({ 
   onAddTransaction, 
   onEditTransaction, 

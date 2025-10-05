@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+// 主要ページ間を切り替えるタブ型ナビゲーション（PC/モバイル両対応）
 export default function TabNavigation() {
   const pathname = usePathname()
 
