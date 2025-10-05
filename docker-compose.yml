@@ -6,3 +6,9 @@ services:
     container_name: money-frontend
     ports:
       - "3000:80"
+    env_file:
+      - .env.production
+
+networks:
+  default:
+    name: money-frontend-network

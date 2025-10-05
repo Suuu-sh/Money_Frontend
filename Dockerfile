@@ -4,6 +4,7 @@ FROM node:20-bullseye AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+COPY .env.production ./.env.production
 RUN npm install
 
 COPY . .
