@@ -52,7 +52,7 @@ export default function ReportsView() {
       if (!token) return;
 
       // 既存のAPIエンドポイントを使用してレポートデータを取得
-      const reportResponse = await fetch(`http://localhost:8080/api/budget/monthly-report/${selectedYear}/${selectedMonth}`, {
+      const reportResponse = await fetch(`http://localhost:8000/api/budget/monthly-report/${selectedYear}/${selectedMonth}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

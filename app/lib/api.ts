@@ -23,7 +23,7 @@ import {
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
   || (process.env.NODE_ENV === 'production'
     ? 'https://your-api-domain.com/api'
-    : 'http://localhost:8080/api')
+    : 'http://localhost:8000/api')
 
 const api = axios.create({
   baseURL: API_BASE_URL,
