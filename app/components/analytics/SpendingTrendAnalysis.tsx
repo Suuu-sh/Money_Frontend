@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Transaction, FixedExpense } from '../../types'
 import { fetchTransactions, fetchFixedExpenses } from '../../lib/api'
 import { 
@@ -22,11 +22,7 @@ export default function SpendingTrendAnalysis() {
   const [loading, setLoading] = useState(true)
   const [selectedPeriod, setSelectedPeriod] = useState<'3months' | '6months' | '12months'>('3months')
 
-  useEffect(() => {
-    loadSpendingData()
-  }, [selectedPeriod])
-
-  const loadSpendingData = async () => {
+  const loadSpendingData = useCallback(async () => {
     try {
       setLoading(true)
       const [transactions, fixedExpenses] = await Promise.all([
@@ -90,7 +86,11 @@ export default function SpendingTrendAnalysis() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedPeriod])
+
+  useEffect(() => {
+    loadSpendingData()
+  }, [loadSpendingData])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { FixedExpense, FixedTransaction, Category } from '../types'
 import { fetchCategories } from '../lib/api'
@@ -26,17 +26,7 @@ export default function FixedTransactionsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/login')
-      return
-    }
-    loadData()
-  }, [router])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [categoriesData] = await Promise.all([
@@ -52,7 +42,17 @@ export default function FixedTransactionsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
+    }
+    loadData()
+  }, [loadData, router])
 
   const handleTransactionAdded = () => {
     setIsAddModalOpen(false)

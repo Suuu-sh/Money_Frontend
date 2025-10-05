@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { BudgetAnalysis, CategoryBudget } from '../../types'
 import { fetchBudgetAnalysis, fetchCategoryBudgets } from '../../lib/api'
 import { CurrencyDollarIcon, CalendarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
@@ -14,11 +14,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    loadBudgetAnalysis()
-  }, [currentMonth])
-
-  const loadBudgetAnalysis = async () => {
+  const loadBudgetAnalysis = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -78,7 +74,11 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentMonth])
+
+  useEffect(() => {
+    loadBudgetAnalysis()
+  }, [loadBudgetAnalysis])
 
   const formatAmount = (amount: number) => {
     // 数値の精度問題を回避するため、整数に丸める

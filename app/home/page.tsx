@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
@@ -27,23 +27,12 @@ export default function HomePage() {
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date()) // 今日の日付
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/login')
-      return
-    }
-    // 初回読み込み時に今月のデータを取得
-    loadData(new Date())
-  }, [router])
-
-  const loadData = async (month?: Date) => {
+  const loadData = useCallback(async (month?: Date) => {
     try {
       setLoading(true)
       
       // 月が指定されている場合は、その月のデータを取得
-      let params = { limit: 100 }
+      let params: Parameters<typeof fetchTransactions>[0] = { limit: 100 }
       if (month) {
         const startDate = new Date(month.getFullYear(), month.getMonth(), 1).toISOString().split('T')[0]
         const endDate = new Date(month.getFullYear(), month.getMonth() + 1, 0).toISOString().split('T')[0]
@@ -67,7 +56,18 @@ export default function HomePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
+    }
+    // 初回読み込み時に今月のデータを取得
+    loadData(new Date())
+  }, [loadData, router])
 
   const handleMonthChange = (month: Date) => {
     setCurrentMonth(month)

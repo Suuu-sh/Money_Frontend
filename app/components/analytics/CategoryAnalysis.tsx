@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Transaction, Category, FixedExpense } from '../../types'
 import { fetchTransactions, fetchCategories, fetchFixedExpenses } from '../../lib/api'
 import { ChartPieIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon, CalendarIcon } from '@heroicons/react/24/outline'
@@ -81,11 +81,7 @@ export default function CategoryAnalysis() {
     return iconMap[name] || <ShoppingBag {...iconProps} />;
   };
 
-  useEffect(() => {
-    loadCategoryData()
-  }, [selectedYear, viewMode])
-
-  const loadCategoryData = async () => {
+  const loadCategoryData = useCallback(async () => {
     try {
       setLoading(true)
       const [transactions, categories, fixedExpenses] = await Promise.all([
@@ -248,7 +244,11 @@ export default function CategoryAnalysis() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedYear, viewMode])
+
+  useEffect(() => {
+    loadCategoryData()
+  }, [loadCategoryData])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {

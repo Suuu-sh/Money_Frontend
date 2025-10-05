@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '../components/Header'
 import TabNavigation from '../components/TabNavigation'
@@ -17,17 +17,7 @@ export default function ReportsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/login')
-      return
-    }
-    loadData()
-  }, [router])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const categoriesData = await fetchCategories()
@@ -41,7 +31,17 @@ export default function ReportsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
+    }
+    loadData()
+  }, [loadData, router])
 
   const handleTransactionAdded = () => {
     setIsAddModalOpen(false)

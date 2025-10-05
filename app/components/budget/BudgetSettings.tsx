@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Budget, BudgetRequest } from '../../types'
 import { fetchBudget, createBudget, updateBudget } from '../../lib/api'
 import { validateBudgetForm } from '../../lib/validation'
@@ -23,11 +23,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth() + 1
 
-  useEffect(() => {
-    loadCurrentBudget()
-  }, [])
-
-  const loadCurrentBudget = async () => {
+  const loadCurrentBudget = useCallback(async () => {
     try {
       setLoading(true)
       const budget = await fetchBudget(currentYear, currentMonth)
@@ -40,7 +36,11 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentMonth, currentYear])
+
+  useEffect(() => {
+    loadCurrentBudget()
+  }, [loadCurrentBudget])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
