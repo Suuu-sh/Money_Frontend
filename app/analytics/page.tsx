@@ -1,4 +1,17 @@
-'use client'
+"use client"
+
+/**
+ * AnalyticsPage renders the analytics dashboard for a signed-in user.
+ *  - On initial load we verify that a JWT token exists; unauthenticated users
+ *    are redirected to the login page to avoid flashing protected content.
+ *  - Once authenticated we fetch categories because several analytics widgets
+ *    (e.g. category analysis, savings recommendations) need the full list to
+ *    label charts and modals.
+ *  - The page itself is organised with tabs so we keep track of the active tab
+ *    and toggle the large analytics components without re-fetching data.
+ * A new team member can start reading from the state declarations below to see
+ * which UI concerns we handle locally.
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -17,10 +30,13 @@ import { fetchCategories } from '../lib/api'
 
 export default function AnalyticsPage() {
   const router = useRouter()
-  // 画面全体で扱うタブとモーダルの状態をまとめて管理
+
+  // UI states for tab navigation and overlay modals.
   const [activeTab, setActiveTab] = useState<'trends' | 'categories' | 'recommendations' | 'insights'>('trends')
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
+  // Data states – categories are shared across multiple analytics widgets.
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -42,7 +58,7 @@ export default function AnalyticsPage() {
   }, [router])
 
   useEffect(() => {
-    // ローカルストレージのトークンを確認し、未ログインならログイン画面へ遷移
+    // Guard page: redirect visitors that do not hold a token yet.
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')

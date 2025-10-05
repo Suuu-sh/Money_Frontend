@@ -1,4 +1,14 @@
-'use client'
+"use client"
+
+/**
+ * DashboardPage はカレンダーと統計カードを組み合わせたメイン画面です。
+ *  - 月単位でのフィルタリングや取引編集を同一画面で行えるように、各種
+ *    モーダルの状態と選択中の日付をここで集約しています。
+ *  - PC とモバイルでレイアウトが大きく変わるため、`main` 要素を 2 つ用意し
+ *    Tailwind のレスポンシブクラスで表示を切り替えています。
+ *  - 新しい機能を追加する場合は `loadData` がどの API を叩いているかを確認し
+ *    必要であれば追加のデータ取得を Promise.all に加える形で拡張すると安全です。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -15,7 +25,7 @@ import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
 
 export default function DashboardPage() {
   const router = useRouter()
-  // ダッシュボード表示に必要なデータとモーダルの開閉状態
+  // 画面表示に必要なデータとUIステートをまとめて管理
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
@@ -24,9 +34,9 @@ export default function DashboardPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()) // デフォルトで今日の日付を選択
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
   const [modalDate, setModalDate] = useState<Date | null>(null)
-  const [currentMonth, setCurrentMonth] = useState(new Date()) // 今日の日付
+  const [currentMonth, setCurrentMonth] = useState(new Date())
 
   // 指定月の取引・カテゴリ・統計をまとめて取得
   const loadData = useCallback(async (month?: Date) => {
@@ -61,7 +71,7 @@ export default function DashboardPage() {
   }, [router])
 
   useEffect(() => {
-    // 未ログインの場合はログイン画面へ、認証済みなら今月分を取得
+    // ページ表示前にJWTを確認し、未ログインのままアクセスした際はログインへ誘導
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')

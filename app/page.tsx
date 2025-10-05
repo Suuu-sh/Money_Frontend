@@ -1,19 +1,26 @@
-import Link from 'next/link';
-import { 
-  ChartBarIcon, 
-  CurrencyDollarIcon, 
+import Link from 'next/link'
+import {
+  ChartBarIcon,
+  CurrencyDollarIcon,
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
   ArrowRightIcon,
   SparklesIcon,
   RocketLaunchIcon,
-  StarIcon
-} from '@heroicons/react/24/outline';
+  StarIcon,
+} from '@heroicons/react/24/outline'
+
+/**
+ * LandingPage はログイン前の訪問者向けにアプリの価値を伝えるページです。
+ *  - Next.js の静的エクスポート対象なので、クライアント状態を持たず構造は単純化。
+ *  - セクションごとに大胆なビジュアルと CTA を配置し、短時間で魅力を理解してもらう狙い。
+ *  - Tailwind CSS のユーティリティクラスでデザインを調整しているため、修正はクラスを書き換えるだけで完結します。
+ */
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {/* Header: アプリ名とアクション（ログイン／登録）を常に表示 */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
@@ -39,7 +46,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section: ファーストビューでブランド価値とCTAを提示 */}
       <section className="relative bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-black opacity-20"></div>
@@ -85,7 +92,7 @@ export default function LandingPage() {
               </Link>
             </div>
             
-            {/* Stats */}
+            {/* Stats: 実績値で信頼を補強 */}
             <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-white mb-2">10万+</div>
@@ -106,7 +113,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section: コア機能を3つのカードで紹介 */}
       <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 sm:mb-20">
@@ -157,7 +164,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section: 最後の登録促進ブロック */}
       <section className="relative py-20 sm:py-28 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-700 overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -196,7 +203,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer: 会社情報や利用規約への導線 */}
       <footer className="bg-gray-900 text-white py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">

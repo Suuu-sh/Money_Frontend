@@ -1,4 +1,11 @@
-'use client'
+"use client"
+
+/**
+ * ReportsPage は月次レポートの閲覧用画面です。
+ *  - カテゴリ一覧を取得してモーダル（取引追加）に渡しつつ、`ReportsView`
+ *    コンポーネントにレポート表示を任せています。
+ *  - 認証トークンがなければログインへリダイレクトする点は他ページと共通。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'

@@ -2,6 +2,14 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from './contexts/ThemeContext'
 
+/**
+ * RootLayout は全ページ共通の HTML 構造を提供します。
+ *  - Google Font (Inter) を読み込み、ボディに適用して統一されたタイポグラフィに。
+ *  - `ThemeProvider` でライト／ダークテーマ切替をアプリ全体に展開します。
+ * Next.js の App Router ではこのコンポーネントが全ページのルートになるため、
+ * グローバルなラッパーを追加したい場合はここに追記します。
+ */
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {

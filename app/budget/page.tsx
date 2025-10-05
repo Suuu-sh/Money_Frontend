@@ -1,4 +1,15 @@
-'use client'
+"use client"
+
+/**
+ * BudgetPage では予算設定や固定収支をまとめて管理します。
+ *  - 認証済みユーザーのみ利用できるため、マウント後すぐにトークンを検証。
+ *  - 予算分析とカテゴリ別予算を同時に参照するケースが多いため、両者を同じ
+ *    ステートとモーダルで扱い、更新時は `handleBudgetUpdated` で一括リロード。
+ *  - 固定費／固定収支の編集モーダルもこのページから開くので、関連する
+ *    `show*Modal` や `editing*` ステートはここで集中管理しています。
+ * 新卒エンジニアが触る場合は、まず下の useState 群でどの UI 要素と結び付いて
+ * いるかを確認してから処理フローを追うと理解しやすいです。
+ */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -19,11 +30,14 @@ import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 
 export default function BudgetPage() {
   const router = useRouter()
+  // データ表示に関するステート
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [categoryBudgets, setCategoryBudgets] = useState<CategoryBudget[]>([])
-  const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0)
+  const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0) // List再描画用のキー
   const [loading, setLoading] = useState(true)
+
+  // モーダルの開閉＆編集中アイテムの管理
   const [showExpenseModal, setShowExpenseModal] = useState(false)
   const [editingExpense, setEditingExpense] = useState<FixedExpense | null>(null)
   const [showTransactionModal, setShowTransactionModal] = useState(false)
@@ -67,7 +81,7 @@ export default function BudgetPage() {
   }, [loadBudgetAnalysis, router])
 
   useEffect(() => {
-    // 認証済みか確認し、未ログインならログインページへ誘導
+    // ログインチェック。未ログインの場合はダッシュボードへ辿り着かせない
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')

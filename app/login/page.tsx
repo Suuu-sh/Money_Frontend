@@ -1,4 +1,12 @@
-'use client'
+"use client"
+
+/**
+ * LoginPage handles username/password authentication.
+ *  - `formData` ステートで入力内容を保持し、`handleSubmit` で API へPOST。
+ *  - 成功時は返却されたJWTを localStorage に保存してダッシュボードへ遷移。
+ *  - エラー表示やパスワードの表示切り替えなど UI に関わる小さな挙動も
+ *    このコンポーネントで完結させています。
+ */
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
