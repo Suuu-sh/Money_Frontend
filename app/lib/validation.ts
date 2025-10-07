@@ -1,6 +1,6 @@
-// バリデーション関数
+// Validation helpers
 
-// 予算金額が適切な範囲かを検証
+// Ensure the budget amount stays within an acceptable range
 export const validateBudgetAmount = (amount: number): string | null => {
   if (isNaN(amount)) {
     return '有効な数値を入力してください'
@@ -14,7 +14,7 @@ export const validateBudgetAmount = (amount: number): string | null => {
   return null
 }
 
-// 固定費の名称が未入力・長すぎないか確認
+// Validate that the fixed expense name is present and not overly long
 export const validateFixedExpenseName = (name: string): string | null => {
   if (!name.trim()) {
     return '名前を入力してください'
@@ -25,7 +25,7 @@ export const validateFixedExpenseName = (name: string): string | null => {
   return null
 }
 
-// 固定費金額の範囲チェック
+// Validate the range for fixed expense amounts
 export const validateFixedExpenseAmount = (amount: number): string | null => {
   if (isNaN(amount)) {
     return '有効な数値を入力してください'
@@ -39,7 +39,7 @@ export const validateFixedExpenseAmount = (amount: number): string | null => {
   return null
 }
 
-// 有効な長さの説明文か判定
+// Ensure an optional description stays within the max length
 export const validateDescription = (description: string): string | null => {
   if (description.length > 500) {
     return '説明は500文字以内で入力してください'
@@ -47,7 +47,7 @@ export const validateDescription = (description: string): string | null => {
   return null
 }
 
-// 指定された年月が現実的な値か検証
+// Validate the supplied year/month pair
 export const validateYearMonth = (year: number, month: number): string | null => {
   const currentYear = new Date().getFullYear()
   
@@ -62,7 +62,7 @@ export const validateYearMonth = (year: number, month: number): string | null =>
   return null
 }
 
-// フォームデータの包括的バリデーション
+// Aggregate budget form validation
 export const validateBudgetForm = (data: {
   year: number
   month: number
@@ -83,7 +83,7 @@ export const validateBudgetForm = (data: {
   return errors
 }
 
-// 有効なカテゴリIDが渡されているか確認
+// Validate that a category ID has been selected
 export const validateCategoryId = (categoryId: number): string | null => {
   if (!categoryId || categoryId <= 0) {
     return 'カテゴリを選択してください'

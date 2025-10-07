@@ -1,12 +1,15 @@
 "use client"
 
 /**
- * CategoryAnalysis は支出カテゴリのトレンドを分析して表示するコンポーネント。
- *  - 直近月と前月、同日比較を行い「増加」や「減少」を判定。
- *  - 年単位 / 月単位を切り替える UI があるため、期間計算ロジックを内部で保持。
- *  - 取得データ: 取引一覧・カテゴリ一覧・固定費（固定費は表示用合計のため）。
- *  - 集計結果は `categoryData` ステートにまとめ、カードUIと詳細リストで利用。
- * 初めて読む場合は `loadCategoryData` から処理の流れを確認すると全体像を掴みやすいです。
+ * CategoryAnalysis visualises spending trends per category.
+ *  - Compares the current period with the previous one (including same-date
+ *    comparisons) to flag increases or decreases.
+ *  - Supports monthly/yearly toggles, so period calculations are handled
+ *    internally.
+ *  - Consumes transactions, categories, and fixed expenses (for context only).
+ *  - Aggregated results are stored in `categoryData` and rendered via cards and
+ *    detail tables.
+ * Start with `loadCategoryData` to understand the overall flow.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -53,18 +56,18 @@ interface CategorySpendingData {
 }
 
 export default function CategoryAnalysis() {
-  // 集計済みのカテゴリデータと派生情報
+  // Aggregated category data and derived metrics
   const [categoryData, setCategoryData] = useState<CategorySpendingData[]>([])
   const [fixedExpensesTotal, setFixedExpensesTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [totalSpending, setTotalSpending] = useState(0)
 
-  // フィルタリング・画面操作用のステート
+  // Filtering state that drives the view mode
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
   const [availableYears, setAvailableYears] = useState<number[]>([])
   const [viewMode, setViewMode] = useState<'monthly' | 'yearly'>('monthly')
 
-  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  // Map category names to lucide-react icons
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 20) => {
     const iconProps = { size, color: iconColor, strokeWidth: 2 };
     
@@ -102,23 +105,22 @@ export default function CategoryAnalysis() {
         fetchFixedExpenses()
       ])
 
-      // 利用可能な年を取得
-      // 取引が存在する年のみドロップダウンに並べる
+      // Derive the list of years that actually have transactions
       const years = [...new Set(transactions.map(t => new Date(t.date).getFullYear()))]
         .sort((a, b) => b - a)
       setAvailableYears(years)
 
-      // 期間の設定
+      // Determine current and previous periods
       let currentPeriodStart: Date, currentPeriodEnd: Date, previousPeriodStart: Date, previousPeriodEnd: Date
 
       if (viewMode === 'yearly') {
-        // 年単位の場合
+        // Yearly comparison
         currentPeriodStart = new Date(selectedYear, 0, 1)
         currentPeriodEnd = new Date(selectedYear + 1, 0, 1)
         previousPeriodStart = new Date(selectedYear - 1, 0, 1)
         previousPeriodEnd = new Date(selectedYear, 0, 1)
       } else {
-        // 月単位の場合（既存のロジック）
+        // Monthly comparison (default behaviour)
         const now = new Date()
         currentPeriodStart = new Date(now.getFullYear(), now.getMonth(), 1)
         currentPeriodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1)
@@ -126,19 +128,19 @@ export default function CategoryAnalysis() {
         previousPeriodEnd = new Date(now.getFullYear(), now.getMonth(), 1)
       }
 
-      // カテゴリ別支出を集計
+      // Prepare a map to accumulate per-category spending
       const categoryMap = new Map<number, CategorySpendingData>()
       
-      // 現在の日付を取得
+      // Capture the current day-of-month for same-date comparisons
       const now = new Date()
       const currentDay = now.getDate()
       
-      // 前月同日までの期間を設定
+      // Define ranges for same-date comparisons (current vs previous month)
       const currentMonthSameDateEnd = new Date(now.getFullYear(), now.getMonth(), currentDay + 1)
       const previousMonthSameDateStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
       const previousMonthSameDateEnd = new Date(now.getFullYear(), now.getMonth() - 1, currentDay + 1)
 
-      // 支出カテゴリのみを初期化
+      // Seed the map with expense categories only
       categories
         .filter(category => category.type === 'expense')
         .forEach(category => {
@@ -159,7 +161,7 @@ export default function CategoryAnalysis() {
           })
         })
 
-      // 取引データを集計
+      // Aggregate expense transactions into the map
       transactions
         .filter(t => t.type === 'expense' && t.categoryId)
         .forEach(transaction => {
@@ -167,59 +169,59 @@ export default function CategoryAnalysis() {
           const data = categoryMap.get(transaction.categoryId!)
           
           if (data) {
-            // 今月全体のデータ
+            // Current period totals
             if (transactionDate >= currentPeriodStart && transactionDate < currentPeriodEnd) {
               data.currentMonth += transaction.amount
               data.transactionCount += 1
             }
             
-            // 前月全体のデータ
+            // Previous period totals
             if (transactionDate >= previousPeriodStart && transactionDate < previousPeriodEnd) {
               data.previousMonth += transaction.amount
             }
             
-            // 今月の同日までのデータ
+            // Current period up to the same calendar day
             if (transactionDate >= currentPeriodStart && transactionDate < currentMonthSameDateEnd) {
               data.currentMonthSameDate += transaction.amount
             }
             
-            // 前月の同日までのデータ
+            // Previous period up to the same calendar day
             if (transactionDate >= previousMonthSameDateStart && transactionDate < previousMonthSameDateEnd) {
               data.previousMonthSameDate += transaction.amount
             }
           }
         })
 
-      // 固定費は毎月の取引として登録済みだが、ビュー上で参考値として表示したい
+      // Fixed expenses already exist as transactions but we surface a summary
       const activeFixedExpenses = fixedExpenses.filter(fe => fe.isActive)
-      // 固定費の合計を計算（表示用）
+      // Calculate the reference total for display
       const fixedTotal = activeFixedExpenses.reduce((sum, fe) => sum + fe.amount, 0)
       setFixedExpensesTotal(fixedTotal)
 
-      // トレンドと平均を計算
+      // Calculate trends and averages
       let totalCurrentSpending = 0
       categoryMap.forEach(data => {
         totalCurrentSpending += data.currentMonth
         
-        // 平均取引金額を計算（全取引データを使用）
+        // Average transaction amount across all expense transactions
         data.averagePerTransaction = data.transactionCount > 0 
           ? data.currentMonth / data.transactionCount 
           : 0
 
-        // 前月比の計算
+        // Month-over-month comparison
         if (data.previousMonth > 0) {
           const percentage = ((data.currentMonth - data.previousMonth) / data.previousMonth) * 100
           data.trendPercentage = percentage
         } else if (data.currentMonth > 0) {
-          // 前月は0で今月に支出がある場合
+          // Handle cases where there was no spending last month but there is now
           data.trendPercentage = 100
         }
 
-        // 前月同日比の計算（カテゴリ別支出ランキングで使用）
+        // Same-date comparison used for ranking increases
         if (data.previousMonthSameDate > 0) {
           data.sameDateTrendPercentage = ((data.currentMonthSameDate - data.previousMonthSameDate) / data.previousMonthSameDate) * 100
           
-          // トレンドの判定は前月同日比に基づく
+          // Assign the trend label based on the same-date comparison
           if (data.sameDateTrendPercentage > 5) {
             data.trend = 'up'
           } else if (data.sameDateTrendPercentage < -5) {
@@ -238,21 +240,21 @@ export default function CategoryAnalysis() {
 
       setTotalSpending(totalCurrentSpending)
 
-      // パーセンテージを計算
+      // Calculate each category's share of total spending
       categoryMap.forEach(data => {
         data.percentage = totalCurrentSpending > 0 
           ? (data.currentMonth / totalCurrentSpending) * 100 
           : 0
       })
 
-      // データをソート（支出額の多い順）
+      // Sort descending by spend amount
       const sortedData = Array.from(categoryMap.values())
         .filter(data => data.currentMonth > 0 || data.previousMonth > 0)
         .sort((a, b) => b.currentMonth - a.currentMonth)
 
       setCategoryData(sortedData)
     } catch (error) {
-      console.error('カテゴリ分析データの取得に失敗しました:', error)
+      console.error('Failed to fetch category analysis data:', error)
     } finally {
       setLoading(false)
     }

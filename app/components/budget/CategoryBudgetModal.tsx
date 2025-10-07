@@ -104,7 +104,7 @@ export default function CategoryBudgetModal({
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl mx-4 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
-        {/* ヘッダー */}
+        {/* Header */}
         <div className="relative px-5 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
@@ -124,7 +124,7 @@ export default function CategoryBudgetModal({
           </div>
         </div>
 
-        {/* コンテンツ */}
+        {/* Body */}
         <div className="px-5 py-5">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
@@ -143,7 +143,7 @@ export default function CategoryBudgetModal({
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">カテゴリを選択</label>
+              <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Select category</label>
               <CategorySelector
                 categories={categories}
                 selectedCategoryId={formData.categoryId || undefined}
@@ -155,7 +155,7 @@ export default function CategoryBudgetModal({
 
             <div>
               <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                予算金額
+                Budget amount
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">¥</span>
@@ -170,13 +170,13 @@ export default function CategoryBudgetModal({
                 />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                月間の予算金額を設定してください
+                Enter the monthly budget amount
               </p>
             </div>
           </form>
         </div>
 
-        {/* フッター */}
+        {/* Footer */}
         <div className="px-5 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl border-t border-gray-200 dark:border-gray-700">
           <div className="flex space-x-2.5">
             <button

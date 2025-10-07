@@ -1,3 +1,7 @@
+/** Tailwind CSS configuration
+ * - Scans Next.js pages/components/app directories for class usage
+ * - Enables dark mode via `.dark` class so ThemeContext can toggle it
+ */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [

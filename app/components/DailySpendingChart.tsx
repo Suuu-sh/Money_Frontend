@@ -11,7 +11,7 @@ interface DailySpending {
   day: number
 }
 
-// 日次の変動支出をラインチャートで表示し、ピークを把握しやすくする
+// Visualise daily variable spending with a line chart to spot peaks
 export default function DailySpendingChart() {
   const [dailySpending, setDailySpending] = useState<DailySpending[]>([])
   const [loading, setLoading] = useState(true)
@@ -20,7 +20,7 @@ export default function DailySpendingChart() {
     loadDailySpending()
   }, [])
 
-  // 今月の変動支出を日別集計し、チャート用配列を構築
+  // Aggregate this month's variable spending by day for the chart
   const loadDailySpending = async () => {
     try {
       setLoading(true)
@@ -33,19 +33,19 @@ export default function DailySpendingChart() {
         fetchFixedExpenses()
       ])
       
-      // アクティブな固定支出の名前リストを作成
+      // Collect the names of active fixed expenses
       const fixedExpenseNames = fixedExpenses
         .filter((expense: FixedExpense) => expense.isActive)
         .map((expense: FixedExpense) => expense.name.toLowerCase())
       
-      // 今月の支出取引のみをフィルタリング（固定支出を除外）
+      // Filter to this month's expense transactions, excluding fixed ones
       const currentMonthExpenses = transactions.filter((transaction: Transaction) => {
         const transactionDate = new Date(transaction.date)
         const isCurrentMonth = transactionDate.getFullYear() === year &&
                               transactionDate.getMonth() + 1 === month &&
                               transaction.type === 'expense'
         
-        // 固定支出でないかチェック（取引の説明が固定支出の名前と一致しないか）
+        // Ignore entries whose descriptions match fixed expense names
         const isNotFixedExpense = !fixedExpenseNames.some(fixedName => 
           transaction.description.toLowerCase().includes(fixedName)
         )
@@ -53,14 +53,14 @@ export default function DailySpendingChart() {
         return isCurrentMonth && isNotFixedExpense
       })
 
-      // 日毎にグループ化
+      // Group expenses by day of month
       const dailyData: { [key: number]: number } = {}
       currentMonthExpenses.forEach((transaction: Transaction) => {
         const day = new Date(transaction.date).getDate()
         dailyData[day] = (dailyData[day] || 0) + Math.abs(transaction.amount)
       })
 
-      // 今月の日数を取得
+      // Determine how many days are in the month
       const daysInMonth = new Date(year, month, 0).getDate()
       const dailySpendingData: DailySpending[] = []
 
@@ -87,7 +87,7 @@ export default function DailySpendingChart() {
     }).format(amount)
   }
 
-  // 動的なY軸スケールを計算
+  // Compute a dynamic Y-axis scale for the chart
   const calculateYAxisScale = (maxValue: number) => {
     if (maxValue === 0) return { max: 10000, step: 2500 }
     
@@ -127,7 +127,7 @@ export default function DailySpendingChart() {
       
       {dailySpending.length > 0 ? (
         <div className="relative" style={{ height: '233px' }}>
-          {/* Y軸ラベル */}
+          {/* Y-axis labels */}
           <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 pr-3 font-medium">
             <span>{formatCurrency(yAxisMax)}</span>
             <span>{formatCurrency(yAxisMax * 0.75)}</span>
@@ -136,9 +136,9 @@ export default function DailySpendingChart() {
             <span>¥0</span>
           </div>
           
-          {/* グラフエリア */}
+          {/* Chart area */}
           <div className="ml-20 h-full relative bg-gradient-to-t from-gray-50/50 to-transparent dark:from-gray-800/50 rounded-lg">
-            {/* グリッドライン */}
+            {/* Grid lines */}
             <div className="absolute inset-0">
               {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
                 <div
@@ -149,7 +149,7 @@ export default function DailySpendingChart() {
               ))}
             </div>
             
-            {/* エリアチャート（グラデーション背景） */}
+            {/* Area chart with gradient background */}
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -158,7 +158,7 @@ export default function DailySpendingChart() {
                 </linearGradient>
               </defs>
               
-              {/* エリア */}
+              {/* Filled area */}
               <polygon
                 fill="url(#areaGradient)"
                 points={`0,100 ${dailySpending
@@ -170,7 +170,7 @@ export default function DailySpendingChart() {
                   .join(' ')} 100,100`}
               />
               
-              {/* メインライン */}
+              {/* Primary line */}
               <polyline
                 fill="none"
                 stroke="#22C55E"
@@ -188,7 +188,7 @@ export default function DailySpendingChart() {
               />
             </svg>
             
-            {/* データポイント（別のSVGで描画） */}
+            {/* Data points rendered via a separate SVG */}
             <svg className="absolute inset-0 w-full h-full">
               {dailySpending.map((data, index) => {
                 const x = (index / (dailySpending.length - 1)) * 100
@@ -218,7 +218,7 @@ export default function DailySpendingChart() {
             </svg>
           </div>
           
-          {/* X軸ラベル */}
+          {/* X-axis labels */}
           <div className="ml-20 mt-2 flex justify-between text-xs text-gray-600 dark:text-gray-400 font-medium px-2">
             <span>1日</span>
             <span>15日</span>

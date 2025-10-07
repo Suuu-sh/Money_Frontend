@@ -8,7 +8,7 @@ interface ErrorAlertProps {
   className?: string
 }
 
-// エラーメッセージを強調表示し、任意で閉じるボタンを提供
+// Highlight error messages with an optional dismiss button
 export default function ErrorAlert({ error, onDismiss, className = '' }: ErrorAlertProps) {
   if (!error) return null
 

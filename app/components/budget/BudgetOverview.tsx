@@ -9,7 +9,7 @@ interface BudgetOverviewProps {
   currentMonth?: Date
 }
 
-// 月次予算のサマリーを取得し、進捗や残額を表示
+// Fetch and display the monthly budget overview (progress and remaining)
 export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [loading, setLoading] = useState(true)
@@ -19,19 +19,19 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
     try {
       setLoading(true)
       setError(null)
-      // currentMonthが指定されている場合はその月のデータを取得、なければ現在の月
+      // Use the supplied month or fallback to the current month
       const targetDate = currentMonth || new Date()
       const year = targetDate.getFullYear()
       const month = targetDate.getMonth() + 1
       
       let data = await fetchBudgetAnalysis(year, month)
 
-      // カテゴリ別予算の合計を常に確認し、APIのmonthlyBudgetより大きければ優先採用
+      // Compare the per-category budget sum and prefer it when larger than the API value
       try {
         const catBudgets: CategoryBudget[] = await fetchCategoryBudgets(year, month)
         const catTotal = (catBudgets || []).reduce((sum, b) => sum + (b.amount || 0), 0)
 
-        // フルフォールバック（API 0 or 未定義）
+        // Full fallback when the API returns 0 or undefined
         if (!data || (data.monthlyBudget ?? 0) <= 0) {
           if (catTotal > 0) {
             const spend = data?.currentSpending || 0
@@ -50,7 +50,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
             }
           }
         } else if (catTotal > (data.monthlyBudget || 0)) {
-          // 上書き（APIの値が小さすぎる場合）
+          // Override when the API value is smaller than the category total
           const spend = data.currentSpending || 0
           const remaining = catTotal - spend
           const utilization = catTotal > 0 ? (spend / catTotal) * 100 : 0
@@ -62,16 +62,16 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
           }
         }
       } catch (e) {
-        // カテゴリ別予算取得エラー時は何もしない
+        // Ignore failures when fetching category-specific budgets
       }
 
       setAnalysis(data)
       
       if (!data || data.monthlyBudget <= 0) {
-        setError('予算が設定されていません')
+        setError('No budget has been configured for this month yet')
       }
     } catch (error: any) {
-      setError('予算データの取得に失敗しました')
+      setError('Failed to fetch the budget overview')
     } finally {
       setLoading(false)
     }
@@ -82,7 +82,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
   }, [loadBudgetAnalysis])
 
   const formatAmount = (amount: number) => {
-    // 数値の精度問題を回避するため、整数に丸める
+    // Round to whole yen to avoid precision artefacts
     const roundedAmount = Math.round(amount)
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -92,7 +92,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
     }).format(roundedAmount)
   }
 
-  // 表示色は「使用率」を基準に統一（残額比ではなく）
+  // Colour coding is based on utilisation rather than remaining budget
   const getBudgetColor = (utilization: number) => {
     if (utilization >= 100) return 'text-red-600'
     if (utilization >= 90) return 'text-red-600'
@@ -158,18 +158,18 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
       </div>
 
       <div className="space-y-4">
-        {/* 残り予算 */}
+        {/* Remaining budget */}
         <div className="text-center">
           <div className={`text-3xl font-bold ${getBudgetColor(utilization)} dark:${getBudgetColor(utilization).replace('600', '400')}`}>
             {formatAmount(analysis.remainingBudget)}
           </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">残り使用可能金額</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">Remaining balance</div>
         </div>
 
-        {/* 予算進捗バー */}
+        {/* Budget progress bar */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-            <span>使用済み</span>
+            <span>Used</span>
             <span>{progressPercentage.toFixed(1)}%</span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
@@ -183,18 +183,18 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
           </div>
         </div>
 
-        {/* 詳細情報 */}
+        {/* Detailed breakdown */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-gray-600 dark:text-gray-400">月次予算</div>
+            <div className="text-gray-600 dark:text-gray-400">Monthly budget</div>
             <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.monthlyBudget)}</div>
           </div>
           <div>
-            <div className="text-gray-600 dark:text-gray-400">固定費</div>
+            <div className="text-gray-600 dark:text-gray-400">Fixed expenses</div>
             <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.totalFixedExpenses)}</div>
           </div>
           <div>
-            <div className="text-gray-600 dark:text-gray-400">{getMonthName(analysis.month)}の支出</div>
+            <div className="text-gray-600 dark:text-gray-400">Spending this month</div>
             <div className="font-semibold text-gray-900 dark:text-white">{formatAmount(analysis.currentSpending)}</div>
           </div>
           <div>
@@ -203,7 +203,7 @@ export default function BudgetOverview({ currentMonth }: BudgetOverviewProps) {
           </div>
         </div>
 
-        {/* 残り日数 */}
+        {/* Days remaining */}
         {analysis.daysRemaining > 0 && (
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
             {getMonthName(analysis.month)}残り {analysis.daysRemaining} 日

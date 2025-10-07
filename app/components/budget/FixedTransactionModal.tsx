@@ -13,7 +13,7 @@ interface FixedTransactionModalProps {
   transaction?: FixedTransaction
 }
 
-// 固定収支の新規作成・編集モーダルを扱うフォームコンポーネント
+// Modal form used to create or edit recurring income/expense entries
 export default function FixedTransactionModal({
   isOpen,
   onClose,
@@ -63,7 +63,7 @@ export default function FixedTransactionModal({
       const data = await fetchCategories()
       setCategories(data)
     } catch (error) {
-      console.error('カテゴリの取得に失敗しました:', error)
+      console.error('Failed to load categories for fixed transactions:', error)
     }
   }
 
@@ -97,7 +97,7 @@ export default function FixedTransactionModal({
     try {
       setLoading(true)
       
-      // 新しい固定収支APIを使用
+      // Leverage the dedicated fixed transaction API
       const requestData: FixedTransactionRequest = {
         name: formData.name,
         amount: Number(formData.amount),
@@ -147,7 +147,7 @@ export default function FixedTransactionModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* 収入・支出タイプ選択 */}
+          {/* Income/expense toggle */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               タイプ
@@ -186,7 +186,7 @@ export default function FixedTransactionModal({
             </div>
           </div>
 
-          {/* 名前 */}
+          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               名前 <span className="text-red-500">*</span>
@@ -205,7 +205,7 @@ export default function FixedTransactionModal({
             )}
           </div>
 
-          {/* 金額 */}
+          {/* Amount */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               金額 <span className="text-red-500">*</span>
@@ -229,7 +229,7 @@ export default function FixedTransactionModal({
             )}
           </div>
 
-          {/* カテゴリ */}
+          {/* Category */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               カテゴリ <span className="text-red-500">*</span>
@@ -247,7 +247,7 @@ export default function FixedTransactionModal({
             )}
           </div>
 
-          {/* 説明 */}
+          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               説明
@@ -261,7 +261,7 @@ export default function FixedTransactionModal({
             />
           </div>
 
-          {/* 有効/無効 */}
+          {/* Active toggle */}
           <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
             <input
               type="checkbox"
@@ -275,7 +275,7 @@ export default function FixedTransactionModal({
             </label>
           </div>
 
-          {/* ボタン */}
+          {/* Action buttons */}
           <div className="flex space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"

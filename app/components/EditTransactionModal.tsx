@@ -13,7 +13,7 @@ interface EditTransactionModalProps {
 }
 
 export default function EditTransactionModal({ transaction, categories, onClose, onTransactionUpdated }: EditTransactionModalProps) {
-  // Date/ISO文字列をフォーム入力用のYYYY-MM-DDに変換
+  // Convert Date/ISO strings into YYYY-MM-DD for form inputs
   const getLocalDateString = (date: Date | string) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date
     const year = dateObj.getFullYear()
@@ -22,7 +22,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
     return `${year}-${month}-${day}`
   }
 
-  // 編集フォームの現在値を保持
+  // Store the current form values for editing
   const [formData, setFormData] = useState({
     type: transaction.type as 'income' | 'expense',
     amount: transaction.amount.toString(),
@@ -31,7 +31,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
     date: getLocalDateString(transaction.date),
   })
 
-  // 取引タイプが変更された時にカテゴリを適切に処理
+  // Ensure the category remains valid when the type changes
   const handleTypeChange = (newType: 'income' | 'expense') => {
     const newFilteredCategories = categories.filter(cat => cat.type === newType)
     const currentCategoryExists = newFilteredCategories.some(cat => cat.id.toString() === formData.categoryId)
@@ -49,7 +49,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // バリデーション
+    // Validate user input
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
       alert('金額を正しく入力してください')
       return
@@ -68,7 +68,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
     setLoading(true)
 
     try {
-      // 金額を正確に処理するため、小数点以下を適切に処理
+      // Round to handle decimals accurately before saving
       const amount = Math.round(parseFloat(formData.amount) * 100) / 100
       
       await updateTransaction(transaction.id, {
@@ -96,7 +96,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      {/* コンパクトなモーダル */}
+      {/* Compact modal layout */}
       <div className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[95vh] flex flex-col">
         <div className="p-6 flex-1 overflow-y-auto">
           <div className="flex justify-between items-center mb-4 sm:mb-6">
@@ -116,9 +116,9 @@ export default function EditTransactionModal({ transaction, categories, onClose,
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="h-full flex flex-col">
-            <div className="space-y-6 flex-1">
-              {/* 取引タイプ - コンパクト */}
+        <form onSubmit={handleSubmit} className="h-full flex flex-col">
+          <div className="space-y-6 flex-1">
+            {/* Transaction type selector */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   取引タイプ
@@ -155,7 +155,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
                 </div>
               </div>
 
-              {/* 金額・日付 - 2列レイアウト */}
+            {/* Amount and date fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -188,7 +188,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
                 </div>
               </div>
 
-              {/* カテゴリ - 全幅 */}
+            {/* Category selector */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   カテゴリ *
@@ -201,7 +201,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
                 />
               </div>
 
-              {/* 説明 - 全幅 */}
+            {/* Optional description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   説明
@@ -216,7 +216,7 @@ export default function EditTransactionModal({ transaction, categories, onClose,
               </div>
             </div>
 
-            {/* 固定フッター */}
+        {/* Sticky footer */}
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6">
               <button
                 type="button"

@@ -18,7 +18,7 @@ interface FixedExpensesListProps {
   onExpensesUpdated?: () => void
 }
 
-// 固定費の一覧を金額ソートや編集操作付きで表示
+// Display fixed expenses with sorting and edit/delete actions
 export default function FixedExpensesList({ 
   onAddExpense, 
   onEditExpense, 
@@ -28,7 +28,7 @@ export default function FixedExpensesList({
   const [loading, setLoading] = useState(true)
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null)
   const [deleting, setDeleting] = useState<number | null>(null)
-  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc') // デフォルトで金額の大きい順
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc') // Default to highest amount first
 
   useEffect(() => {
     loadExpenses()
@@ -40,7 +40,7 @@ export default function FixedExpensesList({
       const data = await fetchFixedExpenses()
       setExpenses(data)
     } catch (error) {
-      console.error('固定費データの取得に失敗しました:', error)
+      console.error('Failed to fetch fixed expenses:', error)
     } finally {
       setLoading(false)
     }
@@ -57,14 +57,14 @@ export default function FixedExpensesList({
         onExpensesUpdated()
       }
     } catch (error) {
-      console.error('固定費の削除に失敗しました:', error)
+      console.error('Failed to delete fixed expense:', error)
     } finally {
       setDeleting(null)
     }
   }
 
   const formatAmount = (amount: number) => {
-    // 数値の精度問題を回避するため、整数に丸める
+    // Round to whole yen to avoid precision artefacts
     const roundedAmount = Math.round(amount)
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -74,17 +74,17 @@ export default function FixedExpensesList({
     }).format(roundedAmount)
   }
 
-  // ソート機能
+  // Toggle sort order between ascending/descending amounts
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')
   }
 
-  // 金額でソートされた固定費リスト
+  // Fixed expenses sorted by amount
   const sortedExpenses = [...expenses].sort((a, b) => {
     if (sortOrder === 'desc') {
-      return b.amount - a.amount // 金額の大きい順
+      return b.amount - a.amount // High to low
     } else {
-      return a.amount - b.amount // 金額の小さい順
+      return a.amount - b.amount // Low to high
     }
   })
 
@@ -118,7 +118,7 @@ export default function FixedExpensesList({
         </button>
       </div>
 
-      {/* 合計金額表示 */}
+      {/* Total amount */}
       <div className="bg-blue-50 rounded-lg p-4 mb-6">
         <div className="text-sm text-blue-600 mb-1">固定費合計</div>
         <div className="text-2xl font-bold text-blue-800">
@@ -129,7 +129,7 @@ export default function FixedExpensesList({
         </div>
       </div>
 
-      {/* ソートボタン */}
+      {/* Sort button */}
       {expenses.length > 0 && (
         <div className="flex items-center justify-between mb-4">
           <div className="text-sm text-gray-600">
@@ -154,7 +154,7 @@ export default function FixedExpensesList({
         </div>
       )}
 
-      {/* 固定費リスト */}
+      {/* Fixed expense list */}
       <div className="space-y-1.5">
         {expenses.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
@@ -262,7 +262,7 @@ export default function FixedExpensesList({
         )}
       </div>
 
-      {/* 固定費管理のヒント */}
+      {/* Tips for managing fixed expenses */}
       {expenses.length > 0 && (
         <div className="mt-6 bg-yellow-50 rounded-lg p-4">
           <div className="flex items-start">

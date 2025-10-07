@@ -1,3 +1,4 @@
+# Compose file to build and serve the static Next.js frontend via nginx
 version: '3.9'
 
 services:
@@ -5,9 +6,9 @@ services:
     build: .
     container_name: money-frontend
     ports:
-      - "3000:80"
+      - "3000:80"            # expose nginx on port 3000 locally
     env_file:
-      - .env.local
+      - .env.local           # reuse local environment variables during build
 
 networks:
   default:

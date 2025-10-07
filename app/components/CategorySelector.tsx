@@ -34,7 +34,7 @@ interface CategorySelectorProps {
   className?: string;
 }
 
-// カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+// Map category names to lucide-react icons
 const getCategoryIcon = (name: string, iconColor: string = '#6B7280') => {
   const iconProps = { size: 20, color: iconColor, strokeWidth: 2 };
   
@@ -63,9 +63,9 @@ const getCategoryIcon = (name: string, iconColor: string = '#6B7280') => {
   return iconMap[name] || <ShoppingBag {...iconProps} />;
 };
 
-// カテゴリのテーマカラーを取得（薄い色を強制使用）
+// Retrieve theme colours for cards (always using lighter shades)
 const getCategoryThemeColor = (category: Category) => {
-  // データベースの濃い色は使用せず、常に薄い色を使用
+  // Prefer light colour palette regardless of stored colour
   const colorMap: { [key: string]: { background: string; border: string; hover: string } } = {
     '食費': { background: '#FEF7F7', border: '#EF4444', hover: '#FEE2E2' },
     '交通費': { background: '#F0F9FF', border: '#22C55E', hover: '#DBEAFE' },
@@ -98,14 +98,14 @@ export default function CategorySelector({
   type,
   className = ''
 }: CategorySelectorProps) {
-  // 入力された検索キーワード
+  // Current search keyword
   const [query, setQuery] = useState('');
 
-  // シンプルな選択処理（最近使った履歴は保持しない）
+  // Simple callback (no recent-history tracking)
   const handleSelect = (category: Category) => {
     onSelect(category);
   };
-  // カテゴリの一般的な順序を定義
+  // Define default ordering for categories by type
   const getCategoryOrder = (categoryName: string, categoryType: string) => {
     if (categoryType === 'income') {
       const incomeOrder = ['給与', '賞与', '副業', '投資', 'その他収入'];
@@ -122,12 +122,12 @@ export default function CategorySelector({
     }
   };
 
-  // タイプでフィルタリング
+  // Filter by income/expense type if provided
   const typeFiltered = useMemo(() => (
     type ? categories.filter(cat => cat.type === type) : categories
   ), [categories, type]);
 
-  // 検索フィルタ（前方一致＋部分一致）
+  // Name filter that supports prefix or substring matches
   const nameMatches = (name: string, q: string) => {
     const n = name.toLowerCase();
     const s = q.trim().toLowerCase();
@@ -135,7 +135,7 @@ export default function CategorySelector({
     return n.startsWith(s) || n.includes(s);
   };
 
-  // 検索適用 + 一般的順序でソート
+  // Apply the search filter and sort with the canonical order
   const filteredCategories = useMemo(() => (
     typeFiltered
       .filter(cat => nameMatches(cat.name, query))
@@ -148,7 +148,7 @@ export default function CategorySelector({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* 検索バー */}
+      {/* Search bar */}
       <div className="mb-2">
         <div className="relative">
           <input
@@ -172,9 +172,9 @@ export default function CategorySelector({
         </div>
       </div>
 
-      {/* 最近使った表示はなし（要望により非表示） */}
+      {/* No recently-used section (intentionally hidden) */}
 
-      {/* カテゴリグリッド（4列コンパクト） */}
+      {/* Category grid (compact layout) */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5">
         {filteredCategories.map((category) => {
           const isSelected = selectedCategoryId === category.id;
@@ -200,19 +200,19 @@ export default function CategorySelector({
               aria-pressed={isSelected}
               aria-label={`カテゴリ: ${category.name}`}
             >
-              {/* 選択チェックマーク */}
+              {/* Selection checkmark */}
               {isSelected && (
                 <div className="absolute top-0.5 right-0.5 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
                   <Check className="w-2 h-2 text-white" />
                 </div>
               )}
               
-              {/* アイコン */}
+              {/* Category icon */}
               <div className="mr-1.5 flex-shrink-0">
                 {React.cloneElement(icon, { size: 14 })}
               </div>
               
-              {/* カテゴリ名（日本語のみ） */}
+              {/* Category name (Japanese labels sourced from API) */}
               <span className={`text-[11px] font-medium truncate text-gray-800 dark:text-gray-100`}>
                 {category.name}
               </span>
@@ -221,7 +221,7 @@ export default function CategorySelector({
         })}
       </div>
 
-      {/* カテゴリが見つからない場合 */}
+      {/* Empty state when no categories match */}
       {filteredCategories.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">📂</div>

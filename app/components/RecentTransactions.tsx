@@ -8,7 +8,7 @@ interface RecentTransactionsProps {
   transactions: Transaction[]
 }
 
-// ダッシュボードで直近の取引数件をコンパクトに一覧表示
+// Render the latest few transactions in the dashboard summary
 export default function RecentTransactions({ transactions }: RecentTransactionsProps) {
   const formatAmount = (amount: number, type: string) => {
     const formatted = new Intl.NumberFormat('ja-JP', {

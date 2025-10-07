@@ -11,7 +11,7 @@ interface BudgetSettingsProps {
   onBudgetUpdated?: () => void
 }
 
-// 月次予算の金額を登録・更新する設定フォーム
+// Settings form to create/update the monthly budget amount
 export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps) {
   const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
   const [amount, setAmount] = useState('')
@@ -32,7 +32,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
       setAmount(budget.amount.toString())
     } catch (error: any) {
       if (error.response?.status !== 404) {
-        setError('予算データの取得に失敗しました')
+        setError('Failed to fetch the existing budget')
       }
     } finally {
       setLoading(false)
@@ -48,7 +48,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
     
     const budgetAmount = parseFloat(amount)
     
-    // バリデーション
+    // Validate input before saving
     const validationErrors = validateBudgetForm({
       year: currentYear,
       month: currentMonth,
@@ -71,20 +71,20 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
       }
 
       if (currentBudget) {
-        // 更新
+        // Update existing budget
         await updateBudget(currentBudget.id, budgetRequest)
       } else {
-        // 新規作成
+        // Create a new budget
         await createBudget(budgetRequest)
       }
 
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
       
-      // 予算データを再読み込み
+      // Reload the visible budget data
       await loadCurrentBudget()
       
-      // 親コンポーネントに更新を通知
+      // Notify the parent component
       if (onBudgetUpdated) {
         onBudgetUpdated()
       }
@@ -92,7 +92,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
       if (error.response?.status === 409) {
         setError('この月の予算は既に設定されています')
       } else {
-        setError('予算の保存に失敗しました')
+      setError('Failed to save the budget')
       }
     } finally {
       setSaving(false)
@@ -100,7 +100,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
   }
 
   const formatAmount = (amount: number) => {
-    // 数値の精度問題を回避するため、整数に丸める
+    // Round to whole yen to avoid precision artefacts
     const roundedAmount = Math.round(amount)
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -131,7 +131,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
         </h2>
       </div>
 
-      {/* 現在の予算表示 */}
+      {/* Display the current budget */}
       {currentBudget && (
         <div className="bg-blue-50 rounded-lg p-4 mb-6">
           <div className="text-sm text-blue-600 mb-1">現在の予算</div>
@@ -203,7 +203,7 @@ export default function BudgetSettings({ onBudgetUpdated }: BudgetSettingsProps)
         </div>
       </form>
 
-      {/* 予算設定のヒント */}
+      {/* Guidance on setting a budget */}
       <div className="mt-6 bg-gray-50 rounded-lg p-4">
         <h3 className="text-sm font-medium text-gray-900 mb-2">予算設定のコツ</h3>
         <ul className="text-sm text-gray-600 space-y-1">

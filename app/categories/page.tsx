@@ -1,12 +1,12 @@
 "use client"
 
 /**
- * CategoriesPage ではユーザー独自のカテゴリ一覧を管理します。
- *  - 初回レンダリングで認証を確認し、未ログインならログイン画面へ遷移。
- *  - `fetchCategories` の結果をローカルステートに保持し、カテゴリの追加・
- *    編集後は `loadData` を再実行して最新のリストを表示します。
- *  - 上部ヘッダーから取引追加モーダルを開けるため、カテゴリ取得結果を
- *    そのままモーダルにも流用しています。
+ * CategoriesPage lets users manage custom income/expense categories.
+ *  - Validates authentication on mount and redirects to login if necessary.
+ *  - Stores the result of `fetchCategories` locally and reruns `loadData`
+ *    after add/edit operations to keep the list fresh.
+ *  - Reuses the fetched categories in the add-transaction modal opened from
+ *    the header.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -21,20 +21,20 @@ import { fetchCategories } from '../lib/api'
 
 export default function CategoriesPage() {
   const router = useRouter()
-  // カテゴリ管理に必要な一覧とモーダル状態
+  // Category list and modal state for the management screen
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  // カテゴリ一覧を取得して画面に反映
+  // Fetch categories and hydrate the page
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const categoriesData = await fetchCategories()
       setCategories(categoriesData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch categories:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -45,7 +45,7 @@ export default function CategoriesPage() {
   }, [router])
 
   useEffect(() => {
-    // 認証されていないブラウザにはページを見せずにログインへ誘導
+    // Block unauthenticated users and redirect to login
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -86,14 +86,14 @@ export default function CategoriesPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* カテゴリ一覧と編集機能 */}
+        {/* Category list and edit actions */}
         <Categories 
           categories={categories}
           onCategoryUpdated={handleCategoryUpdated}
         />
       </main>
 
-      {/* 取引追加モーダル */}
+      {/* Add transaction modal */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -102,7 +102,7 @@ export default function CategoriesPage() {
         />
       )}
 
-      {/* 設定モーダル */}
+      {/* Settings modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

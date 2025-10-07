@@ -1,11 +1,11 @@
 "use client"
 
 /**
- * HomePage は DashboardPage と同じ構成ですが、ルート `/home` 用に分けています。
- *  - 認証／データ取得ロジックは共通化しており、初学者でも分かりやすいように
- *    `loadData` で必要な API をひとまとめにしています。
- *  - カレンダーと統計パネルを同じ画面で扱うため、レイアウトはダッシュボードと
- *    同様に PC 用とモバイル用で構造を分けています。
+ * HomePage mirrors DashboardPage but is routed to `/home` for marketing flows.
+ *  - Authentication/data loading logic is consolidated in `loadData` to keep
+ *    the flow easy to follow.
+ *  - Layout splits desktop and mobile variants so the calendar and stats tiles
+ *    remain usable across breakpoints.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -23,7 +23,7 @@ import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
 
 export default function HomePage() {
   const router = useRouter()
-  // ホーム画面の表示に必要な取引・統計・モーダル状態
+  // Transactions, stats, and modal state needed for the home view
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
@@ -32,16 +32,16 @@ export default function HomePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()) // デフォルトで今日の日付を選択
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()) // Default to today
   const [modalDate, setModalDate] = useState<Date | null>(null)
-  const [currentMonth, setCurrentMonth] = useState(new Date()) // 今日の日付
+  const [currentMonth, setCurrentMonth] = useState(new Date()) // Track the month currently displayed
 
-  // 指定月のデータを取得し、カレンダーとダッシュボードへ渡す
+  // Fetch data for the requested month and pass it to the calendar/dashboard
   const loadData = useCallback(async (month?: Date) => {
     try {
       setLoading(true)
       
-      // 月が指定されている場合は、その月のデータを取得
+      // Narrow queries to the provided month when requested
       let params: Parameters<typeof fetchTransactions>[0] = { limit: 100 }
       if (month) {
         const startDate = new Date(month.getFullYear(), month.getMonth(), 1).toISOString().split('T')[0]
@@ -58,7 +58,7 @@ export default function HomePage() {
       setCategories(categoriesData)
       setStats(statsData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch home view data:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -69,13 +69,13 @@ export default function HomePage() {
   }, [router])
 
   useEffect(() => {
-    // ログイン状態を確認し、今月分のデータを初期表示
+    // Require authentication and preload the current month
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
       return
     }
-    // 初回読み込み時に今月のデータを取得
+    // Preload the current month on first render
     loadData(new Date())
   }, [loadData, router])
 
@@ -132,7 +132,7 @@ export default function HomePage() {
       />
       <TabNavigation />
       
-      {/* Desktop Layout */}
+      {/* Desktop layout */}
       <main className="hidden md:block px-4 sm:px-6 lg:px-8 pt-4 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Calendar */}
@@ -169,7 +169,7 @@ export default function HomePage() {
       {/* Mobile Layout */}
       <main className="md:hidden px-4 pt-4 pb-20">
         <div className="space-y-6">
-          {/* Dashboard Stats */}
+      {/* Dashboard stats */}
           <Dashboard 
             transactions={transactions}
             categories={categories}
@@ -181,7 +181,7 @@ export default function HomePage() {
             onEditTransaction={handleEditTransaction}
           />
           
-          {/* Compact Calendar */}
+          {/* Compact calendar */}
           <div className="h-96">
             <Calendar 
               transactions={transactions}

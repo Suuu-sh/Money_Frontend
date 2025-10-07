@@ -9,7 +9,7 @@ interface SectionHeaderProps {
   rightSlot?: React.ReactNode
 }
 
-// 汎用セクションの見出しとアクション領域をまとめて表示
+// Shared section header that optionally renders an action slot
 export default function SectionHeader({ title, subtitle, icon, rightSlot }: SectionHeaderProps) {
   return (
     <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">

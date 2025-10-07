@@ -1,13 +1,13 @@
 "use client"
 
 /**
- * DashboardPage はカレンダーと統計カードを組み合わせたメイン画面です。
- *  - 月単位でのフィルタリングや取引編集を同一画面で行えるように、各種
- *    モーダルの状態と選択中の日付をここで集約しています。
- *  - PC とモバイルでレイアウトが大きく変わるため、`main` 要素を 2 つ用意し
- *    Tailwind のレスポンシブクラスで表示を切り替えています。
- *  - 新しい機能を追加する場合は `loadData` がどの API を叩いているかを確認し
- *    必要であれば追加のデータ取得を Promise.all に加える形で拡張すると安全です。
+ * DashboardPage combines the calendar and stats cards into the primary view.
+ *  - Keeps modal state and the selected date together so filtering, editing,
+ *    and quick-add actions work on the same screen.
+ *  - Provides separate desktop/mobile layouts by rendering two <main> blocks
+ *    and toggling them via Tailwind responsive utilities.
+ *  - When adding new data requirements, inspect the APIs called in `loadData`
+ *    and extend the Promise.all to keep fetching consistent.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -25,7 +25,7 @@ import { fetchTransactions, fetchCategories, fetchStats } from '../lib/api'
 
 export default function DashboardPage() {
   const router = useRouter()
-  // 画面表示に必要なデータとUIステートをまとめて管理
+  // Aggregate data and UI state required for the dashboard view
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
@@ -38,12 +38,12 @@ export default function DashboardPage() {
   const [modalDate, setModalDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
-  // 指定月の取引・カテゴリ・統計をまとめて取得
+  // Fetch transactions, categories, and stats for the requested month
   const loadData = useCallback(async (month?: Date) => {
     try {
       setLoading(true)
       
-      // 月が指定されている場合は、その月のデータを取得
+      // Narrow the query to the specified month when provided
       let params: Parameters<typeof fetchTransactions>[0] = { limit: 100 }
       if (month) {
         const startDate = new Date(month.getFullYear(), month.getMonth(), 1).toISOString().split('T')[0]
@@ -60,7 +60,7 @@ export default function DashboardPage() {
       setCategories(categoriesData)
       setStats(statsData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch dashboard data:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -71,13 +71,13 @@ export default function DashboardPage() {
   }, [router])
 
   useEffect(() => {
-    // ページ表示前にJWTを確認し、未ログインのままアクセスした際はログインへ誘導
+    // Guard the page by ensuring a token exists before rendering
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
       return
     }
-    // 初回読み込み時に今月のデータを取得
+    // Preload the current month when the page mounts
     loadData(new Date())
   }, [loadData, router])
 
@@ -134,12 +134,12 @@ export default function DashboardPage() {
       />
       <TabNavigation />
       
-      {/* Desktop Layout */}
+      {/* Desktop layout */}
       <main className="hidden md:block px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left: Calendar */}
+          {/* Left column: calendar */}
           <div className="flex flex-col">
-            {/* Calendar - Full visibility */}
+            {/* Calendar in full-height layout */}
             <div className="h-[calc(100vh-200px)] min-h-[600px]">
               <Calendar 
                 transactions={transactions}
@@ -152,7 +152,7 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          {/* Right: Dashboard Stats and Overview */}
+          {/* Right column: stats and overview */}
           <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
             <Dashboard 
               transactions={transactions}
@@ -168,10 +168,10 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      {/* Mobile Layout */}
+      {/* Mobile layout */}
       <main className="md:hidden px-4 py-4 pb-20">
         <div className="space-y-6">
-          {/* Dashboard Stats */}
+          {/* Dashboard stats */}
           <Dashboard 
             transactions={transactions}
             categories={categories}
@@ -183,7 +183,7 @@ export default function DashboardPage() {
             onEditTransaction={handleEditTransaction}
           />
           
-          {/* Compact Calendar */}
+          {/* Compact calendar */}
           <div className="h-96">
             <Calendar 
               transactions={transactions}

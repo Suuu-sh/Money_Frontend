@@ -13,7 +13,7 @@ interface BudgetAlertsProps {
 }
 
 export default function BudgetAlerts({ analysis }: BudgetAlertsProps) {
-  // 仕様変更により、予算アラートは全て非表示にする
-  // 将来的に復活させる場合は、過去の実装を参照
+  // Budget alerts are currently disabled — see previous implementation if reinstated
+  // in future product updates.
   return null
 }

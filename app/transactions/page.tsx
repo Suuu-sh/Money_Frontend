@@ -1,11 +1,11 @@
 "use client"
 
 /**
- * TransactionsPage は履歴一覧とグラフ分析を同じ画面で提供します。
- *  - 最初にカテゴリ・取引・統計をまとめて取得し、複数のチャートに使い回します。
- *  - 円グラフ／折れ線グラフを扱うため、グラフ用のデータ整形関数をローカルで持ち
- *    グラフライブラリ（Recharts）とUIを繋ぐ役割を持っています。
- *  - 取引の追加や編集を行ったら `loadData` を呼び直して UI を即反映させます。
+ * TransactionsPage shows the history list alongside analytic charts.
+ *  - Fetches transactions/categories/stats up front so charts can reuse the
+ *    same payloads.
+ *  - Owns helper transformers that prepare data for the Recharts components.
+ *  - After add/edit operations it invokes `loadData` again to refresh the UI.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -22,7 +22,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, LineChart, Line, XAx
 
 export default function TransactionsPage() {
   const router = useRouter()
-  // 取引リストや円グラフ集計に使用する状態群
+  // State powering the transaction list and chart aggregates
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [expenseSummary, setExpenseSummary] = useState<CategorySummary[]>([])
@@ -34,12 +34,12 @@ export default function TransactionsPage() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  // 今月の取引データとカテゴリ別集計をまとめて取得
+  // Fetch this month's transactions plus category summaries
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
       
-      // 今月のデータを取得
+      // Limit summary queries to the current month
       const now = new Date()
       const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
       const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
@@ -58,7 +58,7 @@ export default function TransactionsPage() {
       setIncomeSummary(incomeData.filter((item) => item.totalAmount > 0))
       setMonthlySummary(monthlyData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch transactions data:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -69,7 +69,7 @@ export default function TransactionsPage() {
   }, [router])
 
   useEffect(() => {
-    // API 呼び出し前に認証チェック。未ログイン時はログイン画面へ。
+    // Ensure a token exists before calling the API; redirect otherwise
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -99,7 +99,7 @@ export default function TransactionsPage() {
     router.push('/')
   }
 
-  // 通貨表示を日本円フォーマットに変換
+  // Format yen currency for display
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -108,9 +108,9 @@ export default function TransactionsPage() {
     }).format(amount)
   }
 
-  // グラフの配色が濃くなりすぎないようカテゴリカラーを少し薄める
+  // Lighten category colours so the chart palette stays readable
   const getLightColor = (color: string, opacity: number = 0.6) => {
-    // HEXカラーをRGBAに変換して透明度を適用
+    // Convert hex to RGBA with the requested opacity
     const hex = color.replace('#', '')
     const r = parseInt(hex.substring(0, 2), 16)
     const g = parseInt(hex.substring(2, 4), 16)
@@ -118,7 +118,7 @@ export default function TransactionsPage() {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`
   }
 
-  // 円グラフ用データ変換（価格の大きい順にソート、実際のカテゴリ色を使用）
+  // Prepare pie chart data sorted by amount (using category colours)
   const expensePieData = expenseSummary
     .sort((a, b) => b.totalAmount - a.totalAmount)
     .map((item) => ({
@@ -137,7 +137,7 @@ export default function TransactionsPage() {
       icon: item.categoryIcon,
     }))
 
-  // Tooltipから利用する円グラフの拡張データ
+  // Custom tooltip that displays value and share percentage
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload
@@ -179,10 +179,10 @@ export default function TransactionsPage() {
       
       <main className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* レポート部分 - 支出内訳・収入内訳・月別収支推移 */}
+          {/* Report area: expense breakdown, income breakdown, monthly trends */}
           <div className="lg:col-span-3 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* 支出内訳 */}
+              {/* Expense breakdown */}
               <div className="card">
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -259,7 +259,7 @@ export default function TransactionsPage() {
                 )}
               </div>
 
-              {/* 収入内訳 */}
+              {/* Income breakdown */}
               <div className="card">
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -340,7 +340,7 @@ export default function TransactionsPage() {
 
           </div>
 
-          {/* 取引履歴部分 - 右側縦長 */}
+          {/* Transaction list column */}
           <div className="lg:col-span-2">
             <TransactionList 
               transactions={transactions}

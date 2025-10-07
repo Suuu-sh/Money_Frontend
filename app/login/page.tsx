@@ -2,10 +2,10 @@
 
 /**
  * LoginPage handles username/password authentication.
- *  - `formData` ステートで入力内容を保持し、`handleSubmit` で API へPOST。
- *  - 成功時は返却されたJWTを localStorage に保存してダッシュボードへ遷移。
- *  - エラー表示やパスワードの表示切り替えなど UI に関わる小さな挙動も
- *    このコンポーネントで完結させています。
+ *  - Maintains the form state in `formData` and POSTs to the login API on submit.
+ *  - Stores the returned JWT in localStorage before redirecting to the dashboard.
+ *  - Handles UI niceties such as error messages and password visibility toggles
+ *    within the component.
  */
 
 import { useState } from 'react'
@@ -16,7 +16,7 @@ import { API_BASE_URL } from '../lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
-  // 入力フォームとUI状態
+  // Form data and UI state
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -25,7 +25,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // 認証APIへログインリクエストを送信
+  // Submit credentials to the auth API
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -55,7 +55,7 @@ export default function LoginPage() {
     }
   }
 
-  // 入力フィールドの変更をフォーム状態へ反映
+  // Keep form state in sync with input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {/* ロゴと導線 */}
+      {/* Branding and navigation prompt */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <CurrencyDollarIcon className="h-12 w-12 text-green-500" />
@@ -82,7 +82,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        {/* ログインフォーム */}
+      {/* Login form */}
         <div className="bg-gray-800 py-8 px-4 shadow-2xl border border-gray-700 sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (

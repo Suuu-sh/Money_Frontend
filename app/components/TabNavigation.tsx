@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-// 主要ページ間を切り替えるタブ型ナビゲーション（PC/モバイル両対応）
+// Tab navigation used to switch between primary sections (desktop/mobile)
 export default function TabNavigation() {
   const pathname = usePathname()
 
@@ -83,7 +83,7 @@ export default function TabNavigation() {
               <span>分析</span>
             </Link>
 
-            {/* レポートタブは削除（仕様変更） */}
+            {/* Reports tab intentionally omitted per current spec */}
 
             <Link
               href="/categories"

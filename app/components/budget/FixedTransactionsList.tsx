@@ -56,7 +56,7 @@ interface FixedTransactionsListProps {
   onTransactionsUpdated?: () => void
 }
 
-// 固定収支の一覧をフィルタ・ソート付きで管理し、編集モーダルへ繋げる
+// Manage recurring income/expense entries with filtering, sorting, and edit modals
 export default function FixedTransactionsList({ 
   onAddTransaction, 
   onEditTransaction, 

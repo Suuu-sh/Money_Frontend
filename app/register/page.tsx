@@ -1,10 +1,10 @@
 "use client"
 
 /**
- * RegisterPage では新規ユーザー登録を行います。
- *  - 入力内容を `formData` で管理し、`handleSubmit` で API `/register` へ送信。
- *  - 成功時はすぐにログイン画面へ遷移させ、続きの認証フローを行います。
- *  - バリデーションエラーなどは API から返されるメッセージをそのまま表示。
+ * RegisterPage handles user sign-up.
+ *  - Tracks input via `formData` and POSTs to `/register` on submit.
+ *  - Redirects straight to the dashboard after a successful response.
+ *  - Surfaces validation feedback returned by the API verbatim.
  */
 
 import { useState } from 'react'
@@ -15,7 +15,7 @@ import { API_BASE_URL } from '../lib/api'
 
 export default function RegisterPage() {
   const router = useRouter()
-  // サインアップフォームとモーダル状態
+  // Form state for signing up
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -27,7 +27,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // バリデーション後に登録APIへPOST
+  // POST to the register API once validation passes
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -73,7 +73,7 @@ export default function RegisterPage() {
     }
   }
 
-  // 入力値をフォーム状態へ反映
+  // Keep form state updated with input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {/* ロゴとページ案内 */}
+      {/* Branding and intro copy */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <CurrencyDollarIcon className="h-12 w-12 text-green-500" />
@@ -100,7 +100,7 @@ export default function RegisterPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        {/* 登録フォーム */}
+        {/* Registration form */}
         <div className="bg-gray-800 py-8 px-4 shadow-2xl border border-gray-700 sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (

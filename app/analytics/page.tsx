@@ -40,14 +40,14 @@ export default function AnalyticsPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
-  // カテゴリ候補を取得して分析コンポーネントに渡す
+  // Fetch categories and feed them into the analytics components
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const categoriesData = await fetchCategories()
       setCategories(categoriesData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch analytics prerequisites:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -95,7 +95,7 @@ export default function AnalyticsPage() {
       <TabNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-        {/* タブナビゲーション */}
+        {/* Tab navigation */}
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6">
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6">
@@ -107,7 +107,7 @@ export default function AnalyticsPage() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                 }`}
               >
-                トレンド分析
+                Trend analysis
               </button>
               <button
                 onClick={() => setActiveTab('categories')}
@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                 }`}
               >
-                カテゴリ分析
+                Category analysis
               </button>
               <button
                 onClick={() => setActiveTab('recommendations')}
@@ -127,7 +127,7 @@ export default function AnalyticsPage() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                 }`}
               >
-                削減提案
+                Savings tips
               </button>
               <button
                 onClick={() => setActiveTab('insights')}
@@ -137,14 +137,14 @@ export default function AnalyticsPage() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                 }`}
               >
-                インサイト
+                Insights
               </button>
             </nav>
           </div>
 
           <div className="p-6">
             {activeTab === 'trends' && (
-              // トレンド分析タブでは時系列・予測系コンポーネントをまとめて表示
+              // Trend tab bundles forecasting and time-series widgets
               <div className="space-y-6">
                 <SpendingPrediction />
                 <SpendingTrendAnalysis />
@@ -153,24 +153,24 @@ export default function AnalyticsPage() {
             )}
             
             {activeTab === 'categories' && (
-              // カテゴリ別詳細分析
+              // Category-specific deep dive
               <CategoryAnalysis />
             )}
             
             {activeTab === 'recommendations' && (
-              // 支出削減のための提案群
+              // Spending reduction suggestions
               <SavingsRecommendations />
             )}
             
             {activeTab === 'insights' && (
-              // AIインサイトのまとめ
+              // Consolidated AI insights
               <FinancialInsights />
             )}
           </div>
         </div>
       </main>
 
-      {/* 取引追加モーダル */}
+      {/* Add transaction modal */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
         />
       )}
 
-      {/* 設定モーダル */}
+      {/* Settings modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
