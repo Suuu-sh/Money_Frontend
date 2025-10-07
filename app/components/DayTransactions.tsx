@@ -37,7 +37,7 @@ interface DayTransactionsProps {
   onEditTransaction?: (transaction: Transaction) => void
 }
 
-// カレンダーで選択した日の取引を一覧し、編集・削除操作を提供
+// Display the transactions for the selected calendar day with edit/delete actions
 export default function DayTransactions({ 
   selectedDate, 
   transactions, 
@@ -46,7 +46,7 @@ export default function DayTransactions({
   onAddTransaction,
   onEditTransaction
 }: DayTransactionsProps) {
-  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  // Map category names to lucide-react icons
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 16) => {
     const iconProps = { size, color: iconColor, strokeWidth: 2 };
     
@@ -96,7 +96,7 @@ export default function DayTransactions({
     isSameDay(new Date(transaction.date), selectedDate)
   )
 
-  // 選択日の収入・支出合計を算出
+  // Calculate total income/expense for the selected day
   const dayIncome = dayTransactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0)
@@ -105,7 +105,7 @@ export default function DayTransactions({
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0)
 
-  // 表示用に金額へ+/-記号を付ける
+  // Prefix amounts with +/- for display
   const formatAmount = (amount: number, type: string) => {
     const formatted = new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -115,7 +115,7 @@ export default function DayTransactions({
     return type === 'income' ? `+${formatted}` : `-${formatted}`
   }
 
-  // 取引削除を確認してからAPIへリクエスト
+  // Confirm deletion before calling the API
   const handleDelete = async (id: number) => {
     if (window.confirm('この取引を削除しますか？')) {
       try {
@@ -130,7 +130,7 @@ export default function DayTransactions({
 
   return (
     <div>
-      {/* 取引一覧 */}
+      {/* Transaction list */}
       <div className="card p-0 overflow-hidden">
         <SectionHeader
           title="取引履歴"
@@ -155,7 +155,7 @@ export default function DayTransactions({
         ) : (
           <div className="space-y-1.5">
             {dayTransactions.map((transaction) => {
-              // カテゴリカラーを薄くした背景色を生成
+              // Tint the background using the category colour
               const hexToRgb = (hex: string) => {
                 const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
                 return result ? {
@@ -204,7 +204,7 @@ export default function DayTransactions({
                       </span>
                       
                       <div className="flex items-center space-x-1">
-                        {/* 編集ボタン */}
+                    {/* Edit button */}
                         {onEditTransaction && (
                           <button
                             onClick={() => onEditTransaction(transaction)}
@@ -217,7 +217,7 @@ export default function DayTransactions({
                           </button>
                         )}
                         
-                        {/* 削除ボタン */}
+                    {/* Delete button */}
                         <button
                           onClick={() => handleDelete(transaction.id)}
                           className="p-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"

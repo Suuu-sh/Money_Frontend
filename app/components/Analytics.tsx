@@ -1,9 +1,9 @@
 "use client"
 
 /**
- * Analytics コンポーネントはダッシュボード内の簡易分析ブロックです。
- *  - 支出カテゴリ・収入カテゴリの集計に加え、固定費を合算して割合を表示。
- *  - 大まかな支出構成を確認するためのカードとして利用されます。
+ * Analytics renders lightweight spending/earning breakdowns for the dashboard.
+ *  - Aggregates expense and income categories, folding in active fixed costs.
+ *  - Intended as a quick overview card rather than the full analytics page.
  */
 
 import { useState, useEffect } from 'react'
@@ -39,7 +39,7 @@ export default function Analytics() {
   const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>([])
   const [loading, setLoading] = useState(true)
 
-  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  // Map category names to lucide-react icons
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 20) => {
     const iconProps = { size, color: iconColor, strokeWidth: 2 };
     
@@ -84,7 +84,7 @@ export default function Analytics() {
       setIncomeSummary(incomeData)
       setFixedExpenses(Array.isArray(fixedExpensesData) ? fixedExpensesData : [])
     } catch (error) {
-      console.error('分析データ取得エラー:', error)
+      console.error('Failed to fetch analytics summary data:', error)
     } finally {
       setLoading(false)
     }
@@ -105,7 +105,7 @@ export default function Analytics() {
     )
   }
 
-      // 固定費をカテゴリ別に集計し、表示用に合算する
+  // Aggregate active fixed expenses by category for display
   const fixedExpensesByCategory = fixedExpenses
     .filter(expense => expense.isActive)
     .reduce((acc, expense) => {
@@ -115,7 +115,7 @@ export default function Analytics() {
       return acc
     }, {} as Record<number, number>)
 
-  // 支出サマリーに固定費を追加
+  // Fold fixed expenses into the expense summary
   const expenseSummaryWithFixed = expenseSummary.map(item => ({
     ...item,
     totalAmount: item.totalAmount + (fixedExpensesByCategory[item.categoryId] || 0)
@@ -132,7 +132,7 @@ export default function Analytics() {
       </h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* 支出分析 */}
+        {/* Expense analysis */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <CurrencyDollarIcon className="w-5 h-5 mr-2 text-red-500" />
@@ -175,11 +175,11 @@ export default function Analytics() {
           )}
         </div>
 
-        {/* 収入分析 */}
+        {/* Income analysis */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <CurrencyDollarIcon className="w-5 h-5 mr-2 text-green-500" />
-            収入カテゴリ別
+            Income by category
           </h3>
           {incomeSummary.length === 0 ? (
             <p className="text-gray-500 text-center py-8">収入データがありません</p>

@@ -1,3 +1,8 @@
+/**
+ * Next.js configuration
+ * - `output: 'export'` enables static export for nginx hosting
+ * - `rewrites` proxies frontend API calls to the Go backend during local dev
+ */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,

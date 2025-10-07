@@ -35,13 +35,13 @@ interface TransactionListProps {
 }
 
 export default function TransactionList({ transactions, categories, onTransactionUpdated, onEditTransaction }: TransactionListProps) {
-  // フィルターとソートの状態を画面側で保持
+  // Local filter/sort state for the transaction list
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'date' | 'amount' | 'created'>('date')
 
 
-  // カテゴリアイコンのマッピング（Lucide Reactアイコンを使用）
+  // Map category names to lucide-react icons
   const getCategoryIcon = (name: string, iconColor: string = '#6B7280', size: number = 16) => {
     const iconProps = { size, color: iconColor, strokeWidth: 2 };
     
@@ -70,7 +70,7 @@ export default function TransactionList({ transactions, categories, onTransactio
     return iconMap[name] || <ShoppingBag {...iconProps} />;
   };
 
-  // 選択された条件に従って取引をフィルタリング・ソート
+  // Filter and sort transactions based on the user selections
   const filteredAndSortedTransactions = transactions
     .filter(transaction => {
       if (filter !== 'all' && transaction.type !== filter) return false
@@ -94,10 +94,10 @@ export default function TransactionList({ transactions, categories, onTransactio
           comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
       }
       
-      return -comparison // 常に降順
+      return -comparison // Always display in descending order
     })
 
-  // 金額に通貨形式と符号を付与
+  // Format amounts with currency symbols and sign
   const formatAmount = (amount: number, type: string) => {
     const formatted = new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -107,7 +107,7 @@ export default function TransactionList({ transactions, categories, onTransactio
     return type === 'income' ? `+${formatted}` : `-${formatted}`
   }
 
-  // 削除確認後にAPIを呼び出し、一覧を更新
+  // Confirm deletion, call the API, then refresh the list
   const handleDelete = async (id: number) => {
     if (window.confirm('この取引を削除しますか？')) {
       try {
@@ -181,7 +181,7 @@ export default function TransactionList({ transactions, categories, onTransactio
       ) : (
         <div className="space-y-1.5 max-h-96 overflow-y-auto">
           {filteredAndSortedTransactions.map((transaction) => {
-            // カテゴリカラーを薄くした背景色を生成
+            // Generate a tinted background from the category colour
             const hexToRgb = (hex: string) => {
               const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
               return result ? {
@@ -233,7 +233,7 @@ export default function TransactionList({ transactions, categories, onTransactio
                     </span>
                     
                     <div className="flex items-center space-x-1">
-                      {/* 編集ボタン */}
+                      {/* Edit button */}
                       {onEditTransaction && (
                         <button
                           onClick={() => onEditTransaction(transaction)}
@@ -246,7 +246,7 @@ export default function TransactionList({ transactions, categories, onTransactio
                         </button>
                       )}
                       
-                      {/* 削除ボタン */}
+                      {/* Delete button */}
                       <button
                         onClick={() => handleDelete(transaction.id)}
                         className="p-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"

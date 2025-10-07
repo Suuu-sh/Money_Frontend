@@ -6,7 +6,7 @@ import { fetchBudgetHistory, fetchCategoryBudgets } from '../../lib/api'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline'
 import SectionHeader from '../common/SectionHeader'
 
-// 過去数ヶ月の予算履歴とカテゴリ別予算を合わせて可視化
+// Visualise recent budget history alongside category budgets
 function BudgetHistory() {
   const [allHistory, setAllHistory] = useState<BudgetHistoryType[]>([])
   const [selectedMonths, setSelectedMonths] = useState(3)
@@ -23,15 +23,14 @@ function BudgetHistory() {
     try {
       setLoading(true)
       const data = await fetchBudgetHistory()
-      console.log('Budget History Data:', data) // デバッグ用
       setAllHistory(data)
       
-      // 現在の月のカテゴリ別予算を取得
+      // Fetch the category budgets for the current month
       const now = new Date()
       const currentYear = now.getFullYear()
       const currentMonth = now.getMonth() + 1
 
-      // カテゴリ別予算を取得
+      // Retrieve category-level budgets
       try {
         const categoryBudgetData = await fetchCategoryBudgets(currentYear, currentMonth)
         setCategoryBudgets(categoryBudgetData)
@@ -40,25 +39,25 @@ function BudgetHistory() {
         setCategoryBudgets([])
       }
     } catch (error) {
-      console.error('Budget History Error:', error) // デバッグ用
+      console.error('Failed to fetch budget history:', error)
       setError('予算履歴の取得に失敗しました')
     } finally {
       setLoading(false)
     }
   }
 
-  // カテゴリ別予算の合計を計算
+  // Sum the category budgets (for reference cards)
   const getTotalCategoryBudget = () => {
     return categoryBudgets.reduce((total, budget) => total + budget.amount, 0)
   }
 
 
 
-  // 選択された月数分の履歴を取得（新しい順に並び替え）
+  // Select the most recent entries according to the dropdown
   const history = allHistory.slice(-selectedMonths).reverse()
 
   const formatAmount = (amount: number) => {
-    // 数値の精度問題を回避するため、整数に丸める
+    // Round to whole yen to avoid precision artefacts
     const roundedAmount = Math.round(amount)
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -130,7 +129,7 @@ function BudgetHistory() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* サマリー統計 */}
+          {/* Summary statistics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
               <div className="text-sm text-blue-600 dark:text-blue-400 mb-1">平均月間支出</div>
@@ -155,7 +154,7 @@ function BudgetHistory() {
             </div>
           </div>
 
-          {/* 月別履歴 */}
+          {/* Monthly history */}
           <div className="space-y-3">
             {history.map((item, index) => {
               const isCurrentMonth = index === 0
@@ -163,7 +162,7 @@ function BudgetHistory() {
                 ? getTotalCategoryBudget()
                 : item.budget
               const budgetUtilization = currentBudget > 0 ? (item.actualSpending / currentBudget) * 100 : 0
-              // 現在月に限り、バックエンド値の代わりに前面で算出した予算で貯蓄率を再計算
+                  // For the current month, recompute savings rate using the latest front-end totals
               const localSavingsRate = currentBudget > 0 ? ((currentBudget - item.actualSpending) / currentBudget) * 100 : item.savingsRate
               
               return (
@@ -181,7 +180,7 @@ function BudgetHistory() {
                           今月
                         </span>
                       )}
-                      {/* 予算超過バッジは非表示（仕様変更） */}
+                      {/* Budget overrun badge disabled by product decision */}
                     </div>
                     <div className="flex items-center space-x-2">
                       {localSavingsRate >= 0 ? (
@@ -197,7 +196,7 @@ function BudgetHistory() {
                     </div>
                   </div>
 
-                  {/* 予算 vs 実績 */}
+                  {/* Budget vs actual */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
                       <div className="text-gray-600 dark:text-gray-400">予算</div>
@@ -229,7 +228,7 @@ function BudgetHistory() {
                     </div>
                   </div>
 
-                  {/* 進捗バー */}
+                  {/* Progress bar */}
                   {currentBudget > 0 && (
                     <div className="mt-3">
                       <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
@@ -248,7 +247,7 @@ function BudgetHistory() {
             })}
           </div>
 
-          {/* 改善提案セクションは非表示（仕様変更） */}
+          {/* Improvement suggestions withheld per current specs */}
         </div>
       )}
 

@@ -47,7 +47,7 @@ export default function AddCategoryModal({
   const [formData, setFormData] = useState({
     name: '',
     type: defaultType as 'income' | 'expense',
-    color: '#22c55e', // デフォルトカラーはMoneyTrackerのブランドカラー
+    color: '#22c55e', // Default to MoneyTracker's brand colour
     icon: 'document',
     description: '',
   })
@@ -77,13 +77,13 @@ export default function AddCategoryModal({
       onCategoryAdded()
       onClose()
     } catch (error: any) {
-      console.error('カテゴリ作成エラー:', error)
+      console.error('Failed to create category:', error)
       if (error.response?.data?.error) {
         setError(error.response.data.error)
       } else if (error.message) {
         setError(error.message)
       } else {
-        setError('カテゴリの作成に失敗しました')
+        setError('Failed to create the category')
       }
     } finally {
       setLoading(false)
@@ -150,7 +150,7 @@ export default function AddCategoryModal({
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 h-[95vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
-        {/* ヘッダー */}
+        {/* Header */}
         <div className="relative px-6 py-5 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
@@ -170,7 +170,7 @@ export default function AddCategoryModal({
           </div>
         </div>
 
-        {/* コンテンツ */}
+        {/* Body */}
         <div className="flex-1 px-6 py-6 overflow-hidden">
           <form onSubmit={handleSubmit} className="h-full flex flex-col space-y-3">
             {error && (
@@ -191,7 +191,7 @@ export default function AddCategoryModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                  カテゴリ名
+                  Category name
                 </label>
                 <input
                   type="text"
@@ -205,7 +205,7 @@ export default function AddCategoryModal({
               
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                  タイプ
+                  Type
                 </label>
                 <select
                   value={formData.type}
@@ -220,7 +220,7 @@ export default function AddCategoryModal({
 
             <div>
               <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                アイコン
+                  Icon
               </label>
               <div className="grid grid-cols-10 gap-1 max-h-32 overflow-y-auto p-2 border border-gray-200 dark:border-gray-600 rounded-lg">
                 {iconOptions.map((option) => (
@@ -277,7 +277,7 @@ export default function AddCategoryModal({
           </form>
         </div>
 
-        {/* フッター */}
+        {/* Footer */}
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl border-t border-gray-200 dark:border-gray-700">
           <div className="flex space-x-3">
             <button

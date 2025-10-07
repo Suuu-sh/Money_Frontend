@@ -41,13 +41,13 @@
     @apply text-expense-600 dark:text-expense-400 font-semibold;
   }
   
-  /* モバイル対応のタッチ操作最適化 */
+  /* Optimise touch interactions for mobile */
   .touch-manipulation {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* オートフィル時のスタイル修正 */
+  /* Tweak autofill appearance */
   .input-dark {
     @apply appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md placeholder-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-green-500 focus:border-green-500 focus:bg-gray-700 sm:text-sm;
   }
@@ -77,7 +77,7 @@
   }
 }
 
-/* モバイル専用スタイル */
+/* Mobile-specific adjustments */
 @media (max-width: 768px) {
   .btn-primary,
   .btn-secondary,
@@ -90,7 +90,7 @@
     @apply min-h-[44px] text-base;
   }
   
-  /* モバイルでのホバー効果を無効化 */
+  /* Disable hover states on touch devices */
   .hover\:bg-gray-50:hover,
   .hover\:bg-gray-100:hover,
   .hover\:bg-gray-200:hover,
@@ -104,7 +104,7 @@
   }
 }
 
-/* PWA対応とセーフエリア */
+/* PWA safe-area helpers */
 @supports (padding: max(0px)) {
   .safe-area-inset-top {
     padding-top: max(1rem, env(safe-area-inset-top));

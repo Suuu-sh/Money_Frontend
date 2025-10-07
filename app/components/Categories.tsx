@@ -40,14 +40,14 @@ interface CategoriesProps {
 }
 
 export default function Categories({ categories, onCategoryUpdated }: CategoriesProps) {
-  // モーダルの開閉状態と編集中カテゴリ
+  // Modal open state and currently edited category
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const [defaultType, setDefaultType] = useState<'income' | 'expense'>('expense')
 
 
-  // カテゴリの一般的な順序を定義
+  // Canonical ordering for categories by type
   const getCategoryOrder = (categoryName: string, categoryType: string) => {
     if (categoryType === 'income') {
       const incomeOrder = ['給与', '賞与', '副業', '投資', 'その他収入']
@@ -64,7 +64,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
     }
   }
 
-  // カテゴリを一般的な順序でソート
+  // Sort according to the canonical order
   const incomeCategories = categories
     .filter(cat => cat.type === 'income')
     .sort((a, b) => getCategoryOrder(a.name, a.type) - getCategoryOrder(b.name, b.type))
@@ -73,9 +73,9 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
     .filter(cat => cat.type === 'expense')
     .sort((a, b) => getCategoryOrder(a.name, a.type) - getCategoryOrder(b.name, b.type))
 
-  // カテゴリカラーを薄くする関数
+  // Lighten category colours for consistent UI badges
   const getLightColor = (color: string, opacity: number = 0.1) => {
-    // HEXカラーをRGBAに変換して透明度を適用
+    // Convert hex to RGBA applying the requested opacity
     const hex = color.replace('#', '')
     const r = parseInt(hex.substring(0, 2), 16)
     const g = parseInt(hex.substring(2, 4), 16)
@@ -99,7 +99,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
         await deleteCategory(id)
         onCategoryUpdated()
       } catch (error) {
-        console.error('カテゴリ削除エラー:', error)
+        console.error('Failed to delete category:', error)
         alert('カテゴリの削除に失敗しました。関連する取引がある可能性があります。')
       }
     }
@@ -162,7 +162,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
 
   return (
     <div className="space-y-8">
-      {/* カテゴリ追加モーダル */}
+      {/* Add category modal */}
       <AddCategoryModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -170,7 +170,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
         defaultType={defaultType}
       />
 
-      {/* カテゴリ編集モーダル */}
+      {/* Edit category modal */}
       <EditCategoryModal
         isOpen={isEditModalOpen}
         onClose={() => {
@@ -181,9 +181,9 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
         onCategoryUpdated={onCategoryUpdated}
       />
 
-      {/* カテゴリ一覧 */}
+      {/* Category list */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* 支出カテゴリ */}
+        {/* Expense categories */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
@@ -247,7 +247,7 @@ export default function Categories({ categories, onCategoryUpdated }: Categories
           </div>
         </div>
 
-        {/* 収入カテゴリ */}
+        {/* Income categories */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center space-x-2">

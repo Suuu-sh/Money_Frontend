@@ -20,10 +20,10 @@ interface CalendarProps {
 }
 
 export default function Calendar({ transactions, onDateClick, selectedDate, onAddTransaction, onMonthChange, currentMonth: propCurrentMonth }: CalendarProps) {
-  // 内部で表示する対象月。親から受け取った値を優先的に使う
+  // Month being displayed internally; prefer the value passed from the parent
   const [currentMonth, setCurrentMonth] = useState(propCurrentMonth || new Date())
 
-  // 親から渡されるcurrentMonthプロパティが変更された時に内部状態を更新
+  // Sync local state whenever the parent updates currentMonth
   useEffect(() => {
     if (propCurrentMonth) {
       console.log('Parent currentMonth changed to:', propCurrentMonth)
@@ -31,20 +31,20 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
     }
   }, [propCurrentMonth])
 
-  // currentMonthの変更を監視（デバッグ用ログは不要なので削除）
+  // (debug logging removed) monitor currentMonth changes
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd })
 
-  // 指定日の取引一覧を取得
+  // Return the transactions occurring on the specified date
   const getDayTransactions = (date: Date) => {
     return transactions.filter(transaction => 
       isSameDay(new Date(transaction.date), date)
     )
   }
 
-  // 指定日の収入 / 支出 / 残高を集計
+  // Aggregate income/expense/balance for a given date
   const getDayBalance = (date: Date) => {
     const dayTransactions = getDayTransactions(date)
     const income = dayTransactions
@@ -83,29 +83,29 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
     onMonthChange?.(today)
   }
 
-  // 週の開始を月曜日にするため、日曜日を最後に移動
+  // Shift Sundays to the end so the week starts on Monday
   const weekDays = ['月', '火', '水', '木', '金', '土', '日']
 
-  // カレンダーのグリッドを作成（月曜日始まり）
+  // Build the calendar grid (Monday start)
   const getCalendarDays = () => {
     const firstDay = monthStart.getDay()
-    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1 // 月曜日を0にする
+    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1 // Make Monday index 0
 
     const calendarDays = []
     
-    // 前月の日付を追加
+    // Prepend days from the previous month
     for (let i = adjustedFirstDay - 1; i >= 0; i--) {
       const date = new Date(monthStart)
       date.setDate(date.getDate() - (i + 1))
       calendarDays.push({ date, isCurrentMonth: false })
     }
     
-    // 今月の日付を追加
+    // Push all days for the current month
     days.forEach(date => {
       calendarDays.push({ date, isCurrentMonth: true })
     })
     
-    // 次月の日付を追加（35日になるまで）
+    // Fill the tail with next-month days until we reach 35 cells
     const remainingDays = 35 - calendarDays.length
     for (let i = 1; i <= remainingDays; i++) {
       const date = new Date(monthEnd)
@@ -120,7 +120,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col md:h-full">
-      {/* カレンダーヘッダー */}
+      {/* Calendar header */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex-shrink-0">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -163,7 +163,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
         </div>
       </div>
 
-      {/* 曜日ヘッダー */}
+      {/* Weekday header */}
       <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
         {weekDays.map((day, index) => (
           <div key={day} className={`py-2 sm:py-3 text-center text-xs sm:text-sm font-medium border-r border-gray-100 dark:border-gray-700 last:border-r-0 ${
@@ -174,7 +174,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
         ))}
       </div>
 
-      {/* カレンダーグリッド */}
+      {/* Calendar grid */}
       <div className="grid grid-cols-7 grid-rows-5 md:flex-1 min-h-0">
         {calendarDays.map(({ date, isCurrentMonth }, index) => {
           const dayData = getDayBalance(date)
@@ -197,7 +197,7 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
               `}
             >
               <div className="h-full flex flex-col">
-                {/* 日付 */}
+                {/* Day number */}
                 <div className="flex items-center justify-between mb-1 sm:mb-2">
                   <span className={`text-xs font-medium ${
                     isTodayDate ? 'bg-blue-600 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-xs' : 
@@ -212,31 +212,31 @@ export default function Calendar({ transactions, onDateClick, selectedDate, onAd
                   )}
                 </div>
                 
-                {/* 取引情報 - 収支を色分けして表示 */}
+                {/* Transaction info (colour-coded) */}
                 {isCurrentMonth && (
                   <div className="flex-1 space-y-0.5 sm:space-y-1 overflow-hidden">
-                    {/* 収入表示（緑色） */}
+                    {/* Income display (green) */}
                     {dayData.income > 0 && (
                       <div className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-1 py-0.5 rounded text-xs font-medium truncate">
                         +¥{formatAmount(dayData.income)}
                       </div>
                     )}
                     
-                    {/* 支出表示（赤色） */}
+                    {/* Expense display (red) */}
                     {dayData.expense > 0 && (
                       <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-1 py-0.5 rounded text-xs font-medium truncate">
                         -¥{formatAmount(dayData.expense)}
                       </div>
                     )}
                     
-                    {/* 取引件数が多い場合の表示 */}
+                    {/* Fallback text when there are many transactions */}
                     {dayData.count > 2 && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                         他{dayData.count - 2}件
                       </div>
                     )}
                     
-                    {/* 取引がない場合のプレースホルダー */}
+                    {/* Placeholder when there are no transactions */}
                     {dayData.count === 0 && (
                       <div className="flex-1 flex items-center justify-center">
                         <div className="text-lg text-gray-300 dark:text-gray-600 font-light">

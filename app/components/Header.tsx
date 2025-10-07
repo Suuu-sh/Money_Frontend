@@ -6,7 +6,7 @@ interface HeaderProps {
   onOpenSettings?: () => void
 }
 
-// グローバルヘッダー: ロゴ・ショートカット・モーダルトリガーをまとめる
+// Global header consolidating logo, shortcuts, and modal triggers
 export default function Header({ onAddTransaction, onLogout, onOpenSettings }: HeaderProps) {
   return (
     <>

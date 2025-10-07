@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 
+# Stage 1: build static Next.js export using Node.js 20
 FROM node:20-bullseye AS builder
 WORKDIR /app
 
@@ -10,6 +11,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# Stage 2: serve the pre-rendered output via lightweight nginx
 FROM nginx:1.25-alpine AS runner
 WORKDIR /usr/share/nginx/html
 

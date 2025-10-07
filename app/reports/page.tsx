@@ -1,10 +1,11 @@
 "use client"
 
 /**
- * ReportsPage は月次レポートの閲覧用画面です。
- *  - カテゴリ一覧を取得してモーダル（取引追加）に渡しつつ、`ReportsView`
- *    コンポーネントにレポート表示を任せています。
- *  - 認証トークンがなければログインへリダイレクトする点は他ページと共通。
+ * ReportsPage renders the monthly spending report overview.
+ *  - Fetches category data for the add-transaction modal and delegates
+ *    visualisation to the `ReportsView` component.
+ *  - Redirects unauthenticated visitors to the login page, like other private
+ *    areas of the app.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -19,20 +20,20 @@ import { fetchCategories } from '../lib/api'
 
 export default function ReportsPage() {
   const router = useRouter()
-  // レポート表示で利用するカテゴリやモーダル状態を保持
+  // Manage categories used by reports and modal visibility state
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  // カテゴリ一覧を取得し、モーダルやフィルタに利用
+  // Load categories for modal filters
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const categoriesData = await fetchCategories()
       setCategories(categoriesData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to load report prerequisites:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -43,7 +44,7 @@ export default function ReportsPage() {
   }, [router])
 
   useEffect(() => {
-    // トークンが無ければログイン画面へ遷移し、あればデータを読み込む
+    // Guard access: require a token before loading data
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -81,7 +82,7 @@ export default function ReportsPage() {
       
       <main className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto">
-          {/* ページヘッダー */}
+          {/* Page header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">レポート</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -89,12 +90,12 @@ export default function ReportsPage() {
             </p>
           </div>
 
-          {/* 月次レポート本体 */}
+          {/* Monthly report content */}
           <ReportsView />
         </div>
       </main>
 
-      {/* 取引追加モーダル */}
+      {/* Transaction add modal */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -103,7 +104,7 @@ export default function ReportsPage() {
         />
       )}
 
-      {/* 設定モーダル */}
+      {/* Settings modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

@@ -6,10 +6,10 @@ interface BudgetProgressProps {
   analysis: BudgetAnalysis
 }
 
-// 予算消化率を視覚的に表す進捗バーと残額のサマリー
+// Render budget consumption progress and remaining balance summary
 export default function BudgetProgress({ analysis }: BudgetProgressProps) {
   const formatAmount = (amount: number) => {
-    // 数値の精度問題を回避するため、整数に丸める
+    // Round to whole yen for consistent formatting
     const roundedAmount = Math.round(amount)
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -37,10 +37,10 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
 
   return (
     <div className="space-y-4">
-      {/* メイン進捗バー */}
+      {/* Main progress bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-gray-700">予算使用状況</span>
+          <span className="text-sm font-medium text-gray-700">Budget usage</span>
           <span className={`text-sm font-semibold ${getTextColor()}`}>
             {progressPercentage.toFixed(1)}%
           </span>
@@ -59,9 +59,9 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
         </div>
       </div>
 
-      {/* 詳細な内訳 */}
+      {/* Detailed breakdown */}
       <div className="space-y-3">
-        {/* 固定費 */}
+        {/* Fixed expenses */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
@@ -70,7 +70,7 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
           <span className="text-sm font-medium">{formatAmount(analysis.totalFixedExpenses)}</span>
         </div>
 
-        {/* 変動費（今月の支出） */}
+        {/* Variable spending (this month) */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className={`w-3 h-3 rounded-full ${
@@ -82,7 +82,7 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
           <span className="text-sm font-medium">{formatAmount(analysis.currentSpending)}</span>
         </div>
 
-        {/* 残り予算 */}
+        {/* Remaining budget */}
         <div className="flex items-center justify-between border-t pt-2">
           <div className="flex items-center space-x-2">
             <div className={`w-3 h-3 rounded-full ${
@@ -96,7 +96,7 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
         </div>
       </div>
 
-      {/* 1日あたりの使用可能金額 */}
+      {/* Allowance per remaining day */}
       {analysis.daysRemaining > 0 && analysis.remainingBudget > 0 && (
         <div className="bg-blue-50 rounded-lg p-3">
           <div className="text-center">
@@ -104,13 +104,13 @@ export default function BudgetProgress({ analysis }: BudgetProgressProps) {
               {formatAmount(analysis.dailyAverage)}
             </div>
             <div className="text-xs text-blue-500">
-              1日あたり使用可能金額（残り{analysis.daysRemaining}日）
+              Daily allowance (remaining {analysis.daysRemaining} days)
             </div>
           </div>
         </div>
       )}
 
-      {/* 予算超過の警告は非表示（仕様変更） */}
+      {/* Budget overrun warnings withheld per current spec */}
     </div>
   )
 }

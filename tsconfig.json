@@ -1,3 +1,4 @@
+// TypeScript settings tuned for Next.js static export build
 {
   "compilerOptions": {
     "lib": [

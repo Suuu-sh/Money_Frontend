@@ -14,7 +14,7 @@ interface FixedExpenseModalProps {
   onSaved: () => void
 }
 
-// 固定費の新規登録・編集をまとめたモーダルフォーム
+// Modal form for creating or editing fixed expenses
 export default function FixedExpenseModal({ 
   isOpen, 
   onClose, 
@@ -72,7 +72,7 @@ export default function FixedExpenseModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // バリデーション
+    // Validate user input
     const validationErrors = validateFixedExpenseForm({
       name: formData.name,
       amount: formData.amount,
@@ -116,7 +116,7 @@ export default function FixedExpenseModal({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* ヘッダー */}
+        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-semibold text-gray-900">
             {expense ? '固定費を編集' : '固定費を追加'}
@@ -129,9 +129,9 @@ export default function FixedExpenseModal({
           </button>
         </div>
 
-        {/* フォーム */}
+        {/* Form body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* 名前 */}
+          {/* Name */}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
               名前 <span className="text-red-500">*</span>
@@ -147,7 +147,7 @@ export default function FixedExpenseModal({
             />
           </div>
 
-          {/* 金額 */}
+          {/* Amount */}
           <div>
             <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
               金額 <span className="text-red-500">*</span>
@@ -180,7 +180,7 @@ export default function FixedExpenseModal({
             </div>
           </div>
 
-          {/* カテゴリ */}
+          {/* Category */}
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
               カテゴリ <span className="text-red-500">*</span>

@@ -173,7 +173,7 @@ export const deleteFixedExpense = async (id: number): Promise<void> => {
   await api.delete(`/fixed-expenses/${id}`)
 }
 
-// Fixed Transactions API (新しい固定収支API)
+// Fixed transactions API (new recurring income/expense endpoints)
 export const createFixedTransaction = async (fixedTransaction: FixedTransactionRequest): Promise<FixedExpense> => {
   const response = await api.post('/fixed-expenses', fixedTransaction)
   return response.data

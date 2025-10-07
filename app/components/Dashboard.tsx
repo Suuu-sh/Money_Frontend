@@ -22,13 +22,13 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ transactions, categories, stats, selectedDate, currentMonth, onTransactionUpdated, onAddTransaction, onEditTransaction }: DashboardProps) {
-  // 予算分析のサマリーを子コンポーネントへ渡せるよう保持
+  // Store budget analysis summary for the child widgets
   const [budgetAnalysis, setBudgetAnalysis] = useState<BudgetAnalysis | null>(null)
 
-  // 表示中の月に対応した予算分析を取得
+  // Refresh analysis for the active month
   const loadBudgetAnalysis = useCallback(async () => {
     try {
-      // currentMonthが指定されている場合はその月のデータを取得、なければ現在の月
+      // Default to the current month when none is provided
       const targetDate = currentMonth || new Date()
       const year = targetDate.getFullYear()
       const month = targetDate.getMonth() + 1
@@ -36,19 +36,19 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
       const data = await fetchBudgetAnalysis(year, month)
       setBudgetAnalysis(data)
     } catch (error: any) {
-      console.error('予算データの取得に失敗しました:', error)
-      console.error('エラー詳細:', error.response?.data || error.message)
-      // 予算が設定されていない場合やエラーの場合はnullのまま
+      console.error('Failed to fetch budget analysis:', error)
+      console.error('Details:', error.response?.data || error.message)
+      // Keep null when no budget is configured or an error occurs
       setBudgetAnalysis(null)
     }
   }, [currentMonth])
 
   useEffect(() => {
-    // currentMonth の変化に追従して予算情報を更新
+    // Watch `currentMonth` and refresh when it changes
     loadBudgetAnalysis()
   }, [loadBudgetAnalysis])
 
-  // 現在表示されている取引から月別統計を計算
+  // Compute monthly statistics from the transactions currently loaded
   const calculateMonthlyStats = (): Stats => {
     const income = transactions
       .filter(t => t.type === 'income')
@@ -68,27 +68,27 @@ export default function Dashboard({ transactions, categories, stats, selectedDat
     }
   }
 
-  // 表示用の統計データ（月別データがある場合はそれを使用、なければ全体統計）
+  // Prefer freshly computed stats; otherwise fall back to the aggregate
   const displayStats = transactions.length > 0 ? calculateMonthlyStats() : stats
 
   return (
     <div className="space-y-8">
-      {/* 予算アラートは表示しない（仕様変更） */}
+      {/* Budget alerts intentionally hidden */}
 
-      {/* 予算概要と日毎支出チャートを横並びに配置 */}
+      {/* Budget overview and daily spending chart */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 予算概要 */}
+        {/* Budget overview */}
         <div>
           <BudgetOverview currentMonth={currentMonth} />
         </div>
 
-        {/* 日毎支出チャート */}
+        {/* Daily spending chart */}
         <div>
           <DailySpendingChart />
         </div>
       </div>
 
-      {/* 取引履歴 - 予算ブロックの下に配置 */}
+      {/* Transaction history beneath the budget section */}
       <div className="w-full">
         <DayTransactions 
           selectedDate={selectedDate}

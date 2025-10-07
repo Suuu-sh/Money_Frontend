@@ -1,14 +1,16 @@
 "use client"
 
 /**
- * BudgetPage では予算設定や固定収支をまとめて管理します。
- *  - 認証済みユーザーのみ利用できるため、マウント後すぐにトークンを検証。
- *  - 予算分析とカテゴリ別予算を同時に参照するケースが多いため、両者を同じ
- *    ステートとモーダルで扱い、更新時は `handleBudgetUpdated` で一括リロード。
- *  - 固定費／固定収支の編集モーダルもこのページから開くので、関連する
- *    `show*Modal` や `editing*` ステートはここで集中管理しています。
- * 新卒エンジニアが触る場合は、まず下の useState 群でどの UI 要素と結び付いて
- * いるかを確認してから処理フローを追うと理解しやすいです。
+ * BudgetPage centralises budget configuration and recurring transactions.
+ *  - Because the view is restricted to authenticated users, the token is
+ *    validated immediately after mount.
+ *  - Users often inspect the overall analysis and per-category budgets
+ *    together, so the page keeps their state/modals in sync and refreshes via
+ *    `handleBudgetUpdated`.
+ *  - Fixed expense/transaction modals also originate here, so all `show*Modal`
+ *    and `editing*` state is coordinated in this component.
+ * For newcomers, start by mapping each useState hook to its UI element before
+ * walking the event flow.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -30,14 +32,14 @@ import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 
 export default function BudgetPage() {
   const router = useRouter()
-  // データ表示に関するステート
+  // State that drives the main budget widgets
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [categoryBudgets, setCategoryBudgets] = useState<CategoryBudget[]>([])
-  const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0) // List再描画用のキー
+  const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0) // Key to force list re-render
   const [loading, setLoading] = useState(true)
 
-  // モーダルの開閉＆編集中アイテムの管理
+  // Modal visibility and currently edited items
   const [showExpenseModal, setShowExpenseModal] = useState(false)
   const [editingExpense, setEditingExpense] = useState<FixedExpense | null>(null)
   const [showTransactionModal, setShowTransactionModal] = useState(false)
@@ -46,7 +48,7 @@ export default function BudgetPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showCategoryBudgetModal, setShowCategoryBudgetModal] = useState(false)
   const [editingCategoryBudget, setEditingCategoryBudget] = useState<CategoryBudget | null>(null)
-  // 今月の予算分析サマリーを取得してハイライト表示に反映
+  // Load the current month's budget analysis for the summary cards
   const loadBudgetAnalysis = useCallback(async () => {
     try {
       const now = new Date()
@@ -56,11 +58,11 @@ export default function BudgetPage() {
       const data = await fetchBudgetAnalysis(year, month)
       setAnalysis(data)
     } catch (error) {
-      console.error('予算分析データの取得に失敗しました:', error)
+      console.error('Failed to fetch budget analysis:', error)
     }
   }, [])
 
-  // カテゴリ一覧と予算分析を並列で読み込み、画面初期化に利用
+  // Fetch categories and budget analysis in parallel to initialise the page
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -70,7 +72,7 @@ export default function BudgetPage() {
       setCategories(categoriesData)
       await loadBudgetAnalysis()
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch budget data:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -81,7 +83,7 @@ export default function BudgetPage() {
   }, [loadBudgetAnalysis, router])
 
   useEffect(() => {
-    // ログインチェック。未ログインの場合はダッシュボードへ辿り着かせない
+    // Guard the page: redirect unauthenticated users to the login screen
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -96,7 +98,7 @@ export default function BudgetPage() {
   }
 
   const handleBudgetUpdated = () => {
-    // カテゴリ予算が更新されたときに両方のコンポーネントを更新
+    // Refresh both analysis and list when a category budget changes
     setBudgetUpdateTrigger(prev => prev + 1)
     loadBudgetAnalysis()
   }
@@ -124,13 +126,13 @@ export default function BudgetPage() {
       <TabNavigation />
       
       <main className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-        {/* アラートは非表示／余白なし */}
+        {/* Keep alert area collapsed while budget alerts are disabled */}
 
 
 
-        {/* メインセクション: カテゴリ別予算設定と予算履歴 */}
+        {/* Main section: category budgets and historical trends */}
         <div className="flex flex-col xl:flex-row gap-6 mb-8">
-          {/* カテゴリ別予算設定 - 6.5割 */}
+          {/* Category budgets - primary column */}
           <div className="xl:w-[65%]">
             <CategoryBudgetList
               key={budgetUpdateTrigger}
@@ -144,7 +146,7 @@ export default function BudgetPage() {
             />
           </div>
 
-          {/* 予算履歴 - 3.5割 */}
+          {/* Budget history - secondary column */}
           <div className="xl:w-[35%]">
             <BudgetHistory />
           </div>
@@ -153,7 +155,7 @@ export default function BudgetPage() {
 
       </main>
 
-      {/* 固定費モーダル */}
+      {/* Fixed expense modal */}
       <FixedExpenseModal
         isOpen={showExpenseModal}
         onClose={() => {
@@ -167,7 +169,7 @@ export default function BudgetPage() {
         }}
       />
 
-      {/* 固定収支モーダル */}
+      {/* Recurring transaction modal */}
       <FixedTransactionModal
         isOpen={showTransactionModal}
         onClose={() => {
@@ -181,7 +183,7 @@ export default function BudgetPage() {
         }}
       />
 
-      {/* カテゴリ別予算モーダル */}
+      {/* Category budget modal */}
       <CategoryBudgetModal
         isOpen={showCategoryBudgetModal}
         onClose={() => {
@@ -196,7 +198,7 @@ export default function BudgetPage() {
         }}
       />
 
-      {/* 取引追加モーダル */}
+      {/* Quick-add transaction modal */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -205,7 +207,7 @@ export default function BudgetPage() {
         />
       )}
 
-      {/* 設定モーダル */}
+      {/* Settings modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

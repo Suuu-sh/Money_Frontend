@@ -1,9 +1,10 @@
 "use client"
 
 /**
- * AddTransactionModal は新しい取引を登録するフォームを提供します。
- *  - 金額・日付・カテゴリは必須。カテゴリの候補は props で受け取りタイプ別にフィルタ。
- *  - 成功時は親コンポーネントの `onTransactionAdded` を呼び出して再読み込みを任せます。
+ * AddTransactionModal renders the form for creating a new transaction.
+ *  - Amount, date, and category are mandatory; categories are filtered by the
+ *    selected type.
+ *  - On success it triggers `onTransactionAdded` so the parent can refresh.
  */
 
 import { useState } from 'react'
@@ -37,29 +38,29 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // 取引タイプが切り替わったときに収入カテゴリ／支出カテゴリのみ表示
+  // Filter category options by the currently selected transaction type
   const filteredCategories = categories.filter(cat => cat.type === formData.type)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // 入力チェック：金額・カテゴリ・日付の基本バリデーション
+    // Basic validation for amount/category/date
     const nextErrors: Record<string, string> = {}
     const amountNum = parseFloat(formData.amount)
     if (!formData.amount || isNaN(amountNum) || amountNum <= 0) {
-      nextErrors.amount = '金額は0より大きい値を入力してください'
+      nextErrors.amount = 'Please enter an amount greater than 0'
     }
     if (!formData.categoryId) {
-      nextErrors.categoryId = 'カテゴリの選択は必須です'
+      nextErrors.categoryId = 'Please select a category'
     }
     if (!formData.date) {
-      nextErrors.date = '日付は必須です'
+      nextErrors.date = 'Please choose a date'
     }
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
     setLoading(true)
 
     try {
-      // 金額は小数が入力されても円単位に丸めて保存
+      // Round to yen even if the user entered decimals
       const amount = Math.round(parseFloat(formData.amount) * 100) / 100
       
       await createTransaction({
@@ -71,8 +72,8 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
       })
       onTransactionAdded()
     } catch (error) {
-      console.error('取引作成エラー:', error)
-      alert('取引の作成に失敗しました')
+      console.error('Failed to create transaction:', error)
+      alert('Could not create the transaction. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -80,7 +81,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      {/* コンパクトなモーダル */}
+      {/* Compact modal container */}
       <div className="bg-white dark:bg-gray-800 w-full max-w-xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[95vh] flex flex-col">
         <div className="p-5 flex-1 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
@@ -100,7 +101,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
 
           <form onSubmit={handleSubmit} className="h-full flex flex-col">
             <div className="space-y-4 flex-1">
-              {/* 取引タイプ - コンパクト */}
+              {/* Transaction type selector */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   取引タイプ
@@ -137,7 +138,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
                 </div>
               </div>
 
-              {/* 金額・日付 - 2列レイアウト */}
+              {/* Amount and date fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -176,7 +177,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
                 </div>
               </div>
 
-              {/* カテゴリ - 全幅 */}
+              {/* Category selector */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   カテゴリ *
@@ -194,7 +195,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
                 )}
               </div>
 
-              {/* 説明 - 全幅 */}
+              {/* Optional description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   説明
@@ -209,7 +210,7 @@ export default function AddTransactionModal({ categories, onClose, onTransaction
               </div>
             </div>
 
-            {/* 固定フッター */}
+            {/* Sticky footer */}
             <div className="flex flex-col sm:flex-row space-y-2.5 sm:space-y-0 sm:space-x-2.5 pt-5 border-t border-gray-200 dark:border-gray-700 mt-5">
               <button
                 type="button"

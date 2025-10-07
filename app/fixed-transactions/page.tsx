@@ -1,9 +1,10 @@
 "use client"
 
 /**
- * FixedTransactionsPage は定期的な収支（固定費／固定収入）の管理画面です。
- *  - カテゴリ一覧を取得し、固定費および固定収支モーダルに渡します。
- *  - モーダル操作後は `handleBudgetUpdated` でリストを再取得して最新状態を反映。
+ * FixedTransactionsPage manages recurring income and expenses.
+ *  - Fetches categories and passes them into the fixed expense/income modals.
+ *  - After modal interactions, `handleBudgetUpdated` reloads the list to
+ *    surface fresh data.
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -22,7 +23,7 @@ import FixedExpenseModal from '../components/budget/FixedExpenseModal'
 
 export default function FixedTransactionsPage() {
   const router = useRouter()
-  // 固定収支管理に必要なカテゴリ・モーダル・再読み込みトリガー
+  // Category data, modal state, and refresh triggers for recurring items
   const [categories, setCategories] = useState<Category[]>([])
   const [budgetUpdateTrigger, setBudgetUpdateTrigger] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -33,7 +34,7 @@ export default function FixedTransactionsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  // 固定収支の編集に必要なカテゴリ情報を取得
+  // Load categories required when editing recurring items
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
@@ -42,7 +43,7 @@ export default function FixedTransactionsPage() {
       ])
       setCategories(categoriesData)
     } catch (error) {
-      console.error('データ取得エラー:', error)
+      console.error('Failed to fetch recurring transaction data:', error)
       if (error instanceof Error && error.message.includes('401')) {
         localStorage.removeItem('token')
         router.push('/login')
@@ -53,7 +54,7 @@ export default function FixedTransactionsPage() {
   }, [router])
 
   useEffect(() => {
-    // 認証状態を確認し、未ログインならログイン画面へ遷移
+    // Enforce authentication before showing the page
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -68,7 +69,7 @@ export default function FixedTransactionsPage() {
   }
 
   const handleBudgetUpdated = () => {
-    // モーダルからの更新後に子コンポーネントを再読み込みさせる
+    // When a modal saves changes, trigger child list refresh
     setBudgetUpdateTrigger(prev => prev + 1)
   }
 
@@ -99,7 +100,7 @@ export default function FixedTransactionsPage() {
       <main className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
 
 
-        {/* 固定収支管理 */}
+        {/* Recurring income/expense management */}
         <div className="grid grid-cols-1 gap-6">
           <div>
             <FixedTransactionsList 
@@ -115,7 +116,7 @@ export default function FixedTransactionsPage() {
         </div>
       </main>
 
-      {/* 固定費モーダル */}
+      {/* Fixed expense modal */}
       <FixedExpenseModal
         isOpen={showExpenseModal}
         onClose={() => {
@@ -129,7 +130,7 @@ export default function FixedTransactionsPage() {
         }}
       />
 
-      {/* 固定収支モーダル */}
+      {/* Recurring transaction modal */}
       <FixedTransactionModal
         isOpen={showTransactionModal}
         onClose={() => {
@@ -143,7 +144,7 @@ export default function FixedTransactionsPage() {
         }}
       />
 
-      {/* 取引追加モーダル */}
+      {/* Quick-add transaction modal */}
       {isAddModalOpen && (
         <AddTransactionModal
           categories={categories}
@@ -152,7 +153,7 @@ export default function FixedTransactionsPage() {
         />
       )}
 
-      {/* 設定モーダル */}
+      {/* Settings modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
